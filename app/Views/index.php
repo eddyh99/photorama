@@ -84,7 +84,7 @@
         const mergedPhotoCanvas = document.getElementById('mergedPhoto');
         const recordedVideo = document.getElementById('recordedVideo');
 
-        const frameImageSrc = 'frame.png'; // Path to your frame image
+        const frameImageSrc = "<?= BASE_URL ?>assets/img/background/frame.png"; // Path to your frame image
         const frameImage = new Image();
         frameImage.src = frameImageSrc;
 

@@ -92,3 +92,13 @@ define('EVENT_PRIORITY_NORMAL', 100);
  * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_HIGH instead.
  */
 define('EVENT_PRIORITY_HIGH', 10);
+
+if ($_SERVER['HTTP_HOST'] == 'localhost') {
+    $addurl = '/'.'guci-toak/'; 
+}else{
+    $addurl = '/'; 
+}
+
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https://'.$_SERVER['HTTP_HOST'].$addurl : 'http://'.$_SERVER['HTTP_HOST'].$addurl;
+defined('BASE_URL') || define('BASE_URL',$protocol);
+define('NAMETITLE', 'Photorama');
