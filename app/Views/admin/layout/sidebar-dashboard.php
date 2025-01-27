@@ -18,7 +18,7 @@
         </li> -->
             <!-- Background -->
             <li class="menu-item setup <?= @$menuactive_bg ?>">
-                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <a href="<?= BASE_URL ?>admin/background" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-cog"></i>
                     <div data-i18n="Account Settings" class="text-center">Background</div>
                 </a>
@@ -44,7 +44,7 @@
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                     <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <span class="avatar-initial rounded-circle bg-label-warning">AP</span>
+                        <span class="avatar-initial rounded-circle bg-label-warning">M</span>
                         <!-- <img src="<?= BASE_URL ?>assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" /> -->
                     </div>
                     </a>
@@ -54,11 +54,11 @@
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                 <div class="avatar avatar-online">
-                                    <span class="avatar-initial rounded-circle bg-label-warning">AP</span>
+                                    <span class="avatar-initial rounded-circle bg-label-warning">M</span>
                                 </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                <span class="fw-semibold d-block">Ari Pramana</span>
+                                <span class="fw-semibold d-block">Miftahus</span>
                                 <small class="text-muted">Admin</small>
                                 </div>
                             </div>

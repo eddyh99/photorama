@@ -25,12 +25,13 @@ DROP TABLE IF EXISTS `background`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `background` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `namabackground` varchar(255) NOT NULL,
-  `path` varchar(500) NOT NULL,
+  `display` varchar(255) NOT NULL,
+  `file` varchar(500) NOT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_display` (`display`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +41,7 @@ CREATE TABLE `background` (
 LOCK TABLES `background` WRITE;
 /*!40000 ALTER TABLE `background` DISABLE KEYS */;
 INSERT INTO `background` VALUES
-(1,'Screen 1','background/frame.png','2025-01-27 11:36:45','2025-01-27 11:36:45');
+(13,'Screen 1','background/Screen 11737963126.png','2025-01-27 14:32:06','2025-01-27 14:32:06');
 /*!40000 ALTER TABLE `background` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-01-27 12:29:34
+-- Dump completed on 2025-01-27 14:32:38

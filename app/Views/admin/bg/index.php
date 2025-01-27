@@ -34,7 +34,7 @@
                         <div class="col-lg-12 col-md-12 col-12 mb-2">
                             <div class="card">
                                 <div class="card-body">
-                                    <a href="<?= BASE_URL?>user/tambah_user" class="btn btn-primary">Tambah Background</a>
+                                    <a href="<?= BASE_URL?>admin/background/add" class="btn btn-primary">Tambah Background</a>
                                 </div>
                             </div>
                         </div>
@@ -47,7 +47,7 @@
                             <table id="table_list_bg" class="table table-striped" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>Nama</th>
+                                        <th>Tampilan</th>
                                         <th>Background</th>
                                         <th>Action</th>
                                     </tr>
