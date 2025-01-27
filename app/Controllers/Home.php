@@ -37,4 +37,18 @@ class Home extends BaseController
 
         return view('guest/wrapper', $mdata);
     }
+
+    public function payment($price) {
+        $result = $this->background->backgroundByScreen('Screen 2');
+        $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $mdata = [
+            'title'         => 'Beranda - ' . NAMETITLE,
+            'content'       => 'guest/payment/index',
+            'extra'         => 'guest/payment/js/_js_index',
+            'background'    =>  $background,
+            'price'         => base64_decode($price)
+        ];
+
+        return view('guest/wrapper', $mdata);
+    }
 }

@@ -5,7 +5,10 @@
         $("#content-bg").css("background-image", bg ? `url('${bg}')` : 'none');
 
         let count = 1;
-        const IDR = new Intl.NumberFormat('id-ID');
+        const IDR = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR'
+            });
 
         // Fungsi untuk menambah
         $("#increase").click(function() {
@@ -21,12 +24,6 @@
                 $("#count").text(count);
                 $("#price").text(IDR.format(count * 17500));
             }
-        });
-
-        $("#next").on('click', () => {
-            let price = $("#price").text();
-            let priceFormatted = parseInt(price.replace(/\./g, ''))
-            window.location.href = "<?= BASE_URL ?>payment/" + encodeURIComponent(btoa(priceFormatted));
         });
     });
 </script>

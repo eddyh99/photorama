@@ -19,7 +19,7 @@
                                     <button class="btn btn-lg btn-primary ms-5 rounded-circle" id="increase"><i class="bx bx-plus"></i></button>
                                 </div>
                             </div>
-                            <h2 id="price">Rp 17.500,00</h2>
+                            <h2>IDR <span id="price">17.500</span></h2>
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                     name="voc" value="Q4LRK3RW"/>
             </div>
         </div>
-        <a href="#" class="btn btn-danger text-white fs-5 mt-3 text-center">NEXT</a>
+        <button id="next" class="btn btn-danger text-white fs-5 mt-3 text-center">NEXT</button>
     </div>
 </div>
 
