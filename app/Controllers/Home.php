@@ -24,4 +24,17 @@ class Home extends BaseController
 
         return view('guest/wrapper', $mdata);
     }
+
+    public function order() {
+        $result = $this->background->backgroundByScreen('Screen 2');
+        $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $mdata = [
+            'title'         => 'Beranda - ' . NAMETITLE,
+            'content'       => 'guest/order/index',
+            'extra'     => 'guest/order/js/_js_index',
+            'background'    =>  $background
+        ];
+
+        return view('guest/wrapper', $mdata);
+    }
 }
