@@ -60,7 +60,7 @@ CREATE TABLE `frame` (
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,8 +70,36 @@ CREATE TABLE `frame` (
 LOCK TABLES `frame` WRITE;
 /*!40000 ALTER TABLE `frame` DISABLE KEYS */;
 INSERT INTO `frame` VALUES
-(20,'nataru','frame/nataru1738035603.png','2025-01-28 10:40:03','2025-01-28 10:40:03');
+(20,'nataru','frame/nataru1738035603.png','2025-01-28 10:40:03','2025-01-28 10:40:03'),
+(21,'music','frame/music1738039832.png','2025-01-28 11:50:32','2025-01-28 11:50:32');
 /*!40000 ALTER TABLE `frame` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `voucher`
+--
+
+DROP TABLE IF EXISTS `voucher`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `voucher` (
+  `kode_voucher` varchar(10) NOT NULL,
+  `expired` date NOT NULL,
+  `potongan_harga` decimal(10,0) NOT NULL,
+  UNIQUE KEY `kode_voucher` (`kode_voucher`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `voucher`
+--
+
+LOCK TABLES `voucher` WRITE;
+/*!40000 ALTER TABLE `voucher` DISABLE KEYS */;
+INSERT INTO `voucher` VALUES
+('4CRLDWB6','2025-01-01',7000),
+('8K61UG4Y','2025-01-29',5000);
+/*!40000 ALTER TABLE `voucher` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -83,4 +111,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-01-28 10:41:31
+-- Dump completed on 2025-01-28 15:36:06

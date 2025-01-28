@@ -11,6 +11,34 @@ class Voucher extends BaseController
         $this->voucher       = model('App\Models\Mdl_voucher');
 	}
 
+    public function index()
+    {
+        $mdata = [
+            'title'     => 'Voucher - ' . NAMETITLE,
+            'content'   => 'admin/voucher/index',
+            'extra'     => 'admin/voucher/js/_js_index',
+            'menuactive_voc'   => 'active open'
+        ];
+
+        return view('admin/layout/wrapper', $mdata);
+    }
+
+    public function store() {
+
+        $kd_voucher = strtoupper(substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 8));
+        $diskon = $this->request->getVar('diskon');
+
+        $mdata = [
+            'kode_voucher'   => $kd_voucher,
+            'potongan_harga' => !empty($diskon) ? $diskon : null,
+            'expired'        => date('Y-m-d', strtotime($this->request->getVar('expired')))
+        ];
+
+        $result = $this->voucher->createVoucher($mdata);
+        return json_encode($result);
+    }
+
+
     public function cekVoucher($voucher)
     {
         // Mengambil data voucher berdasarkan kode
