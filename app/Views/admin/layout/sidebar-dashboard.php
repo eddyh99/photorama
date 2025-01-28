@@ -17,13 +17,19 @@
             <span class="menu-header-text">Setup</span>
         </li> -->
             <!-- Background -->
-            <li class="menu-item setup <?= @$menuactive_bg ?>">
+            <li class="menu-item <?= @$menuactive_bg ?>">
                 <a href="<?= BASE_URL ?>admin/background" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-cog"></i>
                     <div data-i18n="Account Settings" class="text-center">Background</div>
                 </a>
             </li>
         
+            <li class="menu-item <?= @$menuactive_fr ?>">
+                <a href="<?= BASE_URL ?>admin/frame" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-cog"></i>
+                    <div data-i18n="Account Settings" class="text-center">Frame</div>
+                </a>
+            </li>
     </ul>
 </aside>
 

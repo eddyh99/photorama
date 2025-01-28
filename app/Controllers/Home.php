@@ -39,6 +39,8 @@ class Home extends BaseController
     }
 
     public function payment($price) {
+        $price = base64_decode($price);
+        if(!is_numeric($price)) return redirect()->to(BASE_URL .'order');
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $mdata = [
@@ -46,7 +48,7 @@ class Home extends BaseController
             'content'       => 'guest/payment/index',
             'extra'         => 'guest/payment/js/_js_index',
             'background'    =>  $background,
-            'price'         => base64_decode($price)
+            'price'         =>  $price
         ];
 
         return view('guest/wrapper', $mdata);

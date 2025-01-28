@@ -1,0 +1,78 @@
+<?php
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+use CodeIgniter\Database\Exceptions\DatabaseException;
+
+class Mdl_frame extends Model
+{
+    protected $server_tz = "Asia/Singapore";
+
+    public function __construct()
+    {
+        $this->db = \Config\Database::connect();
+    }
+
+    public function allFrame()
+    {
+        $sql = "select * from frame";
+        return $this->db->query($sql)->getResult();
+    }
+
+    // public function backgroundByScreen($screen) {
+    //     $sql = "SELECT file from background WHERE display = ?";
+    //     return $this->db->query($sql, [$screen])->getRow();
+    // }
+
+    public function deleteById($id)
+    {
+
+        $bg = $this->db->table("frame");
+        $bg->where("id", $id);
+
+        if (!$bg->delete()) {
+            return (object) array(
+                "code"      => 400,
+                "message"   => "Gagal menghapus frame"
+            );
+        }
+
+        return (object) array(
+            "code"      => 200,
+            "message"   => "Frame berhasil dihapus"
+        );
+    }
+
+    public function insertFrame($mdata) {
+        try {
+            $bg = $this->db->table("frame");
+
+            // Insert data into 'pengguna' table
+            if (!$bg->insert($mdata)) {
+                // Handle case when insert fails (not due to exception)
+                return (object) array(
+                    "code"      => 400,
+                    "message"   => "Gagal menyimpan frame"
+                );
+            }
+        } catch (DatabaseException $e) {
+            // For other database-related errors, return generic server error
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        } catch (\Exception $e) {
+            // Handle any other general exceptions
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        }
+
+        return (object) array(
+            "code"      => 201,
+            "message"   => "frame berhasil ditambahkan"
+        );
+    }
+}

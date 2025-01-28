@@ -45,6 +45,34 @@ INSERT INTO `background` VALUES
 (17,'Screen 2','background/Screen 21737968531.png','2025-01-27 16:02:11','2025-01-27 16:02:11');
 /*!40000 ALTER TABLE `background` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `frame`
+--
+
+DROP TABLE IF EXISTS `frame`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `frame` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `file` varchar(255) NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `frame`
+--
+
+LOCK TABLES `frame` WRITE;
+/*!40000 ALTER TABLE `frame` DISABLE KEYS */;
+INSERT INTO `frame` VALUES
+(20,'nataru','frame/nataru1738035603.png','2025-01-28 10:40:03','2025-01-28 10:40:03');
+/*!40000 ALTER TABLE `frame` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -55,4 +83,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-01-27 17:05:43
+-- Dump completed on 2025-01-28 10:41:31
