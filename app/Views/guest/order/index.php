@@ -24,20 +24,20 @@
                     </div>
                 </div>
                 <div class="col">
-    <div class="d-flex flex-column justify-content-center align-items-center h-100">
-        <div class="text-center">
-            <label class="form-label text-uppercase text-black fs-3" for="upload foto">Voucher Code</label>
-            <div class="input-group input-group-merge mb-2">
-                <input
-                    type="text"
-                    class="form-control text-center"
-                    id="voc"
-                    name="voc" value="Q4LRK3RW"/>
-            </div>
-        </div>
-        <button id="next" class="btn btn-danger text-white fs-5 mt-3 text-center">NEXT</button>
-    </div>
-</div>
+                    <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                        <div class="text-center">
+                            <label class="form-label text-uppercase text-black fs-3" for="upload foto">Voucher Code</label>
+                            <div class="input-group input-group-merge mb-2">
+                                <input
+                                    type="text"
+                                    class="form-control text-center"
+                                    id="voc"
+                                    name="voc" placeholder="(opsional)"/>
+                            </div>
+                        </div>
+                        <button id="next" class="btn btn-danger text-white fs-5 mt-3 text-center">NEXT</button>
+                    </div>
+                </div>
 
 
             </div>

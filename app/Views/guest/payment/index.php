@@ -9,7 +9,7 @@
                     <div class="card text-white" style="background-color: blue;">
                         <div class="card-body text-center px-0 py-0">
                             <!-- Judul Card -->
-                            <h2 class="card-title text-uppercase fw-bold py-4" style="background-color: yellow;">Scan to pay</h2>
+                            <h2 class="card-title text-uppercase fw-bold py-4" style="background-color: yellow;"><a href="<?= BASE_URL ?>frame">Scan to Pay</a></h2>
 
                             <!-- Logo QRIS -->
                             <img class="d-block mx-auto mb-3" src="<?= BASE_URL ?>assets/img/qris-logo.png" alt="Logo Qris" style="max-width: 40%;">
