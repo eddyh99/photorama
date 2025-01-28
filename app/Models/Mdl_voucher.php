@@ -14,6 +14,10 @@ class Mdl_voucher extends Model
         $this->db = \Config\Database::connect();
     }
 
+    public function allVoucher() {
+        return $this->db->query('SELECT * FROM voucher')->getResult();
+    }
+
     public function voucherByKode($kode)
     {
         $sql = "SELECT * FROM voucher WHERE kode_voucher = ?";
@@ -49,6 +53,23 @@ class Mdl_voucher extends Model
         return (object) array(
             "code"      => 201,
             "message"   => "voucher berhasil dibuat"
+        );
+    }
+
+    public function deleteBykode($kode) {
+        $voc = $this->db->table("voucher");
+        $voc->where("kode_voucher", $kode);
+
+        if (!$voc->delete()) {
+            return (object) array(
+                "code"      => 400,
+                "message"   => "Gagal menghapus Voucher"
+            );
+        }
+
+        return (object) array(
+            "code"      => 200,
+            "message"   => "Voucher berhasil dihapus"
         );
     }
 }

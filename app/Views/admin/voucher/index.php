@@ -46,16 +46,17 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-lg-12 mb-4 order-1">
+            <div class="col-lg-12 mb-4 order-1">
                     <div class="card border-expat w-100">
                         <div class="card-body">
                             <h5 class="card-title fw-semibold mb-4">List Background</h5>
-                            <table id="table_list_bg" class="table table-striped" style="width:100%">
+                            <table id="table_list" class="table table-striped" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>Tampilan</th>
-                                        <th>Background</th>
-                                        <th>Action</th>
+                                        <th>Kode Voucher</th>
+                                        <th>Expired</th>
+                                        <th>Diskon</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -63,7 +64,7 @@
                             </table>
                         </div>
                     </div>
-                </div> -->
+                </div>
         </div>
     </div>
     <!-- / Content -->

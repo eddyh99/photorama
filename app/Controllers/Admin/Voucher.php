@@ -67,4 +67,14 @@ class Voucher extends BaseController
             "data" => $result // Menyertakan data voucher yang valid
         ];
     }
+
+    public function getAll() {
+        $result = $this->voucher->allVoucher();
+        return json_encode($result);
+    }
+
+    public function destroy($voucher) {
+        $result = $this->voucher->deleteBykode($voucher);
+        return json_encode($result);
+    }
 }
