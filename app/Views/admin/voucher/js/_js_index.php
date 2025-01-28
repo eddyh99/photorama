@@ -29,4 +29,8 @@
             }
         });
     });
+
+    $("#diskon").on("input", function () {
+        $("#generate").prop("disabled", !$(this).val());
+    });
 </script>

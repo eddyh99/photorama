@@ -31,14 +31,14 @@
                                 <div class="row form-group">
                                     <label class="col-form-label col-sm-1">Diskon</label>
                                     <div class="col-sm-2">
-                                        <input type="text" name="diskon" id="diskon" class="form-control" placeholder="Rp">
+                                        <input type="number" name="diskon" id="diskon" class="form-control" placeholder="Rp">
                                     </div>
                                     <label class="col-form-label col-sm-1">Expired</label>
                                     <div class="col-3">
                                     <input type="text" class="form-control" name="tgl" id="tgl" value="<?=date("Y-m-d")?>" />
                                     </div>
                                     <div class="col-2">
-                                        <button class="btn btn-primary" id="generate">Generate</button>
+                                        <button class="btn btn-primary" id="generate" disabled>Generate</button>
                                     </div>
                                 </div>
                             </div>

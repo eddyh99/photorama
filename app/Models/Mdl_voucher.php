@@ -36,7 +36,7 @@ class Mdl_voucher extends Model
             // For other database-related errors, return generic server error
             return (object) array(
                 "code"      => 500,
-                "message"   => "Terjadi kesalahan pada server"
+                "message"   => "Periksa inputan anda."
             );
         } catch (\Exception $e) {
             // Handle any other general exceptions
