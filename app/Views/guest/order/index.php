@@ -1,3 +1,16 @@
+<?php if(!empty(session('failed'))): ?>
+    <div id="failedtoast" class="bs-toast toast toast-placement-ex m-3 fade bg-danger top-0 end-0" role="alert" aria-live="assertive" aria-atomic="true" data-delay="1000">
+        <div class="toast-header">
+            <i class="bx bx-x me-2"></i>
+            <div class="me-auto fw-semibold">Error</div>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <?= session('failed')?>
+        </div>
+    </div>
+<?php endif;?>
+
 <div class="h-100 w-100" id="content-bg">
     <div class="d-flex justify-content-center align-items-center h-100">
         <div class="container text-black">

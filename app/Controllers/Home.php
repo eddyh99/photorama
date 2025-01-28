@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\Admin\Frame;
+use App\Controllers\Admin\Voucher;
 
 class Home extends BaseController
 {
@@ -43,6 +44,20 @@ class Home extends BaseController
     public function payment($price) {
         $price = base64_decode($price);
         if(!is_numeric($price)) return redirect()->to(BASE_URL .'order');
+
+        $kd_voucher = $this->request->getVar('voucher');
+        if(!empty($kd_voucher)) {
+            $voucher = new Voucher;
+            $result = $voucher->cekVoucher($kd_voucher);
+
+            if (!$result->success) {
+                session()->setFlashdata('failed', $result->message);
+                return redirect()->to(BASE_URL . "order");
+            }
+            session()->setFlashdata('success', $result->message);
+            $price =  $price - $result->data->potongan_harga;
+
+        }
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $mdata = [

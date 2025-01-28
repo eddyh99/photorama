@@ -1,3 +1,16 @@
+<?php if(!empty(session('success'))): ?>
+    <div id="successtoast" class="bs-toast toast toast-placement-ex m-3 fade bg-success top-0 end-0" role="alert" aria-live="assertive" aria-atomic="true" data-delay="1000">
+        <div class="toast-header">
+            <i class="bx bx-bell me-2"></i>
+            <div class="me-auto fw-semibold">Berhasil</div>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <?= session('success')?>
+        </div>
+    </div>
+<?php endif;?>
+
 <div class="h-100 w-100" id="content-bg">
     <div class="d-flex justify-content-center align-items-center h-100">
         <div class="container text-black">

@@ -4,6 +4,10 @@
         const bg = <?= $background ? json_encode($background) : 'null'; ?>;
         $("#content-bg").css("background-image", bg ? `url('${bg}')` : 'none');
 
+		setTimeout(() => {
+			$("#successtoast").toast('show')
+		}, 0)
+
         let count = 1;
         const IDR = new Intl.NumberFormat('id-ID', {
             style: 'currency',

@@ -4,6 +4,10 @@
         const bg = <?= $background ? json_encode($background) : 'null'; ?>;
         $("#content-bg").css("background-image", bg ? `url('${bg}')` : 'none');
 
+        setTimeout(() => {
+			$("#failedtoast").toast('show')
+		}, 0)
+
         let count = 1;
         const IDR = new Intl.NumberFormat('id-ID');
 
@@ -25,8 +29,13 @@
 
         $("#next").on('click', () => {
             let price = $("#price").text();
+            const voucher = $("#voc").val();
             let priceFormatted = parseInt(price.replace(/\./g, ''))
-            window.location.href = "<?= BASE_URL ?>payment/" + encodeURIComponent(btoa(priceFormatted));
+            let url = "<?= BASE_URL ?>payment/" + encodeURIComponent(btoa(priceFormatted));
+            if (voucher) {
+                url += `?voucher=${voucher}`;
+            }
+            window.location.href = url
         });
     });
 </script>
