@@ -23,7 +23,7 @@
                     <img class="px-5 py-5" id="preview-frame" style="max-width: 100%; max-height: 100%; object-fit: contain; object-position: center;">
                 </div>
                 <div class="d-grid">
-                    <a href="#" class="btn btn-danger fs-3">START PHOTO</a>
+                    <a href="<?= BASE_URL ?>camera" class="btn btn-danger fs-3">START PHOTO</a>
                 </div>
             </div>
         </div>
