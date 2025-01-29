@@ -108,7 +108,7 @@
                         if (!video.paused && !video.ended) {
                             context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
                             context.drawImage(video, 0, 0, overlayCanvas.width, overlayCanvas.height);
-                            context.drawImage(frameImage, 0, 0, overlayCanvas.width, overlayCanvas.height);
+                            // context.drawImage(frameImage, 0, 0, overlayCanvas.width, overlayCanvas.height);
                             requestAnimationFrame(renderFrame);
                         }
                     }
@@ -161,7 +161,7 @@
 
                         const snapshotContext = snapshotCanvas.getContext('2d');
                         snapshotContext.drawImage(video, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
-                        snapshotContext.drawImage(frameImage, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+                        // snapshotContext.drawImage(frameImage, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
 
                         const photo = new Image();
                         photo.src = snapshotCanvas.toDataURL('image/png');

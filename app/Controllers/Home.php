@@ -14,6 +14,11 @@ class Home extends BaseController
         $this->frame            = model('App\Models\Mdl_frame');
 	}
 
+    public function testing() {
+
+        return view('guest/script');
+    }
+
     public function index()
     {
         $result = $this->background->backgroundByScreen('Screen 1');
@@ -92,9 +97,23 @@ class Home extends BaseController
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
 
         $mdata = [
-            'title'         => 'Beranda - ' . NAMETITLE,
+            'title'         => 'Camera - ' . NAMETITLE,
             'content'       => 'guest/camera/index',
             'extra'         => 'guest/camera/js/_js_index',
+            'background'    =>  $background
+        ];
+
+        return view('guest/wrapper', $mdata);
+    }
+
+    public function capture() {
+        $result = $this->background->backgroundByScreen('Screen 2');
+        $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+
+        $mdata = [
+            'title'         => 'Take Photo - ' . NAMETITLE,
+            'content'       => 'guest/capture/index',
+            'extra'         => 'guest/capture/js/_js_index',
             'background'    =>  $background
         ];
 
