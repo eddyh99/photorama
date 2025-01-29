@@ -85,6 +85,31 @@
         });
     });
 
+    $("#update").on("click", function() {
+        $.ajax({
+            url: "<?= BASE_URL ?>admin/voucher/setPrice",
+            type: "POST", // Method POST
+            data: {
+                price: $('#price').val()
+            },
+            success: function(response) {
+                mdata = JSON.parse(response)
+                if (mdata.code != 201) {
+                    $("#failedtoast .toast-body").text(mdata.message);
+                    $("#failedtoast").toast('show');
+                } else {
+                    $("#successtoast .toast-body").text(mdata.message);
+                    $("#successtoast").toast('show');
+                }
+            },
+            error: function(xhr, status, error) {
+                // Jika terjadi error
+                console.error("Error:", error);
+                alert("Terjadi kesalahan saat mengirim data.");
+            }
+        });
+    });
+
     $("#diskon").on("input", function () {
         $("#generate").prop("disabled", !$(this).val());
     });

@@ -80,4 +80,10 @@ class Voucher extends BaseController
         $result = $this->voucher->deleteBykode($voucher);
         return json_encode($result);
     }
+
+    public function setPrice() {
+        $value = $this->request->getVar('price');
+        $result = $this->setting->store('price', $value);
+        return json_encode($result);
+    }
 }
