@@ -30,7 +30,7 @@
 <style>
     .video-container {
         position: relative;
-        height: 100%;
+        height: 95%;
         display: flex;
         align-items: center;
         justify-content: center;
