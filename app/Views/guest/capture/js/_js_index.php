@@ -1,4 +1,5 @@
 <script>
+    const selectedPhotos = [];
     const video = document.getElementById('webcam');
     const overlayCanvas = document.getElementById('overlay');
     const countdownOverlay = document.getElementById('countdown');
@@ -7,7 +8,7 @@
     const mergedPhotoCanvas = document.getElementById('mergedPhoto');
     const recordedVideo = document.getElementById('recordedVideo');
 
-    const frameImageSrc = "<?= BASE_URL ?>assets/img/background/frame.png"; // Path to your frame image
+    const frameImageSrc = "<?= BASE_URL ?>assets/img/frame/music1738039832.png"; // Path to your frame image
     const frameImage = new Image();
     frameImage.src = frameImageSrc;
 
@@ -98,7 +99,7 @@
                     capturedPhotos.push(photo.src);
                     photosContainer.innerHTML += `
                     <div class="col px-2">
-                        <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0">
+                        <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected" onclick="selectPhoto(this)">
                     </div>
                 `;
 
@@ -118,5 +119,22 @@
         $("#content-bg").css("background-image", bg ? `url('${bg}')` : 'none');
         startWebcam();
     });
+
+    function selectPhoto(img) {
+        const imgIndex = selectedPhotos.indexOf(img.src);
+        if (imgIndex === -1) {
+            // Jika gambar tidak ada di selectedPhotos, tambahkan ke array
+            selectedPhotos.push(img.src);
+            // Tambahkan kelas untuk menandai gambar yang dipilih
+            img.classList.add('border-5', 'border-primary', 'shadow-lg');
+        } else {
+        // Jika gambar sudah ada di selectedPhotos, hapus dari array
+            selectedPhotos.splice(imgIndex, 1);
+            // Hapus kelas yang menandai gambar
+            img.classList.remove('border-5', 'border-primary', 'shadow-lg');
+        }
+
+        console.log(selectedPhotos);
+  }
 
 </script>

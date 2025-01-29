@@ -32,7 +32,7 @@
                                     <button class="btn btn-lg btn-primary ms-5 rounded-circle" id="increase"><i class="bx bx-plus"></i></button>
                                 </div>
                             </div>
-                            <h2>IDR <span id="price">17.500</span></h2>
+                            <h2>IDR <span id="price"><?= number_format($price ?? 0, 0, ',', '.') ?></span></h2>
                         </div>
                     </div>
                 </div>

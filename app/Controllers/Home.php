@@ -12,6 +12,7 @@ class Home extends BaseController
     {   
         $this->background       = model('App\Models\Mdl_background');
         $this->frame            = model('App\Models\Mdl_frame');
+        $this->setting       = model('App\Models\Mdl_settings');
 	}
 
     public function testing() {
@@ -36,11 +37,13 @@ class Home extends BaseController
     public function order() {
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $price = $this->setting->value('price');
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'content'       => 'guest/order/index',
             'extra'     => 'guest/order/js/_js_index',
-            'background'    =>  $background
+            'background'    =>  $background,
+            'price'         => $price
         ];
 
         return view('guest/wrapper', $mdata);

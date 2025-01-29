@@ -28,7 +28,24 @@
                     <div class="col-lg-12 col-md-12 col-12 mb-2">
                         <div class="card">
                             <div class="card-body">
-                                <div class="row form-group">
+                            <div class="row form-group">
+                                    <label class="col-form-label col-sm-1">Price</label>
+                                    <div class="col-sm-2">
+                                        <input type="number" name="price" id="price" class="form-control" placeholder="Rp" value="<?= $price ?? '' ?>">
+                                    </div>
+                                    <div class="col-2">
+                                        <button class="btn btn-primary" id="update" disabled>Update</button>
+                                    </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 mb-4 order-1">
+                    <div class="card border-expat w-100">
+                        <div class="card-body">
+                        <div class="row form-group">
                                     <label class="col-form-label col-sm-1">Diskon</label>
                                     <div class="col-sm-2">
                                         <input type="number" name="diskon" id="diskon" class="form-control" placeholder="Rp">
@@ -38,18 +55,10 @@
                                     <input type="text" class="form-control" name="tgl" id="tgl" value="<?=date("Y-m-d")?>" />
                                     </div>
                                     <div class="col-2">
-                                        <button class="btn btn-primary" id="generate" disabled>Generate</button>
+                                        <button class="btn btn-primary" id="generate" disabled>Generate Voucher</button>
                                     </div>
-                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-12 mb-4 order-1">
-                    <div class="card border-expat w-100">
-                        <div class="card-body">
-                            <h5 class="card-title fw-semibold mb-4">List Background</h5>
+                            <h5 class="card-title fw-semibold my-4">List Voucher</h5>
                             <table id="table_list" class="table table-striped" style="width:100%">
                                 <thead>
                                     <tr>

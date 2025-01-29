@@ -9,15 +9,18 @@ class Voucher extends BaseController
     public function __construct()
     {   
         $this->voucher       = model('App\Models\Mdl_voucher');
+        $this->setting       = model('App\Models\Mdl_settings');
 	}
 
     public function index()
     {
+        $price = $this->setting->value('price');
         $mdata = [
             'title'     => 'Voucher - ' . NAMETITLE,
             'content'   => 'admin/voucher/index',
             'extra'     => 'admin/voucher/js/_js_index',
-            'menuactive_voc'   => 'active open'
+            'menuactive_voc'   => 'active open',
+            'price'     => $price
         ];
 
         return view('admin/layout/wrapper', $mdata);

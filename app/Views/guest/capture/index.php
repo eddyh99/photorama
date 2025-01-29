@@ -13,12 +13,10 @@
         <div class="col-md-4 d-flex flex-column p-3">
             <div class="bg-warning overflow-auto" style="height: 85vh">
                 <div class="row row-cols-2 mx-2 my-2" id="photos"></div>
+                <canvas class="bg-black w-100" id="frame" hidden></canvas>
             </div>
-            <!-- <div class="mt-3">
-                <button id="startRecord" class="btn btn-primary w-100 fs-4">Start Recording</button>
-            </div> -->
             <div class="mt-4">
-                <a href="#" class="btn btn-danger w-100 fs-4 py-2">SELECT</a>
+                <button id="select" class="btn btn-danger w-100 fs-4 py-2">SELECT</button>
             </div>
         </div>
     </div>

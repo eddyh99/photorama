@@ -88,4 +88,7 @@
     $("#diskon").on("input", function () {
         $("#generate").prop("disabled", !$(this).val());
     });
+    $("#price").on("input", function () {
+        $("#update").prop("disabled", !$(this).val());
+    });
 </script>
