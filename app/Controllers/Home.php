@@ -38,13 +38,14 @@ class Home extends BaseController
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $price = $this->setting->value('price');
+        $timer = $this->setting->value('timer_order');
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'content'       => 'guest/order/index',
             'extra'     => 'guest/order/js/_js_index',
             'background'    =>  $background,
             'price'         => $price,
-            'timer'         => 120
+            'timer'         => $timer
         ];
 
         return view('guest/wrapper', $mdata);
@@ -69,12 +70,14 @@ class Home extends BaseController
         }
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $timer = $this->setting->value('timer_payment');
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'content'       => 'guest/payment/index',
             'extra'         => 'guest/payment/js/_js_index',
             'background'    =>  $background,
-            'price'         =>  $price
+            'price'         =>  $price,
+            'timer'         => $timer
         ];
 
         return view('guest/wrapper', $mdata);
@@ -84,13 +87,15 @@ class Home extends BaseController
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $frame = $this->frame->allFrame();
+        $timer = $this->setting->value('timer_frame');
 
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'content'       => 'guest/frame/index',
             'extra'         => 'guest/frame/js/_js_index',
             'background'    =>  $background,
-            'frame'         =>  $frame
+            'frame'         =>  $frame,
+            'timer'         => $timer
         ];
 
         return view('guest/wrapper', $mdata);
@@ -99,12 +104,14 @@ class Home extends BaseController
     public function camera() {
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $timer = $this->setting->value('timer_camera');
 
         $mdata = [
             'title'         => 'Camera - ' . NAMETITLE,
             'content'       => 'guest/camera/index',
             'extra'         => 'guest/camera/js/_js_index',
-            'background'    =>  $background
+            'background'    =>  $background,
+            'timer'         => $timer
         ];
 
         return view('guest/wrapper', $mdata);
@@ -113,12 +120,14 @@ class Home extends BaseController
     public function capture() {
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $timer = $this->setting->value('timer_capture');
 
         $mdata = [
             'title'         => 'Take Photo - ' . NAMETITLE,
             'content'       => 'guest/capture/index',
             'extra'         => 'guest/capture/js/_js_index',
-            'background'    =>  $background
+            'background'    =>  $background,
+            'timer'         => $timer
         ];
 
         return view('guest/wrapper', $mdata);

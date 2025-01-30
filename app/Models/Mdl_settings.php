@@ -53,5 +53,42 @@ class Mdl_settings extends Model
             "message"   => "$name berhasil diset."
         );
     }
+
+    public function timer() {
+        $sql = "SELECT * FROM setting WHERE name LIKE 'timer_%'";
+        return $this->db->query($sql)->getResult();
+    }
+
+    public function destroy($name) {
+        $sql = "DELETE FROM setting WHERE name = ?";
+
+        try {
+            // Insert data into 'pengguna' table
+            if (!$this->db->query($sql, [$name])) {
+                // Handle case when insert fails (not due to exception)
+                return (object) array(
+                    "code"      => 400,
+                    "message"   => "Gagal mengahapus settingan."
+                );
+            }
+        } catch (DatabaseException $e) {
+            // For other database-related errors, return generic server error
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Periksa inputan anda."
+            );
+        } catch (\Exception $e) {
+            // Handle any other general exceptions
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        }
+
+        return (object) array(
+            "code"      => 201,
+            "message"   => "$name berhasil dihapus."
+        );
+    }
     
 }
