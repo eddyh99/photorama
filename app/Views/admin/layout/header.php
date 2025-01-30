@@ -43,6 +43,12 @@
     </head>
 
     <body>
+    <?php if (isset($timer)) : ?>
+        <div id="timer" data-time="<?= $timer ?>" class="position-fixed top-0 start-50 translate-middle-x bg-dark text-white py-2 px-4 rounded shadow-lg text-center fw-bold mt-4" style="z-index: 999;">
+            <i class="bx bx-time me-2"></i><span id="countdown"></span>
+        </div>
+    <?php endif; ?>
+
         <!-- Layout wrapper -->
         <div class="layout-wrapper layout-content-navbar">
             <div class="layout-container">

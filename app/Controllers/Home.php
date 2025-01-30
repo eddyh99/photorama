@@ -43,7 +43,8 @@ class Home extends BaseController
             'content'       => 'guest/order/index',
             'extra'     => 'guest/order/js/_js_index',
             'background'    =>  $background,
-            'price'         => $price
+            'price'         => $price,
+            'timer'         => 120
         ];
 
         return view('guest/wrapper', $mdata);

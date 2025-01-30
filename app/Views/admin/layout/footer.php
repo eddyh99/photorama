@@ -40,6 +40,11 @@
                 echo view(@$extra);
             }
         ?>
+        <?php
+        if (isset($timer)) {
+            echo '<script src="' . BASE_URL . 'assets/js/timer.js"></script>';
+        }
+        ?>
 
     </body>
 </html>
