@@ -1,6 +1,7 @@
 <script>
     // custom background
     $(function() {
+        let id;
         const bg = <?= $background ? json_encode($background) : 'null'; ?>;
         $("#content-bg").css("background-image", bg ? `url('${bg}')` : 'none');
 
@@ -24,7 +25,12 @@
         $(function() {
         $('.frame').click(function() {
             $('#preview-frame').attr('src', $(this).find('img').attr('src'));
+            id = btoa($(this).find('img').attr('id'));
         });
+
+        $('#start').click(function() {
+            window.location.href = "<?= BASE_URL ?>camera/" + id;
+        })
     });
     });
 </script>

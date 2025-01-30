@@ -130,8 +130,11 @@
             selectedPhotos.splice(imgIndex, 1);
             img.classList.remove('border-5', 'border-primary', 'shadow-lg');
         }
-
-        console.log(selectedPhotos);
+        if (selectedPhotos.length > 0) {
+            $('#select').prop('disabled', false);
+        } else {
+            $('#select').prop('disabled', true);
+        }
     }
 
     $("#select").on('click', function() {

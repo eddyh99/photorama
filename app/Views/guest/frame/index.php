@@ -9,7 +9,7 @@
                         <?php foreach ($frame as $fr): ?>
                             <div class="col">
                                 <button class="btn p-0 m-0 border-0 frame" style="width: 100%;">
-                                    <img src="<?= BASE_URL ?>assets/img/<?= $fr->file ?>" alt="Frame" style="width: 100%; height: 100%; object-fit: contain;">
+                                    <img src="<?= BASE_URL ?>assets/img/<?= $fr->file ?>" alt="Frame" id="<?= $fr->id ?>" style="width: 100%; height: 100%; object-fit: contain;">
                                 </button>
                             </div>
                         <?php endforeach; ?>
@@ -23,7 +23,7 @@
                     <img class="px-5 py-5" id="preview-frame" style="max-width: 100%; max-height: 100%; object-fit: contain; object-position: center;">
                 </div>
                 <div class="d-grid">
-                    <a href="<?= BASE_URL ?>camera" class="btn btn-danger fs-3">START PHOTO</a>
+                    <button id="start" class="btn btn-danger fs-3">START PHOTO</button>
                 </div>
             </div>
         </div>

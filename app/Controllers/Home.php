@@ -111,7 +111,8 @@ class Home extends BaseController
             'content'       => 'guest/camera/index',
             'extra'         => 'guest/camera/js/_js_index',
             'background'    =>  $background,
-            'timer'         => $timer
+            'timer'         => $timer,
+            'frame'         => $frame
         ];
 
         return view('guest/wrapper', $mdata);

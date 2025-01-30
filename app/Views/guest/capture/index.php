@@ -16,7 +16,7 @@
                 <canvas id="frame" class="w-100 p-2"></canvas>
             </div>
             <div class="mt-4">
-                <button id="select" class="btn btn-danger w-100 fs-4 py-2">SELECT</button>
+                <button id="select" class="btn btn-danger w-100 fs-4 py-2" disabled>SELECT</button>
             </div>
         </div>
     </div>
