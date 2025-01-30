@@ -7,8 +7,9 @@
     const photosContainer = document.getElementById('photos');
     const mergedPhotoCanvas = document.getElementById('mergedPhoto');
     const recordedVideo = document.getElementById('recordedVideo');
+    const frameCanvas = document.getElementById('frame');
 
-    const frameImageSrc = "<?= BASE_URL ?>assets/img/frame/music1738039832.png"; // Path to your frame image
+    const frameImageSrc = "<?= BASE_URL ?>assets/img/frame/nataru1738035603.png"; // Path to your frame image
     const frameImage = new Image();
     frameImage.src = frameImageSrc;
 
@@ -41,7 +42,7 @@
                 }
                 renderFrame();
                 mediaRecorder.start();
-            startPictureCountdown();
+                startPictureCountdown();
             });
 
             // Start video recording
@@ -121,20 +122,53 @@
     });
 
     function selectPhoto(img) {
-        const imgIndex = selectedPhotos.indexOf(img.src);
+        const imgIndex = selectedPhotos.findIndex(photo => photo === img);
         if (imgIndex === -1) {
-            // Jika gambar tidak ada di selectedPhotos, tambahkan ke array
-            selectedPhotos.push(img.src);
-            // Tambahkan kelas untuk menandai gambar yang dipilih
+            selectedPhotos.push(img);
             img.classList.add('border-5', 'border-primary', 'shadow-lg');
         } else {
-        // Jika gambar sudah ada di selectedPhotos, hapus dari array
             selectedPhotos.splice(imgIndex, 1);
-            // Hapus kelas yang menandai gambar
             img.classList.remove('border-5', 'border-primary', 'shadow-lg');
         }
 
         console.log(selectedPhotos);
-  }
+    }
 
+    $("#select").on('click', function() {
+        $("#photos").hide(); // Menyembunyikan elemen foto
+
+        const ctx = frameCanvas.getContext('2d');
+        frameCanvas.width = frameImage.width;
+        frameCanvas.height = frameImage.height;
+
+        // koordinat
+        const positions = [{
+                x: 50,
+                y: 100
+            },
+            {
+                x: 132,
+                y: 825
+            }
+        ];
+
+        selectedPhotos.forEach((photo, index) => {
+            const selectedImage = new Image();
+            selectedImage.src = photo.src;
+
+            selectedImage.onload = function() {
+                const selectedImageX = positions[index].x;
+                const selectedImageY = positions[index].y;
+
+                ctx.drawImage(selectedImage, selectedImageX, selectedImageY, selectedImage.width, selectedImage.height);
+            };
+        });
+
+        const frame = new Image();
+        frame.src = frameImageSrc;
+
+        frame.onload = function() {
+            ctx.drawImage(frame, 0, 0, frame.width, frame.height); // Gambar frame di depan gambar
+        };
+    });
 </script>

@@ -13,7 +13,7 @@
         <div class="col-md-4 d-flex flex-column p-3">
             <div class="bg-warning overflow-auto" style="height: 85vh">
                 <div class="row row-cols-2 mx-2 my-2" id="photos"></div>
-                <canvas class="bg-black w-100" id="frame" hidden></canvas>
+                <canvas id="frame" class="w-100 p-2"></canvas>
             </div>
             <div class="mt-4">
                 <button id="select" class="btn btn-danger w-100 fs-4 py-2">SELECT</button>
