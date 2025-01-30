@@ -101,7 +101,7 @@ class Home extends BaseController
         return view('guest/wrapper', $mdata);
     }
 
-    public function camera() {
+    public function camera($frame) {
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $timer = $this->setting->value('timer_camera');
@@ -117,7 +117,9 @@ class Home extends BaseController
         return view('guest/wrapper', $mdata);
     }
 
-    public function capture() {
+    public function capture($frame) {
+        $frame = $this->frame->getById(base64_decode($frame));
+        if(!$frame) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $timer = $this->setting->value('timer_capture');
@@ -127,6 +129,7 @@ class Home extends BaseController
             'content'       => 'guest/capture/index',
             'extra'         => 'guest/capture/js/_js_index',
             'background'    =>  $background,
+            'frame'         => $frame,
             'timer'         => $timer
         ];
 

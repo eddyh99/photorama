@@ -14,6 +14,6 @@ $routes->get('/frame/get_all_frame', 'Admin\Frame::get_all_frame');
 $routes->get('/order', 'Home::order');
 $routes->get('/payment/(:any)', 'Home::payment/$1');
 $routes->get('/frame', 'Home::frame');
-$routes->get('/camera', 'Home::camera');
-$routes->get('/capture', 'Home::capture');
+$routes->get('/camera/(:any)', 'Home::camera/$1');
+$routes->get('/capture/(:any)', 'Home::capture/$1');
 $routes->get('/login', 'Auth::index');

@@ -20,6 +20,12 @@ class Mdl_frame extends Model
         return $this->db->query($sql)->getResult();
     }
 
+    public function getById($id)
+    {
+        $sql = "select * from frame WHERE id = ?";
+        return $this->db->query($sql, [$id])->getRow() ?? null;
+    }
+
     // public function backgroundByScreen($screen) {
     //     $sql = "SELECT file from background WHERE display = ?";
     //     return $this->db->query($sql, [$screen])->getRow();

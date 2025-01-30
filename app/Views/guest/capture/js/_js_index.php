@@ -9,7 +9,7 @@
     const recordedVideo = document.getElementById('recordedVideo');
     const frameCanvas = document.getElementById('frame');
 
-    const frameImageSrc = "<?= BASE_URL ?>assets/img/frame/nataru1738035603.png"; // Path to your frame image
+    const frameImageSrc = "<?= BASE_URL ?>assets/img/<?= $frame->file ?>"; // Path to your frame image
     const frameImage = new Image();
     frameImage.src = frameImageSrc;
 
