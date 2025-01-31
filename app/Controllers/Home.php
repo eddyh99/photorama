@@ -68,6 +68,7 @@ class Home extends BaseController
             $price =  $price - $result->data->potongan_harga;
 
         }
+        $qris =  Payments::QRIS($price);
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $timer = $this->setting->value('timer_payment');
@@ -77,7 +78,8 @@ class Home extends BaseController
             'extra'         => 'guest/payment/js/_js_index',
             'background'    =>  $background,
             'price'         =>  $price,
-            'timer'         => $timer
+            'timer'         => $timer,
+            'qris'          => $qris
         ];
 
         return view('guest/wrapper', $mdata);

@@ -102,5 +102,5 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https://'.$_SERVER['HTTP_HOST'].$addurl : 'http://'.$_SERVER['HTTP_HOST'].$addurl;
 defined('BASE_URL') || define('BASE_URL',$protocol);
 // define('DOKU_URL', 'https://api.doku.com/');
-define('DOKU_URL', 'https://api-sandbox.doku.com/');
+define('DOKU_URL', 'https://api.doku.com/');
 define('NAMETITLE', 'Photorama');

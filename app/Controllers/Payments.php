@@ -9,41 +9,32 @@ use SimpleSoftwareIO\QrCode\Generator;
 class Payments extends BaseController
 {
 
-    public function index() {
-        $merchantId = "MCH-1352-1634273860130";
-        $clientId = "MCH-1352-1634273860130";
-        $secretKey = "SK-KHUvvn4fm3zXRIip0UWY";
-        $timestamp = gmdate("Y-m-d\TH:i:s\Z"); // Current UTC timestamp
+    public static function QRIS($price) {
+        $merchantId = "33173";
+        $clientId = "BRN-0268-1695035015801";
+        $secretKey = "SK-m8xe8SO4jVXAHngPu4By";
+        $timestamp = gmdate("Y-m-d\TH:i:s\Z");
 
         $stringToSign = $clientId . "|" . $timestamp;
-        $siggy = $this->getSignature($stringToSign);
-        $token = $this->gettoken($clientId, $timestamp, $siggy);
+        $siggy = self::getSignature($stringToSign);
+        $token = self::gettoken($clientId, $timestamp, $siggy);
 
         $jsonResult = json_decode($token);
         $accessToken = $jsonResult->accessToken;
         
-        $result = $this->retriveQRIS($merchantId, $clientId, $accessToken, $timestamp, $secretKey, 100000);
+        $result = self::retriveQRIS($merchantId, $clientId, $accessToken, $timestamp, $secretKey, 100000);
         
         $jsonObject = json_decode($result);
-        dd($jsonObject);
         $responseCode = $jsonObject->responseCode;
 
         if ($responseCode == "2004700") {
+            $qrcode = new Generator;
             $qrisData = $jsonObject->qrContent;
-            // Generate QR code image
-            $qrcodePath = $this->generateQRCode($qrisData);
-            
-            // Display or handle the QR code image as required
-            echo "QR Code generated at: " . $qrcodePath;
+            return $qrcode->size(250)->generate($qrisData);;
         }
     }
 
-    public function generateQRCode($data) {
-        $qrcode = new Generator;
-        return $qrcode->size(120)->generate($data);
-    }
-
-    function retriveQRIS($merchantId, $clientId, $accessToken, $timestamp, $secretKey, $harga) {
+    static function retriveQRIS($merchantId, $clientId, $accessToken, $timestamp, $secretKey, $harga) {
         $systrace = rand(100000, 999999);
         
         $data = [
@@ -52,21 +43,17 @@ class Payments extends BaseController
                 "value" => $harga,
                 "currency" => "IDR"
             ],
-            "feeAmount" => [
-                "value" => "500.00",
-                "currency" => "IDR"
-            ],
             "merchantId" => $merchantId,
             "terminalId" => "A01",
             "additionalInfo" => [
                 "postalCode" => "13120",
-                "feeType" => "2"
+                "feeType" => "1"
             ]
         ];
         
         $postString = json_encode($data, JSON_UNESCAPED_SLASHES);
         
-        $siggy = $this->qris_signature($accessToken, $timestamp, $postString, $secretKey);
+        $siggy = self::qris_signature($accessToken, $timestamp, $postString, $secretKey);
         
         $url = DOKU_URL . "snap-adapter/b2b/v1.0/qr/qr-mpm-generate";
         
@@ -98,20 +85,20 @@ class Payments extends BaseController
         return $response;
     }
 
-    function qris_signature($accessToken, $timestamp, $body, $secretKey) {
+    static function qris_signature($accessToken, $timestamp, $body, $secretKey) {
         $sha256 = hash('sha256', $body);
         
         $signdata = "POST:/snap-adapter/b2b/v1.0/qr/qr-mpm-generate:" . $accessToken . ":" . strtolower($sha256) . ":" . $timestamp;
         
-        return $this->hmacSHA512($signdata, $secretKey);
+        return self::hmacSHA512($signdata, $secretKey);
     }
     
-    function hmacSHA512($data, $key) {
+    static function hmacSHA512($data, $key) {
         $hash = hash_hmac('sha512', $data, $key, true);
         return base64_encode($hash);
     }
     
-    function gettoken($clientId, $timestamp, $siggy) {
+    static function gettoken($clientId, $timestamp, $siggy) {
         $url = DOKU_URL . "authorization/v1/access-token/b2b";
         
         $headers = [
@@ -142,7 +129,7 @@ class Payments extends BaseController
         return $response;
     }
     
-    function getSignature($data) {
+    static function getSignature($data) {
         // Load the private key
         $privateKey = openssl_pkey_get_private(file_get_contents(FCPATH . 'assets/private-key.pem'));
         if ($privateKey === false) {

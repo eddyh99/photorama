@@ -28,7 +28,7 @@
                             <img class="d-block mx-auto mb-3" src="<?= BASE_URL ?>assets/img/qris-logo.png" alt="Logo Qris" style="max-width: 40%;">
 
                             <!-- Logo QRIS -->
-                            <img class="d-block mx-auto w-50" src="<?= BASE_URL ?>assets/img/qris.png" alt="Order">
+                            <?= $qris ?>
 
                             <!-- Total Pembayaran -->
                             <p class="fs-5 mt-2">PAYMENT TOTAL</p>
