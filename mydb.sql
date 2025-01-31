@@ -91,7 +91,7 @@ CREATE TABLE `pembayaran` (
   `cabang` varchar(100) NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,8 +101,8 @@ CREATE TABLE `pembayaran` (
 LOCK TABLES `pembayaran` WRITE;
 /*!40000 ALTER TABLE `pembayaran` DISABLE KEYS */;
 INSERT INTO `pembayaran` VALUES
-(5,'964772',1.00,'2025-01-31','paid','-','2025-01-31 08:50:31'),
-(6,'864678',1.00,'2025-01-31','paid','-','2025-01-31 09:08:56');
+(31,'133509',4.00,'2025-01-31','paid','-','2025-01-31 11:23:26'),
+(32,'613323',4.00,'2025-01-31','paid','-','2025-01-31 11:24:28');
 /*!40000 ALTER TABLE `pembayaran` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -202,4 +202,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-01-31 17:25:59
+-- Dump completed on 2025-01-31 18:27:25
