@@ -77,4 +77,10 @@ class Mdl_pembayaran extends Model
             "message"   => "Pembayaran berhasil."
         );
     }
+
+    public function check($inv)
+    {
+        $sql = "SELECT status from pembayaran WHERE invoice = ?";
+        return $this->db->query($sql, [$inv])->getRow() ?? null;
+    }
 }

@@ -92,10 +92,10 @@ class Home extends BaseController
             'extra'         => 'guest/payment/js/_js_index',
             'background'    =>  $background,
             'price'         =>  $price,
-            'timer'         => $timer,
-            'qris'          => $payment->data->qris
+            'timer'         =>  $timer,
+            'qris'          =>  $payment->data->qris,
+            'inv'           =>  $payment->data->invoice
         ];
-
         return view('guest/wrapper', $mdata);
     }
 

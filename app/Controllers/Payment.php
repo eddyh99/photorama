@@ -14,6 +14,11 @@ class Payment extends BaseController
     private static $clientId = "BRN-0268-1695035015801";
     private static $secretKey = "SK-m8xe8SO4jVXAHngPu4By";
 
+    public function __construct()
+    {
+        $this->pembayaran = model('App\Models\Mdl_pembayaran');
+    }
+
     public static function QRIS($price) {
         $merchantId = self::$merchantId;
         $clientId = self::$clientId;
@@ -167,7 +172,7 @@ class Payment extends BaseController
         return base64_encode($signature);
     }
 
-    public static function check() {
+    public function notify() {
         header('Content-Type: application/json');
         $input = file_get_contents('php://input');
         if (empty($input)) {
@@ -182,12 +187,15 @@ class Payment extends BaseController
         }
 
         if ($result->transactionStatusDesc == 'Success') {
-            $pembayaran = new Mdl_pembayaran;
-            $pembayaran->confirmPayment($result->originalReferenceNo);
+            $this->pembayaran->confirmPayment($result->originalReferenceNo);
             echo json_encode(['status' => 'success', 'message' => 'Payment confirmed']);
         };
     }
 
+    public function checkInvoice($inv) {
+        $result = $this->pembayaran->check($inv);
+        return json_encode($result);
+    }
     // static function check($inv) {
     //     $merchantId = self::$merchantId;
     //     $clientId = self::$clientId;
