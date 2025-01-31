@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Controllers\Admin\Frame;
 use App\Controllers\Admin\Voucher;
 
 class Home extends BaseController
@@ -13,6 +12,7 @@ class Home extends BaseController
         $this->background       = model('App\Models\Mdl_background');
         $this->frame            = model('App\Models\Mdl_frame');
         $this->setting       = model('App\Models\Mdl_settings');
+        $this->pembayaran       = model('App\Models\Mdl_pembayaran');
 	}
 
     public function testing() {
@@ -68,7 +68,21 @@ class Home extends BaseController
             $price =  $price - $result->data->potongan_harga;
 
         }
-        $qris =  Payments::QRIS($price);
+        $payment =  Payment::QRIS($price);
+        if(!$payment->success) {
+            session()->setFlashdata('failed', 'Maaf, coba kembali beberapa saat lagi.');
+            return redirect()->to(BASE_URL. 'order');
+        }
+
+        $inv = [
+            'invoice' => $payment->data->invoice,
+            'amount' => $price,
+            'tanggal' => $payment->data->tanggal,
+            'status' => 'pending',
+            'cabang' => '-'
+        ];
+
+        $this->pembayaran->addInvoice($inv);
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $timer = $this->setting->value('timer_payment');
@@ -79,7 +93,7 @@ class Home extends BaseController
             'background'    =>  $background,
             'price'         =>  $price,
             'timer'         => $timer,
-            'qris'          => $qris
+            'qris'          => $payment->data->qris
         ];
 
         return view('guest/wrapper', $mdata);

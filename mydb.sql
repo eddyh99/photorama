@@ -76,6 +76,37 @@ INSERT INTO `frame` VALUES
 UNLOCK TABLES;
 
 --
+-- Table structure for table `pembayaran`
+--
+
+DROP TABLE IF EXISTS `pembayaran`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pembayaran` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `invoice` varchar(50) NOT NULL,
+  `amount` decimal(15,2) NOT NULL,
+  `tanggal` date NOT NULL,
+  `status` enum('pending','paid') NOT NULL DEFAULT 'pending',
+  `cabang` varchar(100) NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pembayaran`
+--
+
+LOCK TABLES `pembayaran` WRITE;
+/*!40000 ALTER TABLE `pembayaran` DISABLE KEYS */;
+INSERT INTO `pembayaran` VALUES
+(5,'964772',1.00,'2025-01-31','paid','-','2025-01-31 08:50:31'),
+(6,'864678',1.00,'2025-01-31','paid','-','2025-01-31 09:08:56');
+/*!40000 ALTER TABLE `pembayaran` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `setting`
 --
 
@@ -99,8 +130,8 @@ CREATE TABLE `setting` (
 LOCK TABLES `setting` WRITE;
 /*!40000 ALTER TABLE `setting` DISABLE KEYS */;
 INSERT INTO `setting` VALUES
-(2,'price','20000'),
-(11,'timer_payment','32'),
+(2,'price','1'),
+(11,'timer_payment','1000'),
 (12,'timer_frame','20'),
 (13,'timer_order','10');
 /*!40000 ALTER TABLE `setting` ENABLE KEYS */;
@@ -171,4 +202,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-01-30 16:26:29
+-- Dump completed on 2025-01-31 17:25:59
