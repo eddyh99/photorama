@@ -13,17 +13,15 @@
         <div class="col-md-4 d-flex flex-column p-3">
             <div class="bg-warning overflow-auto" style="height: 85vh">
                 <div class="row row-cols-2 mx-2 my-2" id="photos"></div>
-                <canvas id="frame" class="w-100 p-2"></canvas>
+                <canvas id="frame" class="w-100 p-2" hidden></canvas>
             </div>
             <div class="mt-4">
                 <button id="select" class="btn btn-danger w-100 fs-4 py-2" disabled>SELECT</button>
+                <button id="select-filter" class="btn btn-primary w-100 fs-4 py-2" hidden>SELECT FILTER</button>
             </div>
         </div>
     </div>
-    <div class="col-md-4" hidden>
-        <h2 class="text-center">Recorded Video</h2>
-        <video id="recordedVideo" controls class="d-block mx-auto w-100 border rounded"></video>
-    </div>
+    <div id="recordedVideoContainer" hidden></div>
 </div>
 </div>
 

@@ -3,10 +3,8 @@
     const video = document.getElementById('webcam');
     const overlayCanvas = document.getElementById('overlay');
     const countdownOverlay = document.getElementById('countdown');
-    const startRecordButton = document.getElementById('startRecord');
     const photosContainer = document.getElementById('photos');
-    const mergedPhotoCanvas = document.getElementById('mergedPhoto');
-    const recordedVideo = document.getElementById('recordedVideo');
+    const recordedVideoContainer = document.getElementById('recordedVideoContainer');
     const frameCanvas = document.getElementById('frame');
 
     const frameImageSrc = "<?= BASE_URL ?>assets/img/<?= $frame->file ?>"; // Path to your frame image
@@ -36,40 +34,49 @@
                     if (!video.paused && !video.ended) {
                         context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
                         context.drawImage(video, 0, 0, overlayCanvas.width, overlayCanvas.height);
-                        // context.drawImage(frameImage, 0, 0, overlayCanvas.width, overlayCanvas.height);
                         requestAnimationFrame(renderFrame);
                     }
                 }
                 renderFrame();
-                mediaRecorder.start();
+                startRecording(stream);
                 startPictureCountdown();
             });
 
-            // Start video recording
-            recordedChunks = [];
-            mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.ondataavailable = event => {
-                if (event.data.size > 0) {
-                    recordedChunks.push(event.data);
-                }
-            };
-            mediaRecorder.onstop = () => {
-                const blob = new Blob(recordedChunks, {
-                    type: 'video/webm'
-                });
-                recordedVideo.src = URL.createObjectURL(blob);
-            };
         } catch (error) {
             console.error('Error accessing webcam: ', error);
         }
     }
 
+    function startRecording(stream) {
+    recordedChunks = []; // Reset recorded chunks for new recording
+    mediaRecorder = new MediaRecorder(stream);
+    
+    mediaRecorder.ondataavailable = event => {
+        if (event.data.size > 0) {
+            recordedChunks.push(event.data);
+        }
+    };
+    
+    mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, {
+            type: 'video/webm'
+        });
+
+        const recordedVideo = document.createElement('video');
+        recordedVideo.src = URL.createObjectURL(blob);
+        recordedVideo.controls = true;
+        recordedVideoContainer.appendChild(recordedVideo);
+    };
+
+    mediaRecorder.start();
+}
+
     // Countdown and capture photo
     async function startPictureCountdown() {
-        if (pictureCount < 2) {
+        if (pictureCount < 10) {
             pictureCount += 1;
 
-            let countdown = 1;
+            let countdown = 3;
 
             // Show the countdown overlay and set the initial value
             countdownOverlay.style.display = 'flex';
@@ -93,7 +100,6 @@
 
                     const snapshotContext = snapshotCanvas.getContext('2d');
                     snapshotContext.drawImage(video, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
-                    // snapshotContext.drawImage(frameImage, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
 
                     const photo = new Image();
                     photo.src = snapshotCanvas.toDataURL('image/png');
@@ -103,13 +109,14 @@
                         <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected" onclick="selectPhoto(this)">
                     </div>
                 `;
-
+                mediaRecorder.stop();
                     // Prepare for the next photo
-                    if (pictureCount < 2) {
-                        setTimeout(startPictureCountdown, 2000);
-                    } else {
-                        mediaRecorder.stop();
-                    }
+                    if (pictureCount < 10) {
+                    setTimeout(() => {
+                        startRecording(video.srcObject); // Start a new recording
+                        startPictureCountdown(); // Start the countdown for the next photo
+                    }, 2000);
+                }
                 }
             }, 1000);
         }
@@ -138,7 +145,9 @@
     }
 
     $("#select").on('click', function() {
-        $("#photos").hide(); // Menyembunyikan elemen foto
+        $('#frame').removeAttr('hidden');
+        $("#photos").hide();
+        $(this).hide();
 
         const ctx = frameCanvas.getContext('2d');
         frameCanvas.width = frameImage.width;
@@ -173,5 +182,7 @@
         frame.onload = function() {
             ctx.drawImage(frame, 0, 0, frame.width, frame.height); // Gambar frame di depan gambar
         };
+
+        $('#select-filter').removeAttr('hidden');
     });
 </script>
