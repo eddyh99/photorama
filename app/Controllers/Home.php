@@ -153,9 +153,10 @@ class Home extends BaseController
         return view('guest/wrapper', $mdata);
     }
 
-    public function saveVideos()
+    public function saveRecords()
     {
-        $uploadDir = 'assets/videos/' . time() . '/';
+        $time = time();
+        $uploadDir = "assets/photobooth/$time/";
 
         // Buat direktori jika belum ada
         if (!is_dir($uploadDir)) {
@@ -165,14 +166,55 @@ class Home extends BaseController
         $response = ['success' => false];
         foreach ($_FILES as $key => $file) {
             if ($file['error'] === UPLOAD_ERR_OK) {
-                $uploadFile = $uploadDir . $key . '.webm';
+                $uploadFile = "$uploadDir/" . ($file['type'] == "image/png" ? "my-photo.png" : "video-$key.webm");
 
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
-                    $response['success'] = true;
+                    $response = [
+                        'success' => true,
+                        'folder'  => base64_encode($time)
+                    ];
                 }
             }
         }
 
         return json_encode($response);
+    }
+
+    public function filter($dir) {
+        $result = $this->background->backgroundByScreen('Screen 2');
+        $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $timer = $this->setting->value('timer_capture');
+
+        $mdata = [
+            'title'         => 'Make Filter - ' . NAMETITLE,
+            'content'       => 'guest/filter/index',
+            'extra'         => 'guest/filter/js/_js_index',
+            'background'    =>  $background,
+            'timer'         => $timer,
+            'dir'           => base64_decode($dir)
+        ];
+
+        return view('guest/wrapper', $mdata);
+
+    }
+
+    public function userFiles($folder)
+    {
+        $path = FCPATH . "assets/photobooth/" . base64_decode($folder);
+        
+        if (!is_dir($path)) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $files = array_diff(scandir($path), array('.', '..'));
+
+        $mdata = [
+            'title'         => 'My Files - ' . NAMETITLE,
+            'content'       => 'guest/download/index',
+            'files'    =>  $files,
+            'folder'    =>  base64_decode($folder),
+        ];
+
+        return view('guest/wrapper', $mdata);
     }
 }

@@ -13,6 +13,7 @@
 
     const capturedPhotos = [];
     const capturedVideos = [];
+    let blobResultImage;
     let pictureCount = 0;
     let mediaRecorder, recordedChunks;
 
@@ -184,8 +185,8 @@
 
         frame.onload = function() {
             ctx.drawImage(frame, 0, 0, frame.width, frame.height); // Gambar frame di depan gambar
+            frameCanvas.toBlob(blob => blobResultImage = blob) ;
         };
-
         $('#select-filter').removeAttr('hidden');
     });
 
@@ -196,15 +197,21 @@
             formData.append('video' + index, blob);
         });
 
-        
+        console.log(blobResultImage);
+
+        formData.append('photo', blobResultImage);   
         $.ajax({
-            url: "<?= BASE_URL ?>saveVideos",
+            url: "<?= BASE_URL ?>home/saveRecords",
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
             success: function(response) {
-                console.log(response); 
+                const mdata = JSON.parse(response)
+                console.log(mdata);
+                if(mdata.success) {
+                    window.location.href = "<?= BASE_URL ?>filter/" + mdata.folder 
+                }
             },
             error: function(xhr, status, error) {
                 console.error('Error saving videos:', error);

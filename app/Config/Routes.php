@@ -16,6 +16,8 @@ $routes->get('/payment/notify', 'Payment::notify');
 $routes->get('/payment/check/(:any)', 'Payment::checkInvoice/$1');
 $routes->get('/payment/(:any)', 'Home::payment/$1');
 $routes->get('/frame', 'Home::frame');
+$routes->get('/filter/(:any)', 'Home::filter/$1');
+$routes->get('/download/(:any)', 'Home::userFiles/$1');
 $routes->get('/camera/(:any)', 'Home::camera/$1');
 $routes->get('/capture/(:any)', 'Home::capture/$1');
 $routes->get('/login', 'Auth::index');
