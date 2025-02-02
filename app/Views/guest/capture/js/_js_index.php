@@ -12,6 +12,7 @@
     frameImage.src = frameImageSrc;
 
     const capturedPhotos = [];
+    const capturedVideos = [];
     let pictureCount = 0;
     let mediaRecorder, recordedChunks;
 
@@ -62,6 +63,8 @@
             type: 'video/webm'
         });
 
+        capturedVideos.push(blob);
+
         const recordedVideo = document.createElement('video');
         recordedVideo.src = URL.createObjectURL(blob);
         recordedVideo.controls = true;
@@ -73,10 +76,10 @@
 
     // Countdown and capture photo
     async function startPictureCountdown() {
-        if (pictureCount < 10) {
+        if (pictureCount < 3) {
             pictureCount += 1;
 
-            let countdown = 3;
+            let countdown = 1;
 
             // Show the countdown overlay and set the initial value
             countdownOverlay.style.display = 'flex';
@@ -111,7 +114,7 @@
                 `;
                 mediaRecorder.stop();
                     // Prepare for the next photo
-                    if (pictureCount < 10) {
+                    if (pictureCount < 3) {
                     setTimeout(() => {
                         startRecording(video.srcObject); // Start a new recording
                         startPictureCountdown(); // Start the countdown for the next photo
@@ -184,5 +187,30 @@
         };
 
         $('#select-filter').removeAttr('hidden');
+    });
+
+    $('#select-filter').on('click', function() {
+        const formData = new FormData();
+
+         capturedVideos.forEach((blob, index) => {
+            formData.append('video' + index, blob);
+        });
+
+        
+        $.ajax({
+            url: "<?= BASE_URL ?>saveVideos",
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log(response); 
+            },
+            error: function(xhr, status, error) {
+                console.error('Error saving videos:', error);
+            }
+        });
+
+
     });
 </script>

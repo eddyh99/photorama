@@ -152,4 +152,27 @@ class Home extends BaseController
 
         return view('guest/wrapper', $mdata);
     }
+
+    public function saveVideos()
+    {
+        $uploadDir = 'assets/videos/' . time() . '/';
+
+        // Buat direktori jika belum ada
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        $response = ['success' => false];
+        foreach ($_FILES as $key => $file) {
+            if ($file['error'] === UPLOAD_ERR_OK) {
+                $uploadFile = $uploadDir . $key . '.webm';
+
+                if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
+                    $response['success'] = true;
+                }
+            }
+        }
+
+        return json_encode($response);
+    }
 }
