@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="d-grid">
-                    <button id="start" class="btn btn-primary fs-3">NEXT</button>
+                    <a href="<?= BASE_URL ?>print/<?= base64_encode($dir ) ?>" class="btn btn-primary fs-3">NEXT</a>
                 </div>
             </div>
         </div>

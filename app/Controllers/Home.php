@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\Admin\Voucher;
+use SimpleSoftwareIO\QrCode\Generator;
 
 class Home extends BaseController
 {
@@ -192,6 +193,25 @@ class Home extends BaseController
             'background'    =>  $background,
             'timer'         => $timer,
             'dir'           => base64_decode($dir)
+        ];
+
+        return view('guest/wrapper', $mdata);
+
+    }
+
+    public function print($dir) {
+        $result = $this->background->backgroundByScreen('Screen 2');
+        $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $timer = $this->setting->value('timer_capture');
+        $qrcode = new Generator;
+
+        $mdata = [
+            'title'         => 'Make Filter - ' . NAMETITLE,
+            'content'       => 'guest/print/index',
+            'extra'         => 'guest/print/js/_js_index',
+            'background'    =>  $background,
+            'timer'         => $timer,
+            'qrcode'        => $qrcode->size(250)->generate(base_url("download/$dir"))
         ];
 
         return view('guest/wrapper', $mdata);

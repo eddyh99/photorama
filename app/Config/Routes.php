@@ -15,6 +15,7 @@ $routes->get('/order', 'Home::order');
 $routes->get('/payment/notify', 'Payment::notify');
 $routes->get('/payment/check/(:any)', 'Payment::checkInvoice/$1');
 $routes->get('/payment/(:any)', 'Home::payment/$1');
+$routes->get('/print/(:any)', 'Home::print/$1');
 $routes->get('/frame', 'Home::frame');
 $routes->get('/filter/(:any)', 'Home::filter/$1');
 $routes->get('/download/(:any)', 'Home::userFiles/$1');
