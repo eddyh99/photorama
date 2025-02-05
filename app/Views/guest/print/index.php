@@ -3,8 +3,9 @@
         <div class="row text-black h-100">
             <!-- Bagian kiri (SELECT FRAME) -->
             <div class="col-8 d-flex flex-column">
-                <div class="flex-grow-1 mt-2 d-flex justify-content-center align-items-center" style="background-color: green;">
-                <p class="text-white">THANK YOU</p>
+                <div class="flex-grow-1 mt-2 d-flex-column justify-content-center align-items-center" style="background-color: green;">
+                <img id="photo" class="img-fluid px-4 py-4" src="<?= BASE_URL ?>assets/photobooth/<?= $dir ?>/my-photo.png">
+                <p class="text-white text-center">THANK YOU</p>
                 </div>
             </div>
             <!-- Bagian kanan (PREVIEW FRAME) -->

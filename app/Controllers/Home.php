@@ -217,11 +217,12 @@ class Home extends BaseController
         $qrcode = new Generator;
 
         $mdata = [
-            'title'         => 'Make Filter - ' . NAMETITLE,
+            'title'         => 'Print - ' . NAMETITLE,
             'content'       => 'guest/print/index',
             'extra'         => 'guest/print/js/_js_index',
             'background'    =>  $background,
             'timer'         => $timer,
+            'dir'           => base64_decode($dir),
             'qrcode'        => $qrcode->size(250)->generate(base_url("download/$dir"))
         ];
 
