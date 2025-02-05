@@ -30,9 +30,10 @@
 
         $("#next").on('click', () => {
             let price = $("#price").text();
+            let print = $("#count").text();
             const voucher = $("#voc").val();
             let priceFormatted = parseInt(price.replace(/\./g, ''))
-            let url = "<?= BASE_URL ?>payment/" + encodeURIComponent(btoa(priceFormatted));
+            let url = "<?= BASE_URL ?>payment/" + encodeURIComponent(btoa(priceFormatted)) + '/' +print;
             if (voucher) {
                 url += `?voucher=${voucher}`;
             }

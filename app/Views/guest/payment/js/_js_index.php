@@ -3,6 +3,7 @@
     $(function() {
         const bg = <?= $background ? json_encode($background) : 'null'; ?>;
         $("#content-bg").css("background-image", bg ? `url('${bg}')` : 'none');
+        const prints = <?= json_encode($print) ?>;
 
         setTimeout(() => {
             $("#successtoast").toast('show')
@@ -31,7 +32,7 @@
         });
 
         function checkPaymentStatus() {
-            $.get("<?= BASE_URL?>payment/check/" +<?= $inv ?>, function(data, status) {
+            $.get("<?= BASE_URL?>payment/check/" +<?= $inv ?> + "/" + prints, function(data, status) {
                 mdata = JSON.parse(data);
                 if(mdata.status == 'paid') {
                     window.location.href = '<?= BASE_URL ?>frame';
