@@ -181,6 +181,15 @@ class Home extends BaseController
         return json_encode($response);
     }
 
+    public function updateRecord($dir)
+    {
+        $uploadDir = "assets/photobooth/" . base64_decode($dir) . "/";
+        if (!is_dir($uploadDir)) return json_encode(['success' => false]);
+    
+        $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "my-photo.png");
+        return json_encode(['success' => $success]);
+    }
+
     public function filter($dir) {
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;

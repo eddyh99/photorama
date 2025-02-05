@@ -2,10 +2,14 @@
     $(function() {
         const bg = <?= $background ? json_encode($background) : 'null'; ?>;
         $("#content-bg").css("background-image", bg ? `url('${bg}')` : 'none');
+        const dir = btoa(<?= $dir ?>);
+        const canvasToBlob = (canvas) => new Promise((resolve) => canvas.toBlob(resolve));
 
         let img = document.getElementById("photo");
         let canvas = document.getElementById("canvas");
-        let ctx = canvas.getContext("2d", { willReadFrequently: true });
+        let ctx = canvas.getContext("2d", {
+            willReadFrequently: true
+        });
 
         canvas.width = img.width;
         canvas.height = img.height;
@@ -71,6 +75,55 @@
             ctx.putImageData(imageData, 0, 0);
         })
 
+        $("#next").on('click', async function() {
+            Swal.fire({
+                title: "Menerapkan filter",
+                text: "Loading..",
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
+            const result = await updatePhoto();
+            Swal.close();
+            if (result) {
+                window.location.href = "<?= BASE_URL ?>print/" + dir;
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Terjadi kesalahan.',
+                });
+
+            }
+        });
+
+        
+            async function updatePhoto() {
+                const formData = new FormData();
+                formData.append('photo', await canvasToBlob(canvas));
+
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                        url: "<?= BASE_URL ?>home/updateRecord/" + dir,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            const mdata = JSON.parse(response)
+                            resolve(mdata.success);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error saving videos:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: 'Terjadi kesalahan.',
+                            });
+                        }
+                    });
+                });
+            }
 
     });
 </script>
