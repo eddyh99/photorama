@@ -42,6 +42,12 @@
                     <div data-i18n="Account Settings" class="text-center">Timer</div>
                 </a>
             </li>
+            <li class="menu-item <?= @$menuactive_photo ?>">
+                <a href="<?= BASE_URL ?>admin/photo" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-photo-album"></i>
+                    <div data-i18n="Account Settings" class="text-center">Photos</div>
+                </a>
+            </li>
     </ul>
 </aside>
 

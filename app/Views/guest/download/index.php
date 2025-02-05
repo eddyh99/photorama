@@ -13,7 +13,7 @@
                         <div class="list-group-item d-flex justify-content-between align-items-center">
                             <span><?= esc($file) ?></span>
                             <a href="<?= base_url("assets/photobooth/$folder/$file") ?>" class="btn btn-download btn-sm" download>
-                                Unduh
+                                <i class="bx bxs-download"></i>Unduh
                             </a>
                         </div>
                     <?php endforeach; ?>
