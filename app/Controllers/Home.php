@@ -169,7 +169,7 @@ class Home extends BaseController
         $response = ['success' => false];
         foreach ($_FILES as $key => $file) {
             if ($file['error'] === UPLOAD_ERR_OK) {
-                $uploadFile = "$uploadDir/" . ($file['type'] == "image/png" ? "$key.png" : "$key.webm");
+                $uploadFile = "$uploadDir/" . ($file['type'] == "image/png" ? "$key.png" : "$key.mp4");
                 
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     $response = [

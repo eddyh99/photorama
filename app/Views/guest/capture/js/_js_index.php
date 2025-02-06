@@ -61,7 +61,7 @@
 
         mediaRecorder.onstop = () => {
             const blob = new Blob(recordedChunks, {
-                type: 'video/webm'
+                type: 'video/mp4'
             });
 
             capturedVideos.push(blob);
