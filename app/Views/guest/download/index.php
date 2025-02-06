@@ -14,6 +14,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        position: relative;
     }
 
     .swiper-slide img,
@@ -34,6 +35,18 @@
     .mySwiper .swiper-slide {
         height: 20%;
         width: 100%;
+    }
+    .download-btn {
+        position: absolute;
+        top: 10px;
+        right: 50px;
+        padding: 5px 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
     }
 </style>
 
@@ -59,8 +72,10 @@
                                     <source src="<?= $fileUrl ?>" type="video/<?= $ext ?>">
                                     Your browser does not support the video tag.
                                 </video>
+                                <a href="<?= $fileUrl ?>" class="download-btn" download><i class="bx bx-download"></i></a>
                             <?php else: ?>
                                 <img src="<?= $fileUrl ?>" alt="Random Image">
+                                <a href="<?= $fileUrl ?>" class="download-btn" download><i class="bx bx-download"></i></a>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
