@@ -1,5 +1,3 @@
-</div>
-</div>
 <style>
     .swiper {
         width: 100%;
@@ -18,16 +16,17 @@
         align-items: center;
     }
 
-    .swiper-slide img {
+    .swiper-slide img,
+    .swiper-slide video {
         display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        width: 85%;
+        height: auto;
+        object-fit: contain;
     }
 
     .mySwiper {
-        width: 20%;
-        height: 50%;
+        width: 50%;
+        height: auto;
         box-sizing: border-box;
         padding: 10px 0;
     }
@@ -37,73 +36,58 @@
         width: 100%;
     }
 </style>
-<?php if (empty($files)) : ?>
-    <h2 class="text-center mt-4">404</h2>
-    <p class="text-center">Not Found</p>
-<?php else: ?>
-    <!-- Slider main container -->
-    <div class="swiper mySwiper2">
-        <!-- Additional required wrapper -->
-        <div class="swiper-wrapper">
-            <!-- Slides -->
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide1/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide2/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide3/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide4/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide5/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide6/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide7/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide8/800/600" alt="Random Image">
+
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <?php if (empty($files)): ?>
+            <h2 class="text-center mt-4">404</h2>
+            <p class="text-center">Not Found</p>
+        <?php else: ?>
+            <h4 class="text-center my-0">User- <?= date('Y-m-d', $folder) ?></h4>
+
+            <!-- Main slider -->
+            <div class="swiper mySwiper2">
+                <div class="swiper-wrapper">
+                    <?php foreach ($files as $file): ?>
+                        <div class="swiper-slide">
+                            <?php
+                            $ext = pathinfo($file, PATHINFO_EXTENSION);
+                            $fileUrl = base_url("assets/photobooth/$folder/$file");
+                            if (in_array(strtolower($ext), ['mp4', 'webm'])):
+                            ?>
+                                <video controls playsinline>
+                                    <source src="<?= $fileUrl ?>" type="video/<?= $ext ?>">
+                                    Your browser does not support the video tag.
+                                </video>
+                            <?php else: ?>
+                                <img src="<?= $fileUrl ?>" alt="Random Image">
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="swiper-button-prev text-primary"></div>
+                <div class="swiper-button-next text-primary"></div>
             </div>
 
-        </div>
-        <!-- If we need navigation buttons -->
-        <div class="swiper-button-prev text-white"></div>
-        <div class="swiper-button-next text-white"></div>
-    </div>
+            <!-- Thumbnail slider -->
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <?php foreach ($files as $file): ?>
+                        <div class="swiper-slide">
+                            <?php
+                            $ext = pathinfo($file, PATHINFO_EXTENSION);
+                            $fileUrl = base_url("assets/photobooth/$folder/$file");
+                            if (in_array(strtolower($ext), ['mp4', 'webm'])):
+                            ?>
+                                <img src="<?= base_url('assets/img/thumb-video.jpg') ?>" alt="Video">
+                            <?php else: ?>
+                                <img src="<?= $fileUrl ?>" alt="Random Image">
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
 
-    <!-- Slider main container -->
-    <div thumbSlider="" class="swiper mySwiper">
-        <!-- Additional required wrapper -->
-        <div class="swiper-wrapper">
-            <!-- Slides -->
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide1/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide2/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide3/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide4/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide5/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide6/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide7/800/600" alt="Random Image">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://picsum.photos/seed/slide8/800/600" alt="Random Image">
-            </div>
         <?php endif; ?>
+    </div>
+</div>

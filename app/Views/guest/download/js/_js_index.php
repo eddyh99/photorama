@@ -1,5 +1,4 @@
 <script>
-    $(".layout-wrapper").addClass("d-none");
     var swiper = new Swiper(".mySwiper", {
         loop: true,
         spaceBetween: 10,
