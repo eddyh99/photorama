@@ -27,7 +27,7 @@
 				data: 'file',
 				render: function(data, type, row) {
 					return data ?
-						`<img src="<?= BASE_URL ?>assets/img/${encodeURIComponent(data)}" alt="Background" style="width: 50px; height: 50px;">` :
+						`<img src="<?= BASE_URL ?>assets/img/${encodeURI(data)}" alt="Background" style="width: 50px; height: 50px;">` :
 						'<span class="text-center">-</span>';
 				}
 			},
