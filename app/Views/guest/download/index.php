@@ -1,25 +1,109 @@
-<div class="container">
-    <div class="card">
-        <div class="card-header">
-            <h4><code>Filemu tersedia!</code></h4>
-        </div>
-        <div class="card-body">
-            <?php if (empty($files)) : ?>
-                <p class="no-files-message">Tidak ada file dalam folder ini.</p>
-            <?php else : ?>
-                <div class="list-group">
-                    <?php $no = 1;
-                    foreach ($files as $file) : ?>
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <span><?= esc($file) ?></span>
-                            <a href="<?= base_url("assets/photobooth/$folder/$file") ?>" class="btn btn-download btn-sm" download>
-                                <i class="bx bxs-download"></i>Unduh
-                            </a>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
 </div>
+</div>
+<style>
+    .swiper {
+        width: 100%;
+        height: 100%;
+    }
 
+    .mySwiper2 {
+        height: 80%;
+        width: 50%;
+    }
+
+    .swiper-slide {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .mySwiper {
+        width: 20%;
+        height: 50%;
+        box-sizing: border-box;
+        padding: 10px 0;
+    }
+
+    .mySwiper .swiper-slide {
+        height: 20%;
+        width: 100%;
+    }
+</style>
+<?php if (empty($files)) : ?>
+    <h2 class="text-center mt-4">404</h2>
+    <p class="text-center">Not Found</p>
+<?php else: ?>
+    <!-- Slider main container -->
+    <div class="swiper mySwiper2">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+            <!-- Slides -->
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide1/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide2/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide3/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide4/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide5/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide6/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide7/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide8/800/600" alt="Random Image">
+            </div>
+
+        </div>
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev text-white"></div>
+        <div class="swiper-button-next text-white"></div>
+    </div>
+
+    <!-- Slider main container -->
+    <div thumbSlider="" class="swiper mySwiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+            <!-- Slides -->
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide1/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide2/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide3/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide4/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide5/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide6/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide7/800/600" alt="Random Image">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://picsum.photos/seed/slide8/800/600" alt="Random Image">
+            </div>
+        <?php endif; ?>

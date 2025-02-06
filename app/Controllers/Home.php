@@ -242,6 +242,7 @@ class Home extends BaseController
 
         $mdata = [
             'title'         => 'My Files - ' . NAMETITLE,
+            'extra'         => 'guest/download/js/_js_index',
             'content'       => 'guest/download/index',
             'files'    =>  $files,
             'folder'    =>  base64_decode($folder),

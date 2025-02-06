@@ -36,6 +36,10 @@
         <!-- Datatables CSS -->
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+        <!-- SWIPER CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+            />
         <!-- Helpers -->
         <script src="<?= BASE_URL ?>assets/vendor/js/helpers.js"></script>
 
