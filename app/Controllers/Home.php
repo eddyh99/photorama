@@ -169,8 +169,8 @@ class Home extends BaseController
         $response = ['success' => false];
         foreach ($_FILES as $key => $file) {
             if ($file['error'] === UPLOAD_ERR_OK) {
-                $uploadFile = "$uploadDir/" . ($file['type'] == "image/png" ? "my-photo.png" : "video-$key.webm");
-
+                $uploadFile = "$uploadDir/" . ($file['type'] == "image/png" ? "$key.png" : "$key.webm");
+                
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     $response = [
                         'success' => true,
@@ -188,7 +188,7 @@ class Home extends BaseController
         $uploadDir = "assets/photobooth/" . base64_decode($dir) . "/";
         if (!is_dir($uploadDir)) return json_encode(['success' => false]);
     
-        $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "my-photo.png");
+        $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "photos.png");
         return json_encode(['success' => $success]);
     }
 

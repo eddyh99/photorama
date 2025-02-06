@@ -4,7 +4,7 @@
             <!-- Bagian kiri (SELECT FRAME) -->
             <div class="col-8 d-flex flex-column">
                 <div class="flex-grow-1 mt-2 d-flex justify-content-center align-items-center" style="background-color: green;">
-                        <img id="photo" class="img-fluid d-none" src="<?= BASE_URL ?>assets/photobooth/<?= $dir ?>/my-photo.png">
+                        <img id="photo" class="img-fluid d-none" src="<?= BASE_URL ?>assets/photobooth/<?= $dir ?>/photos.png">
                         <canvas class="img-fluid px-4" id="canvas"></canvas>
                 </div>
             </div>

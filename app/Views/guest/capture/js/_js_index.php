@@ -77,7 +77,7 @@
 
     // Countdown and capture photo
     async function startPictureCountdown() {
-        if (pictureCount < 3) {
+        if (pictureCount < 10) {
             pictureCount += 1;
 
             let countdown = 1;
@@ -106,16 +106,20 @@
                     snapshotContext.drawImage(video, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
 
                     const photo = new Image();
-                    photo.src = snapshotCanvas.toDataURL('image/png');
-                    capturedPhotos.push(photo.src);
-                    photosContainer.innerHTML += `
-                    <div class="col px-2">
-                        <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected" onclick="selectPhoto(this)">
-                    </div>
-                `;
+                    snapshotCanvas.toBlob(function(blob) {
+                        let photoURL = URL.createObjectURL(blob);
+                        capturedPhotos.push(blob);
+                        photo.src = photoURL;
+
+                        photosContainer.innerHTML += `
+                        <div class="col px-2">
+                            <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected" onclick="selectPhoto(this)">
+                        </div>
+                    `;
+                    }, 'image/png');
                 mediaRecorder.stop();
                     // Prepare for the next photo
-                    if (pictureCount < 3) {
+                    if (pictureCount < 10) {
                     setTimeout(() => {
                         startRecording(video.srcObject); // Start a new recording
                         startPictureCountdown(); // Start the countdown for the next photo
@@ -192,14 +196,17 @@
 
     $('#select-filter').on('click', function() {
         const formData = new FormData();
+        formData.append('photos', blobResultImage);
 
          capturedVideos.forEach((blob, index) => {
-            formData.append('video' + index, blob);
+            formData.append('video-' + (index+1), blob);
         });
 
-        console.log(blobResultImage);
+        capturedPhotos.forEach((blob, index) => {
+            formData.append('photos-' + (index+1), blob);
+        });
+   
 
-        formData.append('photo', blobResultImage);   
         $.ajax({
             url: "<?= BASE_URL ?>home/saveRecords",
             type: 'POST',

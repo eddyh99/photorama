@@ -5,7 +5,7 @@
             <div class="col-8 d-flex flex-column justify-content-center">
                 <div class="mt-2 d-flex justify-content-center align-items-center h-100" style="background-color: green;">
                     <div class="text-center" style="overflow-y: auto; max-height: 100%;">
-                        <img id="photo" class="img-fluid mt-4" style="max-height: 75vh; object-fit: contain;" src="<?= BASE_URL ?>assets/photobooth/<?= $dir ?>/my-photo.png">
+                        <img id="photo" class="img-fluid mt-4" style="max-height: 75vh; object-fit: contain;" src="<?= BASE_URL ?>assets/photobooth/<?= $dir ?>/photos.png">
                         <p class="text-white mt-4 fs-1">- THANK YOU -</p>
                     </div>
                 </div>
