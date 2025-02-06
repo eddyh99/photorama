@@ -192,8 +192,12 @@ class Payment extends BaseController
         };
     }
 
-    public function checkInvoice($inv) {
+    public function checkInvoice($inv, $print = 1) {
         $result = $this->pembayaran->check($inv);
+        if($result->status == 'paid') {
+            $this->session->set('print', $print);
+        }
+
         return json_encode($result);
     }
     // static function check($inv) {

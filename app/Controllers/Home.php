@@ -23,6 +23,7 @@ class Home extends BaseController
 
     public function index()
     {
+        session()->set('print', 0);
         $result = $this->background->backgroundByScreen('Screen 1');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $mdata = [
@@ -52,9 +53,9 @@ class Home extends BaseController
         return view('guest/wrapper', $mdata);
     }
 
-    public function payment($price) {
+    public function payment($price, $print = null) {
         $price = base64_decode($price);
-        if(!is_numeric($price)) return redirect()->to(BASE_URL .'order');
+        if(!is_numeric($price) || is_null($print)) return redirect()->to(BASE_URL .'order');
 
         $kd_voucher = $this->request->getVar('voucher');
         if(!empty($kd_voucher)) {
@@ -93,6 +94,7 @@ class Home extends BaseController
             'extra'         => 'guest/payment/js/_js_index',
             'background'    =>  $background,
             'price'         =>  $price,
+            'print'         =>  $print,
             'timer'         =>  $timer,
             'qris'          =>  $payment->data->qris,
             'inv'           =>  $payment->data->invoice
@@ -181,6 +183,15 @@ class Home extends BaseController
         return json_encode($response);
     }
 
+    public function updateRecord($dir)
+    {
+        $uploadDir = "assets/photobooth/" . base64_decode($dir) . "/";
+        if (!is_dir($uploadDir)) return json_encode(['success' => false]);
+    
+        $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "my-photo.png");
+        return json_encode(['success' => $success]);
+    }
+
     public function filter($dir) {
         $result = $this->background->backgroundByScreen('Screen 2');
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
@@ -206,11 +217,12 @@ class Home extends BaseController
         $qrcode = new Generator;
 
         $mdata = [
-            'title'         => 'Make Filter - ' . NAMETITLE,
+            'title'         => 'Print - ' . NAMETITLE,
             'content'       => 'guest/print/index',
             'extra'         => 'guest/print/js/_js_index',
             'background'    =>  $background,
             'timer'         => $timer,
+            'dir'           => base64_decode($dir),
             'qrcode'        => $qrcode->size(250)->generate(base_url("download/$dir"))
         ];
 
