@@ -174,8 +174,9 @@
             const blob = URL.createObjectURL(img.files[0]);
             imgPreview.src = blob;
             imgPreview.onload = function() {
-                canvas.style.width = imgPreview.clientWidth + "px";
-                canvas.style.height = imgPreview.clientHeight + "px";
+                console.log(imgPreview.clientWidth);
+                canvas.style.width = imgPreview.offsetWidth + "px";
+                canvas.style.height = imgPreview.offsetHeight + "px";
 
                 // Simpan ukuran asli gambar
                 imgPreview.dataset.originalWidth = imgPreview.naturalWidth;

@@ -6,7 +6,8 @@
             border: 2px solid black;
             background-size: cover;
             padding: 0;
-            margin: 0;
+            box-sizing: content-box;
+            margin: 0 auto;
         }
 
 
@@ -111,10 +112,10 @@
                         <form action="<?= BASE_URL ?>admin/frame/store" method="POST" enctype="multipart/form-data">
                             <div class="row row-cols-2">
                                 <div id="canvas">
-                                    <img class="img-preview" style="max-width: 100%;max-height: 100%;">
+                                    <img class="img-preview mw-100 mh-100">
                                 </div>
                                 <div>
-                                    <button class="btn btn-info  d-block" id="addArea" type="button">Add Area</button>
+                                    <button class="btn btn-info d-block" id="addArea" type="button">Add Area</button>
                                     <button class="btn btn-danger d-block my-3" id="clearButton" type="button">Clear All Areas</button>
                                     <button class="btn btn-primary d-block" id="saveButton" type="button">Save Areas</button>
                                 </div>
