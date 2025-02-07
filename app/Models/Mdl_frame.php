@@ -22,8 +22,18 @@ class Mdl_frame extends Model
 
     public function getById($id)
     {
-        $sql = "select * from frame WHERE id = ?";
-        return $this->db->query($sql, [$id])->getRow() ?? null;
+        $sql = "SELECT
+                    frame.file,
+                    fk.x,
+                    fk.y,
+                    fk.width,
+                    fk.height
+                FROM
+                    frame
+                    JOIN frame_koordinat fk ON fk.frame_id = frame.id
+                WHERE
+                    frame.id = ?";
+        return $this->db->query($sql, [$id])->getResult() ?? null;
     }
 
     // public function backgroundByScreen($screen) {

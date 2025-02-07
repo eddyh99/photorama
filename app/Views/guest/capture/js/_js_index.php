@@ -7,7 +7,7 @@
     const recordedVideoContainer = document.getElementById('recordedVideoContainer');
     const frameCanvas = document.getElementById('frame');
 
-    const frameImageSrc = "<?= BASE_URL ?>assets/img/<?= $frame->file ?>"; // Path to your frame image
+    const frameImageSrc = "<?= BASE_URL ?>assets/img/<?= $frame[0]->file ?>"; // Path to frame image
     const frameImage = new Image();
     frameImage.src = frameImageSrc;
 
@@ -16,7 +16,7 @@
     let blobResultImage;
     let pictureCount = 0;
     let mediaRecorder, recordedChunks;
-
+    const positions = <?= json_encode($frame) ?> || [];
     // Access the webcam
     async function startWebcam() {
         try {
@@ -145,10 +145,10 @@
             selectedPhotos.splice(imgIndex, 1);
             img.classList.remove('border-5', 'border-primary', 'shadow-lg');
         }
-        if (selectedPhotos.length > 0) {
-            $('#select').prop('disabled', false);
-        } else {
+        if (selectedPhotos.length !== positions.length) {
             $('#select').prop('disabled', true);
+        } else {
+            $('#select').prop('disabled', false);
         }
     }
 
@@ -161,17 +161,6 @@
         frameCanvas.width = frameImage.width;
         frameCanvas.height = frameImage.height;
 
-        // koordinat
-        const positions = [{
-                x: 50,
-                y: 100
-            },
-            {
-                x: 132,
-                y: 825
-            }
-        ];
-
         selectedPhotos.forEach((photo, index) => {
             const selectedImage = new Image();
             selectedImage.src = photo.src;
@@ -179,8 +168,10 @@
             selectedImage.onload = function() {
                 const selectedImageX = positions[index].x;
                 const selectedImageY = positions[index].y;
+                const selectedImageWidth = positions[index].width;
+                const selectedImageHeight = positions[index].height;
 
-                ctx.drawImage(selectedImage, selectedImageX, selectedImageY, selectedImage.width, selectedImage.height);
+                ctx.drawImage(selectedImage, selectedImageX, selectedImageY, selectedImageWidth, selectedImageHeight);
             };
         });
 

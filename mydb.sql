@@ -60,7 +60,7 @@ CREATE TABLE `frame` (
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,9 +70,43 @@ CREATE TABLE `frame` (
 LOCK TABLES `frame` WRITE;
 /*!40000 ALTER TABLE `frame` DISABLE KEYS */;
 INSERT INTO `frame` VALUES
-(20,'nataru','frame/nataru1738035603.png','2025-01-28 10:40:03','2025-01-28 10:40:03'),
-(21,'music','frame/music1738039832.png','2025-01-28 11:50:32','2025-01-28 11:50:32');
+(21,'music','frame/music1738039832.png','2025-01-28 11:50:32','2025-01-28 11:50:32'),
+(22,'nataru','frame/nataru1738035603.png','2025-01-28 10:40:03','2025-01-28 10:40:03');
 /*!40000 ALTER TABLE `frame` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `frame_koordinat`
+--
+
+DROP TABLE IF EXISTS `frame_koordinat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `frame_koordinat` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `frame_id` int(11) DEFAULT NULL,
+  `x` double DEFAULT NULL,
+  `y` double DEFAULT NULL,
+  `width` double DEFAULT NULL,
+  `height` double DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `frame_id` (`frame_id`),
+  CONSTRAINT `frame_koordinat_ibfk_1` FOREIGN KEY (`frame_id`) REFERENCES `frame` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `frame_koordinat`
+--
+
+LOCK TABLES `frame_koordinat` WRITE;
+/*!40000 ALTER TABLE `frame_koordinat` DISABLE KEYS */;
+INSERT INTO `frame_koordinat` VALUES
+(5,22,150.29,146.57500000000002,483.075,454.02500000000003),
+(6,22,1495.7433333333333,128.70000000000002,511.70166666666665,500.5),
+(7,22,125.24166666666666,840.125,458.02666666666664,421.85),
+(8,22,1502.8999999999999,832.975,493.80999999999995,446.875);
+/*!40000 ALTER TABLE `frame_koordinat` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -91,7 +125,7 @@ CREATE TABLE `pembayaran` (
   `cabang` varchar(100) NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,7 +136,26 @@ LOCK TABLES `pembayaran` WRITE;
 /*!40000 ALTER TABLE `pembayaran` DISABLE KEYS */;
 INSERT INTO `pembayaran` VALUES
 (31,'133509',4.00,'2025-01-31','paid','-','2025-01-31 11:23:26'),
-(32,'613323',4.00,'2025-01-31','paid','-','2025-01-31 11:24:28');
+(32,'613323',4.00,'2025-01-31','paid','-','2025-01-31 11:24:28'),
+(33,'276933',4.00,'2025-02-02','pending','-','2025-02-02 04:39:08'),
+(34,'206938',1.00,'2025-02-05','pending','-','2025-02-05 07:37:55'),
+(35,'448113',2.00,'2025-02-05','pending','-','2025-02-05 07:43:17'),
+(36,'129708',2.00,'2025-02-05','pending','-','2025-02-05 07:58:27'),
+(37,'830939',4.00,'2025-02-05','pending','-','2025-02-05 07:58:34'),
+(38,'823585',4.00,'2025-02-05','pending','-','2025-02-05 07:59:53'),
+(39,'737609',4.00,'2025-02-05','pending','-','2025-02-05 08:00:35'),
+(40,'735079',4.00,'2025-02-05','pending','-','2025-02-05 08:03:07'),
+(41,'840055',4.00,'2025-02-05','pending','-','2025-02-05 08:03:22'),
+(42,'279266',4.00,'2025-02-05','pending','-','2025-02-05 08:03:29'),
+(43,'476040',4.00,'2025-02-05','pending','-','2025-02-05 08:03:34'),
+(44,'822759',400.00,'2025-02-05','paid','-','2025-02-05 08:03:59'),
+(45,'351150',200.00,'2025-02-05','paid','-','2025-02-05 08:05:34'),
+(46,'534954',200.00,'2025-02-05','pending','-','2025-02-05 08:08:00'),
+(47,'623395',200.00,'2025-02-05','pending','-','2025-02-05 08:09:54'),
+(48,'416431',200.00,'2025-02-05','pending','-','2025-02-05 08:10:26'),
+(49,'176527',300.00,'2025-02-05','pending','-','2025-02-05 08:11:05'),
+(50,'580871',300.00,'2025-02-05','paid','-','2025-02-05 08:13:11'),
+(51,'645474',300.00,'2025-02-05','paid','-','2025-02-05 08:45:00');
 /*!40000 ALTER TABLE `pembayaran` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -130,7 +183,7 @@ CREATE TABLE `setting` (
 LOCK TABLES `setting` WRITE;
 /*!40000 ALTER TABLE `setting` DISABLE KEYS */;
 INSERT INTO `setting` VALUES
-(2,'price','1'),
+(2,'price','100'),
 (11,'timer_payment','1000'),
 (12,'timer_frame','20'),
 (13,'timer_order','10');
@@ -202,4 +255,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-01-31 18:27:25
+-- Dump completed on 2025-02-07 10:20:44
