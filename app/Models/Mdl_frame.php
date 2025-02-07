@@ -16,7 +16,13 @@ class Mdl_frame extends Model
 
     public function allFrame()
     {
-        $sql = "select * from frame";
+        $sql = "SELECT
+                    frame.id,
+                    frame.file
+                FROM
+                    frame
+                    JOIN frame_koordinat fk ON fk.frame_id = frame.id
+                GROUP BY frame.id";
         return $this->db->query($sql)->getResult();
     }
 
