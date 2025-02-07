@@ -44,6 +44,10 @@ class Frame extends BaseController
             'name'     => [
                 'label'     => 'Nama',
                 'rules'     => 'required'
+            ],
+            'koordinat'     => [
+                'label'     => 'Koordinat',
+                'rules'     => 'required'
             ]
         ]);
 
@@ -61,8 +65,11 @@ class Frame extends BaseController
         }
 
         $mdata = [
-            'file'    => 'frame/' .$frameName,
-            'name' => $name
+            'frame' => [
+                'file'    => 'frame/' . $frameName,
+                'name' => $name
+            ],
+            'koordinat' => json_decode($this->request->getVar('koordinat'), true)['areas'] ?? []
         ];
 
         $result = $this->frame->insertFrame($mdata);

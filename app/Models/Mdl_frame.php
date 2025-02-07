@@ -18,6 +18,7 @@ class Mdl_frame extends Model
     {
         $sql = "SELECT
                     frame.id,
+                    frame.name,
                     frame.file
                 FROM
                     frame
@@ -68,16 +69,38 @@ class Mdl_frame extends Model
 
     public function insertFrame($mdata) {
         try {
-            $bg = $this->db->table("frame");
+            $this->db->transBegin();
+            $fr = $this->db->table("frame");
+            $koordinat = $this->db->table("frame_koordinat");
 
             // Insert data into 'pengguna' table
-            if (!$bg->insert($mdata)) {
+            if (!$fr->insert($mdata['frame'])) {
                 // Handle case when insert fails (not due to exception)
+                $this->db->transRollback();
                 return (object) array(
                     "code"      => 400,
                     "message"   => "Gagal menyimpan frame"
                 );
             }
+
+            $frame_id = $this->db->insertID();
+            // Tambahkan frame_id ke setiap koordinat
+            foreach ($mdata['koordinat'] as &$k) {
+                $k["frame_id"] = $frame_id;
+            }
+
+            // InsertBatch into 'koordinat'
+            if (!$koordinat->insertBatch($mdata['koordinat'])) {
+                // Rollback if 'penjualan_detail' insertion fails
+                $this->db->transRollback();
+                return (object) [
+                    "code"    => 500,
+                    "message" => "Gagal menyimpan detail penjualan"
+                ];
+            }
+    
+            $this->db->transCommit();
+
         } catch (DatabaseException $e) {
             // For other database-related errors, return generic server error
             return (object) array(

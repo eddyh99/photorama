@@ -1,3 +1,85 @@
+<style>
+        #canvas {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            border: 2px solid black;
+            background-size: cover;
+            padding: 0;
+            margin: 0;
+        }
+
+
+        .frame-area {
+            position: absolute;
+            border: 2px dashed red;
+            min-width: 50px;
+            min-height: 50px;
+            background: rgba(255, 0, 0, 0.2);
+        }
+
+        .resize-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: blue;
+        }
+
+        /* Corner Handles */
+        .top-left {
+            top: -5px;
+            left: -5px;
+            cursor: nwse-resize;
+        }
+
+        .top-right {
+            top: -5px;
+            right: -5px;
+            cursor: nesw-resize;
+        }
+
+        .bottom-left {
+            bottom: -5px;
+            left: -5px;
+            cursor: nesw-resize;
+        }
+
+        .bottom-right {
+            bottom: -5px;
+            right: -5px;
+            cursor: nwse-resize;
+        }
+
+        /* Side Handles */
+        .top {
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: ns-resize;
+        }
+
+        .bottom {
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: ns-resize;
+        }
+
+        .left {
+            left: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: ew-resize;
+        }
+
+        .right {
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: ew-resize;
+        }
+    </style>
+
 <?php if (!empty(session('failed'))): ?>
     <div id="failedtoast" class="bs-toast toast toast-placement-ex m-3 fade bg-danger top-0 end-0" role="alert" aria-live="assertive" aria-atomic="true" data-delay="1000">
         <div class="toast-header">
@@ -27,9 +109,16 @@
                     </div>
                     <div class="card-body">
                         <form action="<?= BASE_URL ?>admin/frame/store" method="POST" enctype="multipart/form-data">
-                            <img class="img-preview img-fluid col-sm-5 d-block">
                             <div class="row row-cols-2">
-                                <div class="mb-3">
+                                <div id="canvas">
+                                    <img class="img-preview" style="max-width: 100%;max-height: 100%;">
+                                </div>
+                                <div>
+                                    <button class="btn btn-info  d-block" id="addArea" type="button">Add Area</button>
+                                    <button class="btn btn-danger d-block my-3" id="clearButton" type="button">Clear All Areas</button>
+                                    <button class="btn btn-primary d-block" id="saveButton" type="button">Save Areas</button>
+                                </div>
+                                <div class="my-3">
                                     <label class="form-label" for="upload foto">Upload Foto</label>
                                     <div class="input-group input-group-merge">
                                         <input
@@ -41,7 +130,7 @@
                                             onchange="previewImage()" />
                                     </div>
                                 </div>
-                                <div class="mb-3">
+                                <div class="my-3">
                                     <label class="form-label" for="name">Name</label>
                                     <div class="input-group input-group-merge">
                                         <input
@@ -51,6 +140,7 @@
                                             name="name"/>
                                     </div>
                                 </div>
+                                <input type="hidden" id="koordinat" name="koordinat">
                             </div>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </form>

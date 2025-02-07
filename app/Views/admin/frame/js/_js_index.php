@@ -40,7 +40,7 @@
 					var del = `<a href="<?= BASE_URL ?>admin/frame/destroy/${encodeURI(btoa(data.id))}" class="del-data">
                                                 <i class="bx bx-trash bx-md fs-5 text-danger"></i>
                                           </a>`;
-					return `${edit} ${del}`;
+					return `${del}`;
 				}
 			},
 		],
