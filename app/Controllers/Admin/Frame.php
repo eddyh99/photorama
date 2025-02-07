@@ -69,7 +69,7 @@ class Frame extends BaseController
                 'file'    => 'frame/' . $frameName,
                 'name' => $name
             ],
-            'koordinat' => json_decode($this->request->getVar('koordinat'), true)['areas'] ?? []
+            'koordinat' => json_decode($this->request->getVar('koordinat')) ?? []
         ];
 
         $result = $this->frame->insertFrame($mdata);

@@ -86,7 +86,7 @@ class Mdl_frame extends Model
             $frame_id = $this->db->insertID();
             // Tambahkan frame_id ke setiap koordinat
             foreach ($mdata['koordinat'] as &$k) {
-                $k["frame_id"] = $frame_id;
+                $k->frame_id = $frame_id;
             }
 
             // InsertBatch into 'koordinat'

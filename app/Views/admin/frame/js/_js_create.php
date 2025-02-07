@@ -163,7 +163,7 @@
                 }))
             };
             console.log("Frame Data:", frameData); // Log the data for debugging
-            koordinat.value = JSON.stringify(frameData);
+            koordinat.value = JSON.stringify(frameData['areas']);
             alert("Frame areas saved successfully!");
         });
 
