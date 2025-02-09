@@ -51,9 +51,10 @@ class Mdl_frame extends Model
     public function deleteById($id)
     {
 
-        $bg = $this->db->table("frame");
-        $bg->where("id", $id);
+        $bg = $this->db->table("frame")->where("id", $id);
+        $file = $bg->get()->getRow()->file ?? null;
 
+        $bg->where("id", $id);
         if (!$bg->delete()) {
             return (object) array(
                 "code"      => 400,
@@ -63,6 +64,7 @@ class Mdl_frame extends Model
 
         return (object) array(
             "code"      => 200,
+            "file"      => $file,
             "message"   => "Frame berhasil dihapus"
         );
     }
