@@ -28,9 +28,10 @@ class Mdl_background extends Model
     public function deleteById($id)
     {
 
-        $bg = $this->db->table("background");
-        $bg->where("id", $id);
+        $bg = $this->db->table("background")->where("id", $id);
+        $file = $bg->get()->getRow()->file ?? null;
 
+        $bg->where("id", $id);
         if (!$bg->delete()) {
             return (object) array(
                 "code"      => 400,
@@ -40,6 +41,7 @@ class Mdl_background extends Model
 
         return (object) array(
             "code"      => 200,
+            "file"      => $file,
             "message"   => "Background berhasil dihapus"
         );
     }
