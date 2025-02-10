@@ -48,6 +48,7 @@
                             <thead>
                                 <tr>
                                     <th>Halaman</th>
+                                    <th>Cabang</th>
                                     <th>Waktu</th>
                                     <th>Action</th>
                                 </tr>

@@ -9,6 +9,7 @@ class Timer extends BaseController
     public function __construct()
     {
         $this->setting = model('App\Models\Mdl_settings');
+        $this->timer = model('App\Models\Mdl_timer');
     }
     public function index()
     {
@@ -22,13 +23,13 @@ class Timer extends BaseController
         return view('admin/layout/wrapper', $mdata);
     }
 
-    public function getAll() {
-        $result = $this->setting->timer();
+    public function get_all() {
+        $result = $this->timer->allTimer();
         return json_encode($result);
     }
 
-    public function destroy($name) {
-        $result = $this->setting->destroy($name);
+    public function destroy($id) {
+        $result = $this->timer->deleteById(base64_decode($id));
         if (@$result->code!=201){
             session()->setFlashdata('failed', $result->message);
 	    } else {
