@@ -34,7 +34,7 @@
                     <div class="col-lg-12 col-md-12 col-12 mb-2">
                         <div class="card">
                             <div class="card-body">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add">Tambah</button>
+                                <a href="<?= BASE_URL ?>admin/branch/add" class="btn btn-primary">Tambah</a>
                             </div>
                         </div>
                     </div>

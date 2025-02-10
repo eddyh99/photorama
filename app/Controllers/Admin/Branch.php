@@ -24,6 +24,17 @@ class Branch extends BaseController
         return view('admin/layout/wrapper', $mdata);
     }
 
+    public function add()
+    {
+        $mdata = [
+            'title'     => 'Cabang - ' . NAMETITLE,
+            'content'   => 'admin/cabang/create',
+            'menuactive_bg'   => 'active open'
+        ];
+
+        return view('admin/layout/wrapper', $mdata);
+    }
+
     public function destroy($id) {
         $result = $this->cabang->deleteById(base64_decode($id));
         if($result->code == 200){

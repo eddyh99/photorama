@@ -21,7 +21,8 @@ class Photo extends BaseController
 
     public function list()
     {
-        $path = FCPATH . "assets/photobooth/";
+        
+        $path = FCPATH . "assets" . DIRECTORY_SEPARATOR . "photobooth" . DIRECTORY_SEPARATOR;
         $items = array_diff(scandir($path), array('.', '..'));
 
         // Filter hanya folder
