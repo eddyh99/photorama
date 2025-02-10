@@ -62,7 +62,19 @@ class Mdl_cabang extends Model
                     LEFT JOIN harga ON harga.cabang_id = cabang.id
                 WHERE
                     harga.cabang_id IS NULL
-                    AND username = 'user'";
+                    AND role = 'user'";
+        return $this->db->query($sql)->getResult();
+    }
+
+    public function getCabang_notHaving_timer() {
+        $sql = "SELECT
+                    cabang.*
+                FROM
+                    cabang
+                    LEFT JOIN timer ON timer.cabang_id = cabang.id
+                WHERE
+                    timer.cabang_id IS NULL
+                    AND role = 'user'";
         return $this->db->query($sql)->getResult();
     }
 

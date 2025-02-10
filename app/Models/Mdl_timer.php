@@ -40,8 +40,8 @@ class Mdl_timer extends Model
                     timer.id,
                     timer.display,
                     timer.time,
-                    cabang.nama_cabang,
-                    cabang.lokasi
+                    timer.cabang_id,
+                    cabang.nama_cabang
                 FROM
                     timer
                     INNER JOIN cabang ON cabang.id = timer.cabang_id
@@ -99,37 +99,37 @@ class Mdl_timer extends Model
         );
     }
 
-    // public function insertPrice($mdata) {
-    //     try {
-    //         $price = $this->db->table("harga");
+    public function insertTimer($mdata) {
+        try {
+            $timer = $this->db->table("timer");
 
-    //         // Insert data into 'pengguna' table
-    //         if (!$price->insert($mdata)) {
-    //             // Handle case when insert fails (not due to exception)
-    //             return (object) array(
-    //                 "code"      => 400,
-    //                 "message"   => "Gagal menyimpan Harga"
-    //             );
-    //         }
-    //     } catch (DatabaseException $e) {
-    //         // For other database-related errors, return generic server error
-    //         return (object) array(
-    //             "code"      => 500,
-    //             "message"   => "Terjadi kesalahan pada server"
-    //         );
-    //     } catch (\Exception $e) {
-    //         // Handle any other general exceptions
-    //         return (object) array(
-    //             "code"      => 500,
-    //             "message"   => "Terjadi kesalahan pada server"
-    //         );
-    //     }
+            // Insert data into 'pengguna' table
+            if (!$timer->insertBatch($mdata)) {
+                // Handle case when insert fails (not due to exception)
+                return (object) array(
+                    "code"      => 400,
+                    "message"   => "Gagal menyimpan Timer"
+                );
+            }
+        } catch (DatabaseException $e) {
+            // For other database-related errors, return generic server error
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        } catch (\Exception $e) {
+            // Handle any other general exceptions
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        }
 
-    //     return (object) array(
-    //         "code"      => 201,
-    //         "message"   => "Harga berhasil disimpan"
-    //     );
-    // }
+        return (object) array(
+            "code"      => 201,
+            "message"   => "Timer berhasil disimpan"
+        );
+    }
 
     // public function updatePrice($mdata, $id) {
     //     try {
