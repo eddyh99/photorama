@@ -29,4 +29,15 @@ class Price extends BaseController
         $result = $this->price->allPrices();
         echo json_encode($result);
     }
+
+    public function destroy($id) {
+        $result = $this->price->deleteById(base64_decode($id));
+        if($result->code == 200){
+            session()->setFlashdata('success', $result->message);
+            return redirect()->to(BASE_URL."admin/price");
+        }else{
+            session()->setFlashdata('failed', $result->message);
+            return redirect()->to(BASE_URL."admin/price");
+        }
+    }
 }

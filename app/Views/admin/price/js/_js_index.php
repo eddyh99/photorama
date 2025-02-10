@@ -38,7 +38,7 @@
 					var edit = `<a href="#">
                                                 <i class="bx bx-edit bx-md fs-5 text-black"></i>
                                           </a>`;
-					var del = `<a href="<?= BASE_URL ?>admin/background/destroy/${encodeURI(btoa(data.id))}" class="del-data">
+					var del = `<a href="<?= BASE_URL ?>admin/price/destroy/${encodeURI(btoa(data.id))}" class="del-data">
                                                 <i class="bx bx-trash bx-md fs-5 text-danger"></i>
                                           </a>`;
 					return `${edit} ${del}`;

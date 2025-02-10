@@ -59,22 +59,22 @@ class Mdl_price extends Model
     }
 
 
-    // public function deleteById($id)
-    // {
+    public function deleteById($id)
+    {
 
-    //     $cabang = $this->db->table("cabang")->where("id", $id);
-    //     if (!$cabang->delete()) {
-    //         return (object) array(
-    //             "code"      => 400,
-    //             "message"   => "Gagal menghapus cabang"
-    //         );
-    //     }
+        $harga = $this->db->table("harga")->where("id", $id);
+        if (!$harga->delete()) {
+            return (object) array(
+                "code"      => 400,
+                "message"   => "Gagal menghapus harga"
+            );
+        }
 
-    //     return (object) array(
-    //         "code"      => 200,
-    //         "message"   => "Cabang berhasil dihapus"
-    //     );
-    // }
+        return (object) array(
+            "code"      => 200,
+            "message"   => "Harga berhasil dihapus"
+        );
+    }
 
     // public function insertCabang($mdata) {
     //     try {
