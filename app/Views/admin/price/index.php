@@ -34,7 +34,7 @@
                         <div class="col-lg-12 col-md-12 col-12 mb-2">
                             <div class="card">
                                 <div class="card-body">
-                                    <a href="<?= BASE_URL?>admin/background/add" class="btn btn-primary">Tambah</a>
+                                    <a href="<?= BASE_URL?>admin/price/add" class="btn btn-primary">Tambah</a>
                                 </div>
                             </div>
                         </div>

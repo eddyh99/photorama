@@ -54,6 +54,18 @@ class Mdl_cabang extends Model
         return $this->db->query($sql, [$id])->getRow();
     }
 
+    public function getCabang_notHaving_price() {
+        $sql = "SELECT
+                    cabang.*
+                FROM
+                    cabang
+                    LEFT JOIN harga ON harga.cabang_id = cabang.id
+                WHERE
+                    harga.cabang_id IS NULL
+                    AND username = 'user'";
+        return $this->db->query($sql)->getResult();
+    }
+
 
     public function deleteById($id)
     {

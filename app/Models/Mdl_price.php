@@ -76,37 +76,37 @@ class Mdl_price extends Model
         );
     }
 
-    // public function insertCabang($mdata) {
-    //     try {
-    //         $bg = $this->db->table("cabang");
+    public function insertPrice($mdata) {
+        try {
+            $price = $this->db->table("harga");
 
-    //         // Insert data into 'pengguna' table
-    //         if (!$bg->insert($mdata)) {
-    //             // Handle case when insert fails (not due to exception)
-    //             return (object) array(
-    //                 "code"      => 400,
-    //                 "message"   => "Gagal menyimpan cabang"
-    //             );
-    //         }
-    //     } catch (DatabaseException $e) {
-    //         // For other database-related errors, return generic server error
-    //         return (object) array(
-    //             "code"      => 500,
-    //             "message"   => "Terjadi kesalahan pada server"
-    //         );
-    //     } catch (\Exception $e) {
-    //         // Handle any other general exceptions
-    //         return (object) array(
-    //             "code"      => 500,
-    //             "message"   => "Terjadi kesalahan pada server"
-    //         );
-    //     }
+            // Insert data into 'pengguna' table
+            if (!$price->insert($mdata)) {
+                // Handle case when insert fails (not due to exception)
+                return (object) array(
+                    "code"      => 400,
+                    "message"   => "Gagal menyimpan Harga"
+                );
+            }
+        } catch (DatabaseException $e) {
+            // For other database-related errors, return generic server error
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        } catch (\Exception $e) {
+            // Handle any other general exceptions
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        }
 
-    //     return (object) array(
-    //         "code"      => 201,
-    //         "message"   => "cabang berhasil ditambahkan"
-    //     );
-    // }
+        return (object) array(
+            "code"      => 201,
+            "message"   => "Harga berhasil disimpan"
+        );
+    }
 
     // public function updateCabang($mdata, $id) {
     //     try {
