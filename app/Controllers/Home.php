@@ -13,6 +13,7 @@ class Home extends BaseController
         $this->cabang = session()->get('logged_user')['id_cabang'];
         $this->background       = model('App\Models\Mdl_background');
         $this->frame            = model('App\Models\Mdl_frame');
+        $this->price       = model('App\Models\Mdl_price');
         $this->setting       = model('App\Models\Mdl_settings');
         $this->pembayaran       = model('App\Models\Mdl_pembayaran');
 	}
@@ -40,7 +41,7 @@ class Home extends BaseController
     public function order() {
         $result = $this->background->backgroundByScreen('Screen 2', $this->cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
-        $price = $this->setting->value('price');
+        $price = $this->price->getBy_cabang($this->cabang);
         $timer = $this->setting->value('timer_order');
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
