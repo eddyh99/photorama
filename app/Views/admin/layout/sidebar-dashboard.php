@@ -16,6 +16,13 @@
         <!-- <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Setup</span>
         </li> -->
+             <!-- cabang -->
+            <li class="menu-item <?= @$menuactive_cabang ?>">
+                <a href="<?= BASE_URL ?>admin/branch" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-git-branch"></i>
+                    <div data-i18n="Account Settings" class="text-center">Cabang</div>
+                </a>
+            </li>
             <!-- Background -->
             <li class="menu-item <?= @$menuactive_bg ?>">
                 <a href="<?= BASE_URL ?>admin/background" class="menu-link">
