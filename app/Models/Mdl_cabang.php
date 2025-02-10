@@ -43,10 +43,17 @@ class Mdl_cabang extends Model
         return $this->db->query($sql)->getResult();
     }
 
-    // public function backgroundByScreen($screen, $cabang) {
-    //     $sql = "SELECT file from background WHERE display = ? AND cabang_id = ?";
-    //     return $this->db->query($sql, [$screen, $cabang])->getRow();
-    // }
+    public function getCabang_byId($id)
+    {
+        $sql = "SELECT
+                    cabang.*
+                FROM
+                    cabang
+                WHERE
+                    id = ?";
+        return $this->db->query($sql, [$id])->getRow();
+    }
+
 
     public function deleteById($id)
     {
@@ -94,6 +101,38 @@ class Mdl_cabang extends Model
         return (object) array(
             "code"      => 201,
             "message"   => "cabang berhasil ditambahkan"
+        );
+    }
+
+    public function updateCabang($mdata, $id) {
+        try {
+            $cabang = $this->db->table("cabang")->where('id', $id);
+
+            // Insert data into 'pengguna' table
+            if (!$cabang->update($mdata)) {
+                // Handle case when insert fails (not due to exception)
+                return (object) array(
+                    "code"      => 400,
+                    "message"   => "Gagal memperbarui cabang"
+                );
+            }
+        } catch (DatabaseException $e) {
+            // For other database-related errors, return generic server error
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        } catch (\Exception $e) {
+            // Handle any other general exceptions
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        }
+
+        return (object) array(
+            "code"      => 201,
+            "message"   => "cabang berhasil diperbarui"
         );
     }
 }

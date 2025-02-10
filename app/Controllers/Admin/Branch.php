@@ -36,6 +36,22 @@ class Branch extends BaseController
         return view('admin/layout/wrapper', $mdata);
     }
 
+    public function edit($id)
+    {
+
+        $result = $this->cabang->getCabang_byId(base64_decode($id));
+        $result->id = $id;
+        $mdata = [
+            'title'     => 'Cabang - ' . NAMETITLE,
+            'content'   => 'admin/cabang/edit',
+            'extra'     => 'admin/cabang/js/_js_edit',
+            'menuactive_bg'   => 'active open',
+            'user'      => $result
+        ];
+
+        return view('admin/layout/wrapper', $mdata);
+    }
+
     public function store() {
         $rules = $this->validate([
             'nama_cabang' => [
@@ -84,6 +100,59 @@ class Branch extends BaseController
             return redirect()->to(BASE_URL . "admin/branch/add")->withInput();
         }
     }
+
+    public function update($id) {
+        $rules = $this->validate([
+            'nama_cabang' => [
+                'label' => 'Nama Cabang',
+                'rules' => 'required'
+            ],
+            'username' => [
+                'label' => 'Username',
+                'rules' => 'required'
+            ],
+            'password' => [
+                'label' => 'Password',
+                'rules' => 'permit_empty|min_length[7]'
+            ],
+            'konfirmasi_password' => [
+                'label' => 'Konfirmasi Password',
+                'rules' => 'matches[password]'
+            ],
+            'lokasi' => [
+                'label' => 'Lokasi',
+                'rules' => 'required'
+            ]
+        ]);
+
+        // Checking Validation
+        if (!$rules){
+            session()->setFlashdata('failed', $this->validation->listErrors());
+            return redirect()->to(BASE_URL . "admin/branch/edit/$id")->withInput();
+        }
+
+        $pwd = $this->request->getVar('password');
+        $mdata = [
+            'nama_cabang' => $this->request->getVar('nama_cabang'),
+            'username' => $this->request->getVar('username'),
+            'lokasi' => $this->request->getVar('lokasi')
+        ];
+
+        if(!empty($pwd)) {
+            $mdata['password'] = sha1($pwd);
+        }
+
+        $result = $this->cabang->updateCabang($mdata, base64_decode($id));
+
+        if ($result->code == 201) {
+            session()->setFlashdata('success', $result->message);
+            return redirect()->to(BASE_URL . "admin/branch");
+        }else{
+            session()->setFlashdata('failed', $result->message);
+            return redirect()->to(BASE_URL . "admin/branch/edit/$id")->withInput();
+        }
+    }
+
 
     public function destroy($id) {
         $result = $this->cabang->deleteById(base64_decode($id));

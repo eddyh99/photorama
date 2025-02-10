@@ -32,10 +32,13 @@
 			{
 				data: null,
 				"mRender": function(data, type, full, meta) {
+					var edit = `<a href="<?= BASE_URL ?>admin/branch/edit/${encodeURI(btoa(data.id))}">
+                                                <i class="bx bx-edit bx-md fs-5 text-black"></i>
+                                          </a>`;
 					var del = `<a href="<?= BASE_URL ?>admin/branch/destroy/${encodeURI(btoa(data.id))}" class="del-data">
                                                 <i class="bx bx-trash bx-md fs-5 text-danger"></i>
                                           </a>`;
-					return `${del}`;
+					return `${edit} ${del}`;
 				}
 			},
 		],
