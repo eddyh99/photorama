@@ -20,9 +20,9 @@ class Mdl_background extends Model
         return $this->db->query($sql)->getResult();
     }
 
-    public function backgroundByScreen($screen) {
-        $sql = "SELECT file from background WHERE display = ?";
-        return $this->db->query($sql, [$screen])->getRow();
+    public function backgroundByScreen($screen, $cabang) {
+        $sql = "SELECT file from background WHERE display = ? AND cabang_id = ?";
+        return $this->db->query($sql, [$screen, $cabang])->getRow();
     }
 
     public function deleteById($id)

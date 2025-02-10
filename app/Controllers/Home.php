@@ -10,6 +10,7 @@ class Home extends BaseController
 
     public function __construct()
     {   
+        $this->cabang = session()->get('logged_user')['cabang_id'];
         $this->background       = model('App\Models\Mdl_background');
         $this->frame            = model('App\Models\Mdl_frame');
         $this->setting       = model('App\Models\Mdl_settings');
@@ -24,7 +25,7 @@ class Home extends BaseController
     public function index()
     {
         session()->set('print', 0);
-        $result = $this->background->backgroundByScreen('Screen 1');
+        $result = $this->background->backgroundByScreen('Screen 1', $this->cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
@@ -37,7 +38,7 @@ class Home extends BaseController
     }
 
     public function order() {
-        $result = $this->background->backgroundByScreen('Screen 2');
+        $result = $this->background->backgroundByScreen('Screen 2', $this->cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $price = $this->setting->value('price');
         $timer = $this->setting->value('timer_order');
@@ -85,7 +86,7 @@ class Home extends BaseController
         ];
 
         $this->pembayaran->addInvoice($inv);
-        $result = $this->background->backgroundByScreen('Screen 2');
+        $result = $this->background->backgroundByScreen('Screen 2',$this->cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $timer = $this->setting->value('timer_payment');
         $mdata = [
@@ -103,7 +104,7 @@ class Home extends BaseController
     }
 
     public function frame() {
-        $result = $this->background->backgroundByScreen('Screen 2');
+        $result = $this->background->backgroundByScreen('Screen 2', $this->cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $frame = $this->frame->allFrame();
         $timer = $this->setting->value('timer_frame');
@@ -121,7 +122,7 @@ class Home extends BaseController
     }
 
     public function camera($frame) {
-        $result = $this->background->backgroundByScreen('Screen 2');
+        $result = $this->background->backgroundByScreen('Screen 2', $this->cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $timer = $this->setting->value('timer_camera');
 
@@ -140,7 +141,7 @@ class Home extends BaseController
     public function capture($frame) {
         $frame = $this->frame->getById(base64_decode($frame));
         if(!$frame) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        $result = $this->background->backgroundByScreen('Screen 2');
+        $result = $this->background->backgroundByScreen('Screen 2', $this->cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $timer = $this->setting->value('timer_capture');
 
@@ -193,7 +194,7 @@ class Home extends BaseController
     }
 
     public function filter($dir) {
-        $result = $this->background->backgroundByScreen('Screen 2');
+        $result = $this->background->backgroundByScreen('Screen 2', $this->cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $timer = $this->setting->value('timer_capture');
 
@@ -211,7 +212,7 @@ class Home extends BaseController
     }
 
     public function print($dir) {
-        $result = $this->background->backgroundByScreen('Screen 2');
+        $result = $this->background->backgroundByScreen('Screen 2', $this->cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $timer = $this->setting->value('timer_capture');
         $qrcode = new Generator;

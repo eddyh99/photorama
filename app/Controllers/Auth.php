@@ -69,12 +69,22 @@ class Auth extends BaseController
             return redirect()->to(BASE_URL. 'login')->withInput();
         }
 
+        $mdata += [
+            'role' => $user->message->role,
+            'cabang_id' => $user->message->cabang_id
+        ];        
+
         // Set SESSION logged_user
         $this->session->set('logged_user', $mdata);
 
         // If Success set session and redirect
         session()->setFlashdata('success', "Selamat datang <b>".$mdata['username']."</b>");
-        return redirect()->to(BASE_URL . "admin/background");
+
+        if($mdata['role'] == 'admin') {
+            return redirect()->to(BASE_URL . "admin/background");
+        } else {
+            return redirect()->to(BASE_URL . "/");
+        }
         exit();
     }
 
