@@ -49,6 +49,17 @@ class Mdl_timer extends Model
         return $this->db->query($sql)->getResult();
     }
 
+    public function get_byCabang_andScreen($screen, $cabang) {
+        $sql = "SELECT
+                    time
+                FROM
+                    timer
+                WHERE
+                    display = ?
+                AND cabang_id = ?";
+        return $this->db->query($sql, [$screen, $cabang])->getRow()->time ?? null;
+    }
+
     // public function getBy_Id($id)
     // {
     //     $sql = "SELECT
