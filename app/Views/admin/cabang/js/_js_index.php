@@ -27,7 +27,7 @@
 				data: 'lokasi'
 			},
 			{
-				data: 'user'
+				data: 'username'
 			},
 			{
 				data: null,

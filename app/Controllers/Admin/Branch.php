@@ -29,10 +29,60 @@ class Branch extends BaseController
         $mdata = [
             'title'     => 'Cabang - ' . NAMETITLE,
             'content'   => 'admin/cabang/create',
+            'extra'     => 'admin/cabang/js/_js_create',
             'menuactive_bg'   => 'active open'
         ];
 
         return view('admin/layout/wrapper', $mdata);
+    }
+
+    public function store() {
+        $rules = $this->validate([
+            'nama_cabang' => [
+                'label' => 'Nama Cabang',
+                'rules' => 'required'
+            ],
+            'username' => [
+                'label' => 'Username',
+                'rules' => 'required'
+            ],
+            'password' => [
+                'label' => 'Password',
+                'rules' => 'required'
+            ],
+            'konfirmasi_password' => [
+                'label' => 'Konfirmasi Password',
+                'rules' => 'required|matches[password]'
+            ],
+            'lokasi' => [
+                'label' => 'Lokasi',
+                'rules' => 'required'
+            ]
+        ]);
+
+        // Checking Validation
+        if (!$rules){
+            session()->setFlashdata('failed', $this->validation->listErrors());
+            return redirect()->to(BASE_URL . "admin/branch/add")->withInput();
+        }
+
+
+        $mdata = [
+            'nama_cabang' => $this->request->getVar('nama_cabang'),
+            'username' => $this->request->getVar('username'),
+            'password' => sha1($this->request->getVar('password')),
+            'lokasi' => $this->request->getVar('lokasi')
+        ];
+
+        $result = $this->cabang->insertCabang($mdata);
+
+        if ($result->code == 201) {
+            session()->setFlashdata('success', $result->message);
+            return redirect()->to(BASE_URL . "admin/branch");
+        }else{
+            session()->setFlashdata('failed', $result->message);
+            return redirect()->to(BASE_URL . "admin/branch/add")->withInput();
+        }
     }
 
     public function destroy($id) {

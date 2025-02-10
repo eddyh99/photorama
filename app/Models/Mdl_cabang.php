@@ -37,11 +37,9 @@ class Mdl_cabang extends Model
     public function allCabang()
     {
         $sql = "SELECT
-                    user.username as user,
                     cabang.*
                 FROM
-                    cabang
-                    INNER JOIN user ON user.cabang_id = cabang.id";
+                    cabang";
         return $this->db->query($sql)->getResult();
     }
 
@@ -67,35 +65,35 @@ class Mdl_cabang extends Model
         );
     }
 
-    // public function insertBg($mdata) {
-    //     try {
-    //         $bg = $this->db->table("background");
+    public function insertCabang($mdata) {
+        try {
+            $bg = $this->db->table("cabang");
 
-    //         // Insert data into 'pengguna' table
-    //         if (!$bg->insert($mdata)) {
-    //             // Handle case when insert fails (not due to exception)
-    //             return (object) array(
-    //                 "code"      => 400,
-    //                 "message"   => "Gagal menyimpan pengguna"
-    //             );
-    //         }
-    //     } catch (DatabaseException $e) {
-    //         // For other database-related errors, return generic server error
-    //         return (object) array(
-    //             "code"      => 500,
-    //             "message"   => "Terjadi kesalahan pada server"
-    //         );
-    //     } catch (\Exception $e) {
-    //         // Handle any other general exceptions
-    //         return (object) array(
-    //             "code"      => 500,
-    //             "message"   => "Terjadi kesalahan pada server"
-    //         );
-    //     }
+            // Insert data into 'pengguna' table
+            if (!$bg->insert($mdata)) {
+                // Handle case when insert fails (not due to exception)
+                return (object) array(
+                    "code"      => 400,
+                    "message"   => "Gagal menyimpan cabang"
+                );
+            }
+        } catch (DatabaseException $e) {
+            // For other database-related errors, return generic server error
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        } catch (\Exception $e) {
+            // Handle any other general exceptions
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        }
 
-    //     return (object) array(
-    //         "code"      => 201,
-    //         "message"   => "background berhasil ditambahkan"
-    //     );
-    // }
+        return (object) array(
+            "code"      => 201,
+            "message"   => "cabang berhasil ditambahkan"
+        );
+    }
 }

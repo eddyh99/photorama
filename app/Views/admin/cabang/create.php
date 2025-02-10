@@ -19,15 +19,15 @@
             <div class="col-lg-12 mb-4 order-1">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <a href="<?= BASE_URL ?>admin/background" class="me-2">
+                        <a href="<?= BASE_URL ?>admin/branch" class="me-2">
                             <i class="bx bx-chevron-left fs-2"></i>
                             Back
                         </a>
                         <h5 class="mb-1">Tambah Cabang</h5>
                     </div>
                     <div class="card-body">
-                        <form action="<?= BASE_URL ?>admin/background/store" method="POST" enctype="multipart/form-data">
-                            <div class="row">
+                        <form action="<?= BASE_URL ?>admin/branch/store" method="POST" enctype="multipart/form-data">
+                            <div class="row row-cols-2">
                             <div class="mb-3">
                                     <label class="form-label" for="namabarang">Nama Cabang</label>
                                     <div class="input-group input-group-merge">
@@ -35,20 +35,28 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label" for="namabarang">User</label>
+                                    <label class="form-label" for="username">Username</label>
                                     <div class="input-group input-group-merge">
-                                        <select name="display" class="form-control text-center">
-                                            <option value="" disabled selected>--- PILIH USER ---</option>
-                                            <option>Screen 1</option>
-                                            <option>Screen 2</option>
-                                        </select>
+                                        <input class="form-control" name="username" type="text"/>
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label" for="namabarang">Lokasi</label>
+                                    <label class="form-label" for="namabarang">Password</label>
                                     <div class="input-group input-group-merge">
-                                        <textarea class="form-control" name="lokasi" rows="4"></textarea>
+                                        <input class="form-control" name="password" type="password"/>
                                     </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="namabarang">Konfirmasi Password</label>
+                                    <div class="input-group input-group-merge">
+                                        <input class="form-control" name="konfirmasi_password" type="password"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="namabarang">Lokasi</label>
+                                <div class="input-group input-group-merge">
+                                    <textarea class="form-control" name="lokasi" rows="4"></textarea>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Simpan</button>
