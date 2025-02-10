@@ -14,6 +14,26 @@ class Mdl_cabang extends Model
         $this->db = \Config\Database::connect();
     }
 
+    public function getByUsername($username)
+    {
+        $sql = "SELECT * FROM cabang WHERE username=?";
+        $query = $this->db->query($sql, [$username])->getRow();
+        
+        if (!$query) {
+	        $error=[
+	            "code"       => "400",
+	            "message"    => "Username not found"
+	        ];
+            return (object) $error;
+        }
+
+        $response=[
+            "code"       => "200",
+            "message"    => $query
+        ];
+        return (object) $response;
+    }
+
     public function allCabang()
     {
         $sql = "SELECT

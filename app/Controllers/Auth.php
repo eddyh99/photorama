@@ -9,7 +9,7 @@ class Auth extends BaseController
 {
     public function __construct()
     {   
-        $this->user       = model('App\Models\Mdl_user');
+        $this->cabang       = model('App\Models\Mdl_cabang');
 	}
     public function index()
     {
@@ -58,27 +58,21 @@ class Auth extends BaseController
             'password'  => sha1(htmlspecialchars($this->request->getVar('password'))),
         ];
         
-        $user = $this->user->getByUsername($mdata['username']);
+        $user = $this->cabang->getByUsername($mdata['username']);
         if (@$user->code==400){
             session()->setFlashdata('failed', $user->message);
             return redirect()->to(BASE_URL. 'login')->withInput();
 	    }
 
-        if ($mdata['password'] != $user->message->passwd) {
+        if ($mdata['password'] != $user->message->password) {
             session()->setFlashdata('failed', 'Invalid username or password');
             return redirect()->to(BASE_URL. 'login')->withInput();
         }
 
         $mdata += [
             'role' => $user->message->role,
-            'cabang_id' => $user->message->cabang_id
-        ];  
-
-        // validasi cabang user
-        if($mdata['role'] == 'user' && !$mdata['cabang_id'] ) {
-            session()->setFlashdata('failed', 'User belum memiliki cabang.');
-            return redirect()->to(BASE_URL. 'login')->withInput();
-        }
+            'id_cabang' => $user->message->id
+        ]; 
 
         // Set SESSION logged_user
         $this->session->set('logged_user', $mdata);
