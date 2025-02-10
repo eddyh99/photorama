@@ -70,16 +70,18 @@ class Mdl_timer extends Model
     //     return $this->db->query($sql, [$id])->getRow();
     // }
 
-    // public function getBy_cabang($cabang_id)
-    // {
-    //     $sql = "SELECT
-    //                 harga.harga
-    //             FROM
-    //                 harga
-    //                 INNER JOIN cabang ON cabang.id = harga.cabang_id
-    //             WHERE harga.cabang_id = ?";
-    //     return $this->db->query($sql, [$cabang_id])->getRow()->harga ?? 999999;
-    // }
+    public function getBy_cabang($cabang_id)
+    {
+        $sql = "SELECT
+                    timer.display,
+                    timer.time,
+                    timer.cabang_id
+                FROM
+                    timer
+                    INNER JOIN cabang ON cabang.id = timer.cabang_id
+                WHERE timer.cabang_id = ?";
+        return $this->db->query($sql, [$cabang_id])->getResult() ?? null;
+    }
 
 
     public function deleteById($id)
@@ -99,12 +101,51 @@ class Mdl_timer extends Model
         );
     }
 
+    public function updateTimer($mdata) {
+        try {
+            foreach ($mdata as $data) {
+                // Mengumpulkan ID untuk WHERE clause
+                $ids[] = $this->db->escape($data['display']); // Escape untuk keamanan
+                $caseStatements[] = "WHEN display = " . $this->db->escape($data['display']) . " AND cabang_id = " . (int)$data['cabang_id'] . " THEN " . (int)$data['time'];
+            }
+    
+            // Menyusun query
+            $sql = "UPDATE timer SET time = CASE " . implode(' ', $caseStatements) . " END WHERE display IN (" . implode(',', $ids) . ") AND cabang_id = " . (int)$mdata[0]['cabang_id'];
+
+            // Insert data into 'timer' table
+            if (!$this->db->query($sql)) {
+                // Handle case when insert fails (not due to exception)
+                return (object) array(
+                    "code"      => 400,
+                    "message"   => "Gagal mengupdate Timer"
+                );
+            }
+        } catch (DatabaseException $e) {
+            // For other database-related errors, return generic server error
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        } catch (\Exception $e) {
+            // Handle any other general exceptions
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        }
+
+        return (object) array(
+            "code"      => 201,
+            "message"   => "Timer berhasil diupdate"
+        );
+    }
+
     public function insertTimer($mdata) {
         try {
             $timer = $this->db->table("timer");
 
             // Insert data into 'pengguna' table
-            if (!$timer->insertBatch($mdata)) {
+            if (!$timer->updateBatch($mdata)) {
                 // Handle case when insert fails (not due to exception)
                 return (object) array(
                     "code"      => 400,
