@@ -72,7 +72,13 @@ class Auth extends BaseController
         $mdata += [
             'role' => $user->message->role,
             'cabang_id' => $user->message->cabang_id
-        ];        
+        ];  
+
+        // validasi cabang user
+        if($mdata['role'] == 'user' && !$mdata['cabang_id'] ) {
+            session()->setFlashdata('failed', 'User belum memiliki cabang.');
+            return redirect()->to(BASE_URL. 'login')->withInput();
+        }
 
         // Set SESSION logged_user
         $this->session->set('logged_user', $mdata);
@@ -80,12 +86,10 @@ class Auth extends BaseController
         // If Success set session and redirect
         session()->setFlashdata('success', "Selamat datang <b>".$mdata['username']."</b>");
 
-        if($mdata['role'] == 'admin') {
-            return redirect()->to(BASE_URL . "admin/background");
-        } else {
-            return redirect()->to(BASE_URL . "/");
-        }
-        exit();
+        // Redirect berdasarkan role
+        return ($mdata['role'] === 'admin') 
+            ? redirect()->to(BASE_URL . "admin/background") 
+            : redirect()->to(BASE_URL);
     }
 
     public function logout(){
