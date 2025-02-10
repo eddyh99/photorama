@@ -40,6 +40,23 @@ class Price extends BaseController
         return view('admin/layout/wrapper', $mdata);
     }
 
+    public function edit($id)
+    {
+        $price = $this->price->getBy_Id(base64_decode($id));
+        $price->id = $id;
+        $cabang = $this->cabang->allCabang();
+        $mdata = [
+            'title'     => 'Price - ' . NAMETITLE,
+            'content'   => 'admin/price/edit',
+            'extra'     => 'admin/price/js/_js_create',
+            'menuactive_bg'   => 'active open',
+            'price'     => $price,
+            'cabang'    => $cabang
+        ];
+
+        return view('admin/layout/wrapper', $mdata);
+    }
+
     public function store() {
         $rules = $this->validate([
             'harga' => [
@@ -72,6 +89,40 @@ class Price extends BaseController
         }else{
             session()->setFlashdata('failed', $result->message);
             return redirect()->to(BASE_URL . "admin/price/add")->withInput();
+        }
+    }
+
+    public function update($id) {
+        $rules = $this->validate([
+            'harga' => [
+                'label' => 'Harga',
+                'rules' => 'required'
+            ],
+            'cabang_id' => [
+                'label' => 'Cabang',
+                'rules' => 'required'
+            ]
+        ]);
+
+        // Checking Validation
+         if (!$rules){
+            session()->setFlashdata('failed', $this->validation->listErrors());
+            return redirect()->to(BASE_URL . "admin/price/edit/$id")->withInput();
+        }
+
+
+        $mdata = [
+            'harga' => $this->request->getVar('harga'),
+            'cabang_id' => $this->request->getVar('cabang_id'),
+        ];
+        $result = $this->price->updatePrice($mdata, base64_decode($id));
+
+        if ($result->code == 201) {
+            session()->setFlashdata('success', $result->message);
+            return redirect()->to(BASE_URL . "admin/price");
+        }else{
+            session()->setFlashdata('failed', $result->message);
+            return redirect()->to(BASE_URL . "admin/price/edit/$id")->withInput();
         }
     }
 

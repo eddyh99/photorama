@@ -47,6 +47,16 @@ class Mdl_price extends Model
         return $this->db->query($sql)->getResult();
     }
 
+    public function getBy_Id($id)
+    {
+        $sql = "SELECT
+                    *
+                FROM
+                    harga
+                WHERE id = ?";
+        return $this->db->query($sql, [$id])->getRow();
+    }
+
     public function getBy_cabang($cabang_id)
     {
         $sql = "SELECT
@@ -108,35 +118,35 @@ class Mdl_price extends Model
         );
     }
 
-    // public function updateCabang($mdata, $id) {
-    //     try {
-    //         $cabang = $this->db->table("cabang")->where('id', $id);
+    public function updatePrice($mdata, $id) {
+        try {
+            $price = $this->db->table("harga")->where('id', $id);
 
-    //         // Insert data into 'pengguna' table
-    //         if (!$cabang->update($mdata)) {
-    //             // Handle case when insert fails (not due to exception)
-    //             return (object) array(
-    //                 "code"      => 400,
-    //                 "message"   => "Gagal memperbarui cabang"
-    //             );
-    //         }
-    //     } catch (DatabaseException $e) {
-    //         // For other database-related errors, return generic server error
-    //         return (object) array(
-    //             "code"      => 500,
-    //             "message"   => "Terjadi kesalahan pada server"
-    //         );
-    //     } catch (\Exception $e) {
-    //         // Handle any other general exceptions
-    //         return (object) array(
-    //             "code"      => 500,
-    //             "message"   => "Terjadi kesalahan pada server"
-    //         );
-    //     }
+            // Insert data into 'pengguna' table
+            if (!$price->update($mdata)) {
+                // Handle case when insert fails (not due to exception)
+                return (object) array(
+                    "code"      => 400,
+                    "message"   => "Gagal memperbarui harga"
+                );
+            }
+        } catch (DatabaseException $e) {
+            // For other database-related errors, return generic server error
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        } catch (\Exception $e) {
+            // Handle any other general exceptions
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        }
 
-    //     return (object) array(
-    //         "code"      => 201,
-    //         "message"   => "cabang berhasil diperbarui"
-    //     );
-    // }
+        return (object) array(
+            "code"      => 201,
+            "message"   => "harga berhasil diperbarui"
+        );
+    }
 }
