@@ -75,20 +75,26 @@ class Auth extends BaseController
         ]; 
 
         // Set SESSION logged_user
-        $this->session->set('logged_user', $mdata);
-
-        // If Success set session and redirect
         session()->setFlashdata('success', "Selamat datang <b>".$mdata['username']."</b>");
 
-        // Redirect berdasarkan role
-        return ($mdata['role'] === 'admin') 
-            ? redirect()->to(BASE_URL . "admin/background") 
-            : redirect()->to(BASE_URL);
+        if ($mdata['role'] === 'user') {
+            // Simpan di cookie selama 1 tahun
+            setcookie('logged_user', json_encode($mdata), time() + (365 * 24 * 60 * 60), "/");
+            return redirect()->to(BASE_URL) ;
+        } else {
+            $this->session->set('logged_user', $mdata);
+            return redirect()->to(BASE_URL . "admin/background");
+        }
     }
 
     public function logout(){
         // unset($_SESSION['item']);
         session()->destroy();
+
+        // Hapus cookie jika ada
+        if (isset($_COOKIE['logged_user'])) {
+            setcookie('logged_user', '', time() - 3600, "/");
+        }
         return redirect()->to(BASE_URL. "login")->withInput();
         exit;
     }

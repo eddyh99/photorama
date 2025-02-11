@@ -11,9 +11,10 @@ class LoginFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         $session = session();
-        if(!$session->has('logged_user')){
-            header("Location:".BASE_URL . "login");
-            exit();
+        $cookie = $_COOKIE['logged_user'] ?? null;
+
+        if (!$session->has('logged_user') && !$cookie) {
+            return redirect()->to(BASE_URL . "login");
         }
     }
 

@@ -10,7 +10,8 @@ class Home extends BaseController
 
     public function __construct()
     {   
-        $this->id_cabang = session()->get('logged_user')['id_cabang'];
+        $user = $_COOKIE['logged_user'] ?? null;
+        $this->id_cabang = $user ? json_decode($user)->id_cabang: null;
         $this->cabang       = model('App\Models\Mdl_cabang');
         $this->qris       = model('App\Models\Mdl_qris');
         $this->background       = model('App\Models\Mdl_background');
