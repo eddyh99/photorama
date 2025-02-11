@@ -3,12 +3,14 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use Config\Services;
 
 class Background extends BaseController
 {
     public function __construct()
     {   
         $this->background       = model('App\Models\Mdl_background');
+        $this->cabang       = model('App\Models\Mdl_cabang');
 	}
 
     public function index()
@@ -25,45 +27,50 @@ class Background extends BaseController
 
     public function add()
     {
+        $cabang = $this->cabang->getCabang_notHaving_bg();
         $mdata = [
             'title'     => 'Background - ' . NAMETITLE,
             'content'   => 'admin/bg/create',
             'extra'     => 'admin/bg/js/_js_create',
-            'menuactive_bg'   => 'active open'
+            'menuactive_bg'   => 'active open',
+            'cabang'     => $cabang
         ];
 
         return view('admin/layout/wrapper', $mdata);
     }
 
     public function store() {
-        $rules = $this->validate([
-            'file' => [
-                'label' => 'Background',
-                'rules' => 'uploaded[file]|is_image[file]|mime_in[file,image/png]'
-            ],
-            'display'     => [
-                'label'     => 'Tampilan',
-                'rules'     => 'required'
-            ]
-        ]);
 
-        // Checking Validation
-        if (!$rules){
-            session()->setFlashdata('failed', $this->validation->listErrors());
-            return redirect()->to(BASE_URL . "admin/background/add")->withInput();
+        $validation = Services::validation(); // Ambil instance validasi
+        $postData = $this->request->getPost();
+        $mdata = [];
+
+        // validasi cabang
+        if (!isset($postData['cabang_id'])) {
+            session()->setFlashdata('failed', 'Cabang ID harus diisi!');
+            return redirect()->to(base_url("admin/background/add"))->withInput();
         }
 
-        $fileBg = $this->request->getFile('file');
-        $screen = $this->request->getVar('display');
-        if ($fileBg && $fileBg->isValid()) {
-            $bgName = $screen.time() .'.png';
-            $fileBg->move('assets/img/background', $bgName);
+        $cabangId = $postData['cabang_id'];
+        unset($postData['cabang_id']); //hapus cabang_id
+
+        // Loop semua input selain cabang_id untuk menyusun array data
+        $rules = [];
+        foreach ($_FILES as $field => $file) {
+            // Pastikan ada file yang diunggah dan tidak terjadi kesalahan saat upload
+            if (isset($file['name']) && $file['error'] === UPLOAD_ERR_OK) {
+                $rules[$field] = 'uploaded[' . $field . ']|is_image[' . $field . ']|mime_in[' . $field . ',image/jpg,image/jpeg,image/png]|max_size[' . $field . ',2048]';
+            }
         }
 
-        $mdata = [
-            'file'    => 'background/' .$bgName,
-            'display' => $screen
-        ];
+
+        // Jalankan validasi
+        if (!$validation->withRequest($this->request)->run()) {
+            session()->setFlashdata('failed', $validation->listErrors());
+            return redirect()->to(base_url("admin/background/add"))->withInput();
+        }
+
+        // dd('sukses');
 
         $result = $this->background->insertBg($mdata);
 

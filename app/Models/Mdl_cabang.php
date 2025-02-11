@@ -66,6 +66,18 @@ class Mdl_cabang extends Model
         return $this->db->query($sql)->getResult();
     }
 
+    public function getCabang_notHaving_bg() {
+        $sql = "SELECT
+                    cabang.*
+                FROM
+                    cabang
+                    LEFT JOIN background ON background.cabang_id = cabang.id
+                WHERE
+                    background.cabang_id IS NULL
+                    AND role = 'user'";
+        return $this->db->query($sql)->getResult();
+    }
+
     public function getCabang_notHaving_timer() {
         $sql = "SELECT
                     cabang.*

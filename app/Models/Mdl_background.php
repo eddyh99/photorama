@@ -16,7 +16,7 @@ class Mdl_background extends Model
 
     public function allBackground()
     {
-        $sql = "select * from background";
+        $sql = "select background.*, cabang.nama_cabang  from background inner join cabang on cabang.id = background.cabang_id";
         return $this->db->query($sql)->getResult();
     }
 
