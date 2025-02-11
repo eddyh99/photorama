@@ -1,7 +1,5 @@
 <script>
     $(function() {
-        const bg = <?= $background ? json_encode($background) : 'null'; ?>;
-        $("#content-bg").css("background-image", bg ? `url('${bg}')` : 'none');
         const dir = btoa(<?= $dir ?>);
         const canvasToBlob = (canvas) => new Promise((resolve) => canvas.toBlob(resolve));
 

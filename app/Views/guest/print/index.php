@@ -19,7 +19,10 @@
                         </div>
                         <p class="text-white">SCAN QR CODE</p>
                         <p class="text-white">OR</p>
-                        <button class="btn btn-warning">EMAIL SOFT COPY</button>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-warning">EMAIL SOFT COPY</button>
+                            <a href="<?= BASE_URL ?>finish" class="btn btn-primary">DONE</a>
+                        </div>
                     </div>
                 </div>
             </div>

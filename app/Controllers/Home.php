@@ -30,28 +30,25 @@ class Home extends BaseController
     public function index()
     {
         session()->set('print', 0);
-        $result = $this->background->backgroundByScreen('Screen 1', $this->id_cabang);
-        $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'content'       => 'guest/beranda/index',
-            'extra'     => 'guest/beranda/js/_js_index',
-            'background'    =>  $background
+            'background'    =>  $background ?? null
         ];
 
         return view('guest/wrapper', $mdata);
     }
 
     public function order() {
-        $result = $this->background->backgroundByScreen('Screen 2', $this->id_cabang);
-        $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
         $price = $this->price->getBy_cabang($this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_order', $this->id_cabang);
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'content'       => 'guest/order/index',
-            'extra'     => 'guest/order/js/_js_index',
-            'background'    =>  $background,
+            'extra'         => 'guest/order/js/_js_index',
+            'background'    =>  $background ?? null,
             'price'         => $price,
             'timer'         => $timer
         ];
@@ -92,15 +89,14 @@ class Home extends BaseController
         ];
 
         $this->pembayaran->addInvoice($inv);
-        $result = $this->background->backgroundByScreen('Screen 2',$this->id_cabang);
-        $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang); $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
         $qris_bg = $this->qris->getBy_cabang($this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_payment', $this->id_cabang);
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'content'       => 'guest/payment/index',
             'extra'         => 'guest/payment/js/_js_index',
-            'background'    =>  $background,
+            'background'    =>  $background ?? null,
             'price'         =>  $price,
             'print'         =>  $print,
             'timer'         =>  $timer,
@@ -113,8 +109,7 @@ class Home extends BaseController
     }
 
     public function frame() {
-        $result = $this->background->backgroundByScreen('Screen 2', $this->id_cabang);
-        $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
         $frame = $this->frame->allFrame();
         $timer = $this->timer->get_byCabang_andScreen('screen_frame', $this->id_cabang);
 
@@ -122,7 +117,7 @@ class Home extends BaseController
             'title'         => 'Beranda - ' . NAMETITLE,
             'content'       => 'guest/frame/index',
             'extra'         => 'guest/frame/js/_js_index',
-            'background'    =>  $background,
+            'background'    =>  $background ?? null,
             'frame'         =>  $frame,
             'timer'         => $timer
         ];
@@ -131,15 +126,14 @@ class Home extends BaseController
     }
 
     public function camera($frame) {
-        $result = $this->background->backgroundByScreen('Screen 2', $this->id_cabang);
-        $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_select_camera', $this->id_cabang);
 
         $mdata = [
             'title'         => 'Camera - ' . NAMETITLE,
             'content'       => 'guest/camera/index',
             'extra'         => 'guest/camera/js/_js_index',
-            'background'    =>  $background,
+            'background'    =>  $background ?? null,
             'timer'         => $timer,
             'frame'         => $frame
         ];
@@ -150,15 +144,14 @@ class Home extends BaseController
     public function capture($frame) {
         $frame = $this->frame->getById(base64_decode($frame));
         if(!$frame) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        $result = $this->background->backgroundByScreen('Screen 2', $this->id_cabang);
-        $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_capture_photo', $this->id_cabang);
 
         $mdata = [
             'title'         => 'Take Photo - ' . NAMETITLE,
             'content'       => 'guest/capture/index',
             'extra'         => 'guest/capture/js/_js_index',
-            'background'    =>  $background,
+            'background'    =>  $background ?? null,
             'frame'         => $frame,
             'timer'         => $timer
         ];
@@ -203,15 +196,14 @@ class Home extends BaseController
     }
 
     public function filter($dir) {
-        $result = $this->background->backgroundByScreen('Screen 2', $this->id_cabang);
-        $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_filter', $this->id_cabang);
 
         $mdata = [
             'title'         => 'Make Filter - ' . NAMETITLE,
             'content'       => 'guest/filter/index',
             'extra'         => 'guest/filter/js/_js_index',
-            'background'    =>  $background,
+            'background'    =>  $background ?? null,
             'timer'         => $timer,
             'dir'           => base64_decode($dir)
         ];
@@ -221,8 +213,7 @@ class Home extends BaseController
     }
 
     public function print($dir) {
-        $result = $this->background->backgroundByScreen('Screen 2', $this->id_cabang);
-        $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
         $qrcode = new Generator;
 
@@ -230,7 +221,7 @@ class Home extends BaseController
             'title'         => 'Print - ' . NAMETITLE,
             'content'       => 'guest/print/index',
             'extra'         => 'guest/print/js/_js_index',
-            'background'    =>  $background,
+            'background'    =>  $background ?? null,
             'timer'         => $timer,
             'dir'           => base64_decode($dir),
             'qrcode'        => $qrcode->size(250)->generate(base_url("download/$dir"))
@@ -238,6 +229,19 @@ class Home extends BaseController
 
         return view('guest/wrapper', $mdata);
 
+    }
+
+    public function finish() {
+        $background = $this->background->backgroundByScreen('screen_finish', $this->id_cabang);
+        $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
+        $mdata = [
+            'title'         => 'Print - ' . NAMETITLE,
+            'content'       => 'guest/finish/index',
+            'background'    =>  $background ?? 'thx.png',
+            'timer'         => $timer
+        ];
+
+        return view('guest/wrapper', $mdata);
     }
 
     public function userFiles($folder)
