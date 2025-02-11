@@ -34,7 +34,7 @@
                         <div class="col-lg-12 col-md-12 col-12 mb-2">
                             <div class="card">
                                 <div class="card-body">
-                                    <a href="<?= BASE_URL?>admin/frame/add" class="btn btn-primary">Tambah Frame</a>
+                                    <a href="<?= BASE_URL?>admin/qris/add" class="btn btn-primary">Tambah</a>
                                 </div>
                             </div>
                         </div>

@@ -12,6 +12,7 @@ class Home extends BaseController
     {   
         $this->id_cabang = session()->get('logged_user')['id_cabang'];
         $this->cabang       = model('App\Models\Mdl_cabang');
+        $this->qris       = model('App\Models\Mdl_qris');
         $this->background       = model('App\Models\Mdl_background');
         $this->frame            = model('App\Models\Mdl_frame');
         $this->price       = model('App\Models\Mdl_price');
@@ -92,6 +93,7 @@ class Home extends BaseController
         $this->pembayaran->addInvoice($inv);
         $result = $this->background->backgroundByScreen('Screen 2',$this->id_cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
+        $qris_bg = $this->qris->getBy_cabang($this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_payment', $this->id_cabang);
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
@@ -102,6 +104,7 @@ class Home extends BaseController
             'print'         =>  $print,
             'timer'         =>  $timer,
             'qris'          =>  $payment->data->qris,
+            'bg_qris'       =>  $qris_bg ?? null,
             'inv'           =>  $payment->data->invoice,
             'cabang'        => $cabang->lokasi ?? ''
         ];
