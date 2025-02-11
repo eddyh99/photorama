@@ -49,6 +49,12 @@
                     <div data-i18n="Account Settings" class="text-center">Voucher</div>
                 </a>
             </li>
+            <li class="menu-item <?= @$menuactive_qr ?>">
+                <a href="<?= BASE_URL ?>admin/qris" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-qr-scan"></i>
+                    <div data-i18n="Account Settings" class="text-center">QRIS</div>
+                </a>
+            </li>
             <li class="menu-item <?= @$menuactive_timer ?>">
                 <a href="<?= BASE_URL ?>admin/timer" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-time"></i>

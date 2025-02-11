@@ -10,7 +10,8 @@ class Home extends BaseController
 
     public function __construct()
     {   
-        $this->cabang = session()->get('logged_user')['id_cabang'];
+        $this->id_cabang = session()->get('logged_user')['id_cabang'];
+        $this->cabang       = model('App\Models\Mdl_cabang');
         $this->background       = model('App\Models\Mdl_background');
         $this->frame            = model('App\Models\Mdl_frame');
         $this->price       = model('App\Models\Mdl_price');
@@ -27,7 +28,7 @@ class Home extends BaseController
     public function index()
     {
         session()->set('print', 0);
-        $result = $this->background->backgroundByScreen('Screen 1', $this->cabang);
+        $result = $this->background->backgroundByScreen('Screen 1', $this->id_cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
@@ -40,10 +41,10 @@ class Home extends BaseController
     }
 
     public function order() {
-        $result = $this->background->backgroundByScreen('Screen 2', $this->cabang);
+        $result = $this->background->backgroundByScreen('Screen 2', $this->id_cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
-        $price = $this->price->getBy_cabang($this->cabang);
-        $timer = $this->timer->get_byCabang_andScreen('screen_order', $this->cabang);
+        $price = $this->price->getBy_cabang($this->id_cabang);
+        $timer = $this->timer->get_byCabang_andScreen('screen_order', $this->id_cabang);
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'content'       => 'guest/order/index',
@@ -78,6 +79,7 @@ class Home extends BaseController
             session()->setFlashdata('failed', 'Maaf, coba kembali beberapa saat lagi.');
             return redirect()->to(BASE_URL. 'order');
         }
+        $cabang = $this->cabang->getCabang_byId($this->id_cabang);
 
         $inv = [
             'invoice' => $payment->data->invoice,
@@ -88,9 +90,9 @@ class Home extends BaseController
         ];
 
         $this->pembayaran->addInvoice($inv);
-        $result = $this->background->backgroundByScreen('Screen 2',$this->cabang);
+        $result = $this->background->backgroundByScreen('Screen 2',$this->id_cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
-        $timer = $this->timer->get_byCabang_andScreen('screen_payment', $this->cabang);
+        $timer = $this->timer->get_byCabang_andScreen('screen_payment', $this->id_cabang);
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'content'       => 'guest/payment/index',
@@ -100,16 +102,17 @@ class Home extends BaseController
             'print'         =>  $print,
             'timer'         =>  $timer,
             'qris'          =>  $payment->data->qris,
-            'inv'           =>  $payment->data->invoice
+            'inv'           =>  $payment->data->invoice,
+            'cabang'        => $cabang->lokasi ?? ''
         ];
         return view('guest/wrapper', $mdata);
     }
 
     public function frame() {
-        $result = $this->background->backgroundByScreen('Screen 2', $this->cabang);
+        $result = $this->background->backgroundByScreen('Screen 2', $this->id_cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
         $frame = $this->frame->allFrame();
-        $timer = $this->timer->get_byCabang_andScreen('screen_frame', $this->cabang);
+        $timer = $this->timer->get_byCabang_andScreen('screen_frame', $this->id_cabang);
 
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
@@ -124,9 +127,9 @@ class Home extends BaseController
     }
 
     public function camera($frame) {
-        $result = $this->background->backgroundByScreen('Screen 2', $this->cabang);
+        $result = $this->background->backgroundByScreen('Screen 2', $this->id_cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
-        $timer = $this->timer->get_byCabang_andScreen('screen_select_camera', $this->cabang);
+        $timer = $this->timer->get_byCabang_andScreen('screen_select_camera', $this->id_cabang);
 
         $mdata = [
             'title'         => 'Camera - ' . NAMETITLE,
@@ -143,9 +146,9 @@ class Home extends BaseController
     public function capture($frame) {
         $frame = $this->frame->getById(base64_decode($frame));
         if(!$frame) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        $result = $this->background->backgroundByScreen('Screen 2', $this->cabang);
+        $result = $this->background->backgroundByScreen('Screen 2', $this->id_cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
-        $timer = $this->timer->get_byCabang_andScreen('screen_capture_photo', $this->cabang);
+        $timer = $this->timer->get_byCabang_andScreen('screen_capture_photo', $this->id_cabang);
 
         $mdata = [
             'title'         => 'Take Photo - ' . NAMETITLE,
@@ -196,9 +199,9 @@ class Home extends BaseController
     }
 
     public function filter($dir) {
-        $result = $this->background->backgroundByScreen('Screen 2', $this->cabang);
+        $result = $this->background->backgroundByScreen('Screen 2', $this->id_cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
-        $timer = $this->timer->get_byCabang_andScreen('screen_filter', $this->cabang);
+        $timer = $this->timer->get_byCabang_andScreen('screen_filter', $this->id_cabang);
 
         $mdata = [
             'title'         => 'Make Filter - ' . NAMETITLE,
@@ -214,9 +217,9 @@ class Home extends BaseController
     }
 
     public function print($dir) {
-        $result = $this->background->backgroundByScreen('Screen 2', $this->cabang);
+        $result = $this->background->backgroundByScreen('Screen 2', $this->id_cabang);
         $background = $result ? BASE_URL .'assets/img/'.$result->file : null;
-        $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->cabang);
+        $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
         $qrcode = new Generator;
 
         $mdata = [

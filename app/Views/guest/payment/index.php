@@ -18,24 +18,17 @@
                 <div class="col">
                     <!-- 1 of 3 -->
                 </div>
-                <div class="col-6">
-                    <div class="card text-white" style="background-color: blue;">
-                        <div class="card-body text-center px-0 py-0">
-                            <!-- Judul Card -->
-                            <h2 class="card-title text-uppercase fw-bold py-4" style="background-color: yellow;">Scan to Pay</h2>
-
-                            <!-- Logo QRIS -->
-                            <img class="d-block mx-auto mb-3" src="<?= BASE_URL ?>assets/img/qris-logo.png" alt="Logo Qris" style="max-width: 40%;">
+                <div class="col">
+                    <div class="card text-white" style="background-image: url('<?= BASE_URL ?>assets/img/<?= $bg_qris ?? 'bg-qris.png' ?>');width: 400px;height: 500px;">
+                        <div class="mx-auto" style="margin-top: 140px;">
+                            <!-- Alamat -->
+                             <h4 class="text-center py-0" style="color: black;"><?= $cabang ?></h4>
 
                             <!-- Logo QRIS -->
                             <?= $qris ?>
 
                             <!-- Total Pembayaran -->
-                            <p class="fs-5 mt-2">PAYMENT TOTAL</p>
-                            <h2 class="text-white">IDR <span id="price"><?= number_format($price, 0, ',', '.') ?></span></h2>
-
-                            <!-- Partner QRIS -->
-                            <img class="mx-0" src="<?= BASE_URL ?>assets/img/qris-partner.jpeg" alt="" style="max-width: 100%; height: auto;">
+                            <h2 class="text-center mt-5" style="color: black;">IDR <span id="price"><?= number_format($price, 0, ',', '.') ?></span></h2>
                         </div>
                     </div>
                 </div>
