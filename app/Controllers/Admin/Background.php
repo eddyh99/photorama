@@ -39,9 +39,9 @@ class Background extends BaseController
         return view('admin/layout/wrapper', $mdata);
     }
 
-    public function store() {
+    public function store()
+    {
 
-        $validation = Services::validation(); // Ambil instance validasi
         $postData = $this->request->getPost();
         $mdata = [];
 
@@ -55,29 +55,44 @@ class Background extends BaseController
         unset($postData['cabang_id']); //hapus cabang_id
 
         // Loop semua input selain cabang_id untuk menyusun array data
-        $rules = [];
+        $rules_bg = [];
         foreach ($_FILES as $field => $file) {
             // Pastikan ada file yang diunggah dan tidak terjadi kesalahan saat upload
             if (isset($file['name']) && $file['error'] === UPLOAD_ERR_OK) {
-                $rules[$field] = 'uploaded[' . $field . ']|is_image[' . $field . ']|mime_in[' . $field . ',image/jpg,image/jpeg,image/png]|max_size[' . $field . ',2048]';
+                $rules_bg[$field] = 'uploaded[' . $field . ']|is_image[' . $field . ']|mime_in[' . $field . ',image/jpg,image/jpeg,image/png]|max_size[' . $field . ',2048]';
+
+                $mdata[$field] = [
+                    'display' => $field,
+                    'cabang_id' => $cabangId
+                ];
+            } else {
+                session()->setFlashdata('failed', 'Harap lengkapi semua background screen');
+                return redirect()->to(base_url("admin/background/add"))->withInput();
             }
         }
 
-
+        $rules = $this->validate($rules_bg);
         // Jalankan validasi
-        if (!$validation->withRequest($this->request)->run()) {
-            session()->setFlashdata('failed', $validation->listErrors());
-            return redirect()->to(base_url("admin/background/add"))->withInput();
+        if (!$rules) {
+            session()->setFlashdata('failed', $this->validation->listErrors());
+            return redirect()->to(BASE_URL . "admin/background/add")->withInput();
         }
 
-        // dd('sukses');
+
+        foreach ($_FILES as $field => $file) {
+            $bg_name = "$field" . time() . '.png';
+            $mdata[$field]['file'] = 'background/' . $bg_name;
+            move_uploaded_file($file['tmp_name'], FCPATH . 'assets/img/background/' . $bg_name);
+        }
+
+        // dd($mdata);
 
         $result = $this->background->insertBg($mdata);
 
         if ($result->code == 201) {
             session()->setFlashdata('success', $result->message);
             return redirect()->to(BASE_URL . "admin/background");
-        }else{
+        } else {
             session()->setFlashdata('failed', $result->message);
             return redirect()->to(BASE_URL . "admin/background/add")->withInput();
         }

@@ -51,7 +51,7 @@ class Mdl_background extends Model
             $bg = $this->db->table("background");
 
             // Insert data into 'pengguna' table
-            if (!$bg->insert($mdata)) {
+            if (!$bg->insertBatch($mdata)) {
                 // Handle case when insert fails (not due to exception)
                 return (object) array(
                     "code"      => 400,
