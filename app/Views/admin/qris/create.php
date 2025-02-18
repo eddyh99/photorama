@@ -23,14 +23,14 @@
                             <i class="bx bx-chevron-left fs-2"></i>
                             Back
                         </a>
-                        <h5 class="mb-1">Tambah Background</h5>
+                        <h5 class="mb-1">Tambah Background QRIS</h5>
                     </div>
                     <div class="card-body">
                         <form action="<?= BASE_URL ?>admin/qris/store" method="POST" enctype="multipart/form-data">
                         <img class="img-preview img-fluid mx-auto d-block">
                             <div class="row row-cols-2">
                                 <div class="mb-3">
-                                    <label class="form-label" for="upload foto">Screen Order</label>
+                                    <label class="form-label" for="upload foto">Background</label>
                                     <div class="input-group input-group-merge">
                                         <input
                                             type="file"

@@ -2,7 +2,7 @@
     const selectedPhotos = [];
     const video = document.getElementById('webcam');
     const overlayCanvas = document.getElementById('overlay');
-    const countdownOverlay = document.getElementById('countdown');
+    const countdownOverlay = document.getElementById('countdown-camera');
     const photosContainer = document.getElementById('photos');
     const recordedVideoContainer = document.getElementById('recordedVideoContainer');
     const frameCanvas = document.getElementById('frame');

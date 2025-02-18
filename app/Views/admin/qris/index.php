@@ -43,7 +43,7 @@
                 <div class="col-lg-12 mb-4 order-1">
                     <div class="card border-expat w-100">
                         <div class="card-body">
-                            <h5 class="card-title fw-semibold mb-4">List Frame</h5>
+                            <h5 class="card-title fw-semibold mb-4">List Background</h5>
                             <table id="table_list_bg" class="table table-striped" style="width:100%">
                                 <thead>
                                     <tr>

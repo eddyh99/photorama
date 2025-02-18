@@ -5,7 +5,7 @@
             <div class="video-container">
                 <video id="webcam" autoplay playsinline muted></video>
                 <canvas id="overlay"></canvas>
-                <div id="countdown" class="countdown-overlay"></div>
+                <div id="countdown-camera" class="countdown-overlay"></div>
             </div>
         </div>
 

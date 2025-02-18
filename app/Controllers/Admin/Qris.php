@@ -34,7 +34,7 @@ class Qris extends BaseController
             'title'     => 'Background - ' . NAMETITLE,
             'content'   => 'admin/qris/create',
             'extra'     => 'admin/qris/js/_js_create',
-            'menuactive_bg'   => 'active open',
+            'menuactive_qr'   => 'active open',
             'cabang'     => $cabang
         ];
 
