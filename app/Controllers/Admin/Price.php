@@ -9,7 +9,7 @@ class Price extends BaseController
 {
     public function __construct()
     {   
-        $this->price       = model('App\Models\Mdl_Price');
+        $this->price       = model('App\Models\Mdl_price');
         $this->cabang       = model('App\Models\Mdl_cabang');
 	}
 

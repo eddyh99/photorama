@@ -9,7 +9,7 @@ class Branch extends BaseController
 {
     public function __construct()
     {   
-        $this->cabang       = model('App\Models\Mdl_Cabang');
+        $this->cabang       = model('App\Models\Mdl_cabang');
 	}
 
     public function index()

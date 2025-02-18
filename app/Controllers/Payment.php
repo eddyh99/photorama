@@ -186,8 +186,8 @@ class Payment extends BaseController
             return;
         }
 
-        if ($result->transactionStatusDesc == 'Success') {
-            $this->pembayaran->confirmPayment($result->originalReferenceNo);
+        if ($result->transaction->status == 'SUCCESS') {
+            $this->pembayaran->confirmPayment($result->order->invoice_number);
             echo json_encode(['status' => 'success', 'message' => 'Payment confirmed']);
         };
     }
