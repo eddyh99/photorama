@@ -23,31 +23,117 @@
                             <i class="bx bx-chevron-left fs-2"></i>
                             Back
                         </a>
-                        <h5 class="mb-1">Tambah Backgorund</h5>
+                        <h5 class="mb-1">Tambah Background</h5>
                     </div>
                     <div class="card-body">
                         <form action="<?= BASE_URL ?>admin/background/store" method="POST" enctype="multipart/form-data">
-                            <img class="img-preview img-fluid col-sm-5 d-block">
+                        <img class="img-preview img-fluid col-sm-5 d-block">
+                        <div class="mb-3">
+                                    <label class="form-label" for="namabarang">Cabang</label>
+                                    <div class="input-group input-group-merge">
+                                        <select name="cabang_id" class="form-control text-center">
+                                            <option value="" selected disabled>--- Pilih Cabang ---</option>
+                                            <?php foreach($cabang as $c): ?>
+                                            <option value="<?= $c->id ?>"><?= $c->nama_cabang ?></option>
+                                            <?php endforeach ?>
+                                        </select>
+                                    </div>
+                                </div>
                             <div class="row row-cols-2">
-                                <div class="mb-3">
-                                    <label class="form-label" for="upload foto">Upload Foto</label>
+                            <div class="mb-3">
+                                    <label class="form-label" for="upload foto">Screen Order</label>
                                     <div class="input-group input-group-merge">
                                         <input
                                             type="file"
                                             class="form-control"
                                             id="file"
-                                            name="file"
+                                            name="screen_order"
                                             accept=".png"
-                                            onchange="previewImage()" />
+                                            onchange="previewImage(this)" />
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label" for="namabarang">Tampilan</label>
+                                    <label class="form-label" for="username">Screen Payment</label>
                                     <div class="input-group input-group-merge">
-                                        <select name="display" class="form-control">
-                                            <option>Screen 1</option>
-                                            <option>Screen 2</option>
-                                        </select>
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="file"
+                                            name="screen_payment"
+                                            accept=".png"
+                                            onchange="previewImage(this)" />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="namabarang">Screen Frame</label>
+                                    <div class="input-group input-group-merge">
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="file"
+                                            name="screen_frame"
+                                            accept=".png"
+                                            onchange="previewImage(this)" />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="username">Screen Select Camera</label>
+                                    <div class="input-group input-group-merge">
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="file"
+                                            name="screen_select_camera"
+                                            accept=".png"
+                                            onchange="previewImage(this)" />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="namabarang">Screen Capture Photo</label>
+                                    <div class="input-group input-group-merge">
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="file"
+                                            name="screen_capture_photo"
+                                            accept=".png"
+                                            onchange="previewImage(this)" />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="username">Screen Filter</label>
+                                    <div class="input-group input-group-merge">
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="file"
+                                            name="screen_filter"
+                                            accept=".png"
+                                            onchange="previewImage(this)" />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="username">Screen Print</label>
+                                    <div class="input-group input-group-merge">
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="file"
+                                            name="screen_print"
+                                            accept=".png"
+                                            onchange="previewImage(this)" />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="username">Screen Finish</label>
+                                    <div class="input-group input-group-merge">
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="file"
+                                            name="screen_finish"
+                                            accept=".png"
+                                            onchange="previewImage(this)" />
                                     </div>
                                 </div>
                             </div>

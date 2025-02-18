@@ -34,7 +34,7 @@
                     <div class="col-lg-12 col-md-12 col-12 mb-2">
                         <div class="card">
                             <div class="card-body">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add">Set Timer</button>
+                                <a class="btn btn-primary" href="<?= BASE_URL ?>admin/timer/set">Set Timer</a>
                             </div>
                         </div>
                     </div>
@@ -48,6 +48,7 @@
                             <thead>
                                 <tr>
                                     <th>Halaman</th>
+                                    <th>Cabang</th>
                                     <th>Waktu</th>
                                     <th>Action</th>
                                 </tr>
@@ -77,28 +78,3 @@
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
-
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Timer</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="<?= BASE_URL ?>admin/timer/store" method="post">
-                    <label for="time">Halaman</label>
-                    <input class="form-control" name="name" type="text" placeholder="timer_" />
-                    <label class="mt-4" for="time">Waktu (s)</label>
-                    <input class="form-control" name="value" type="number" step="1" />
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>

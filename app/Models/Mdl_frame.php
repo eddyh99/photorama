@@ -16,14 +16,31 @@ class Mdl_frame extends Model
 
     public function allFrame()
     {
-        $sql = "select * from frame";
+        $sql = "SELECT
+                    frame.id,
+                    frame.name,
+                    frame.file
+                FROM
+                    frame
+                    JOIN frame_koordinat fk ON fk.frame_id = frame.id
+                GROUP BY frame.id";
         return $this->db->query($sql)->getResult();
     }
 
     public function getById($id)
     {
-        $sql = "select * from frame WHERE id = ?";
-        return $this->db->query($sql, [$id])->getRow() ?? null;
+        $sql = "SELECT
+                    frame.file,
+                    fk.x,
+                    fk.y,
+                    fk.width,
+                    fk.height
+                FROM
+                    frame
+                    JOIN frame_koordinat fk ON fk.frame_id = frame.id
+                WHERE
+                    frame.id = ?";
+        return $this->db->query($sql, [$id])->getResult() ?? null;
     }
 
     // public function backgroundByScreen($screen) {
@@ -34,9 +51,10 @@ class Mdl_frame extends Model
     public function deleteById($id)
     {
 
-        $bg = $this->db->table("frame");
-        $bg->where("id", $id);
+        $bg = $this->db->table("frame")->where("id", $id);
+        $file = $bg->get()->getRow()->file ?? null;
 
+        $bg->where("id", $id);
         if (!$bg->delete()) {
             return (object) array(
                 "code"      => 400,
@@ -46,22 +64,45 @@ class Mdl_frame extends Model
 
         return (object) array(
             "code"      => 200,
+            "file"      => $file,
             "message"   => "Frame berhasil dihapus"
         );
     }
 
     public function insertFrame($mdata) {
         try {
-            $bg = $this->db->table("frame");
+            $this->db->transBegin();
+            $fr = $this->db->table("frame");
+            $koordinat = $this->db->table("frame_koordinat");
 
             // Insert data into 'pengguna' table
-            if (!$bg->insert($mdata)) {
+            if (!$fr->insert($mdata['frame'])) {
                 // Handle case when insert fails (not due to exception)
+                $this->db->transRollback();
                 return (object) array(
                     "code"      => 400,
                     "message"   => "Gagal menyimpan frame"
                 );
             }
+
+            $frame_id = $this->db->insertID();
+            // Tambahkan frame_id ke setiap koordinat
+            foreach ($mdata['koordinat'] as &$k) {
+                $k->frame_id = $frame_id;
+            }
+
+            // InsertBatch into 'koordinat'
+            if (!$koordinat->insertBatch($mdata['koordinat'])) {
+                // Rollback if 'penjualan_detail' insertion fails
+                $this->db->transRollback();
+                return (object) [
+                    "code"    => 500,
+                    "message" => "Gagal menyimpan detail penjualan"
+                ];
+            }
+    
+            $this->db->transCommit();
+
         } catch (DatabaseException $e) {
             // For other database-related errors, return generic server error
             return (object) array(

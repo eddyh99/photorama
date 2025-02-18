@@ -16,6 +16,13 @@
         <!-- <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Setup</span>
         </li> -->
+             <!-- cabang -->
+            <li class="menu-item <?= @$menuactive_cabang ?>">
+                <a href="<?= BASE_URL ?>admin/branch" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-git-branch"></i>
+                    <div data-i18n="Account Settings" class="text-center">Cabang</div>
+                </a>
+            </li>
             <!-- Background -->
             <li class="menu-item <?= @$menuactive_bg ?>">
                 <a href="<?= BASE_URL ?>admin/background" class="menu-link">
@@ -30,10 +37,22 @@
                     <div data-i18n="Account Settings" class="text-center">Frame</div>
                 </a>
             </li>
+            <li class="menu-item <?= @$menuactive_price ?>">
+                <a href="<?= BASE_URL ?>admin/price" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-dollar-circle"></i>
+                    <div data-i18n="Account Settings" class="text-center">Price</div>
+                </a>
+            </li>
             <li class="menu-item <?= @$menuactive_voc ?>">
                 <a href="<?= BASE_URL ?>admin/voucher" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-purchase-tag-alt"></i>
-                    <div data-i18n="Account Settings" class="text-center">Price</div>
+                    <div data-i18n="Account Settings" class="text-center">Voucher</div>
+                </a>
+            </li>
+            <li class="menu-item <?= @$menuactive_qr ?>">
+                <a href="<?= BASE_URL ?>admin/qris" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-qr-scan"></i>
+                    <div data-i18n="Account Settings" class="text-center">QRIS</div>
                 </a>
             </li>
             <li class="menu-item <?= @$menuactive_timer ?>">

@@ -16,21 +16,22 @@ class Mdl_background extends Model
 
     public function allBackground()
     {
-        $sql = "select * from background";
+        $sql = "select background.*, cabang.nama_cabang  from background inner join cabang on cabang.id = background.cabang_id";
         return $this->db->query($sql)->getResult();
     }
 
-    public function backgroundByScreen($screen) {
-        $sql = "SELECT file from background WHERE display = ?";
-        return $this->db->query($sql, [$screen])->getRow();
+    public function backgroundByScreen($screen, $cabang) {
+        $sql = "SELECT file from background WHERE display = ? AND cabang_id = ?";
+        return $this->db->query($sql, [$screen, $cabang])->getRow()->file ?? null;
     }
 
     public function deleteById($id)
     {
 
-        $bg = $this->db->table("background");
-        $bg->where("id", $id);
+        $bg = $this->db->table("background")->where("id", $id);
+        $file = $bg->get()->getRow()->file ?? null;
 
+        $bg->where("id", $id);
         if (!$bg->delete()) {
             return (object) array(
                 "code"      => 400,
@@ -40,6 +41,7 @@ class Mdl_background extends Model
 
         return (object) array(
             "code"      => 200,
+            "file"      => $file,
             "message"   => "Background berhasil dihapus"
         );
     }
@@ -49,7 +51,7 @@ class Mdl_background extends Model
             $bg = $this->db->table("background");
 
             // Insert data into 'pengguna' table
-            if (!$bg->insert($mdata)) {
+            if (!$bg->insertBatch($mdata)) {
                 // Handle case when insert fails (not due to exception)
                 return (object) array(
                     "code"      => 400,

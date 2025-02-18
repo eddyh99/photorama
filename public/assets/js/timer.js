@@ -1,4 +1,4 @@
-let waktu = parseInt($('#timer').data('time')) || 10;
+let waktu = parseInt($('#timer').data('time')) || 1;
 let countdownElement = document.getElementById("countdown");
 
 function formatWaktu(seconds) {

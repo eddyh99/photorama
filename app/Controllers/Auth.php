@@ -9,7 +9,7 @@ class Auth extends BaseController
 {
     public function __construct()
     {   
-        $this->user       = model('App\Models\Mdl_user');
+        $this->cabang       = model('App\Models\Mdl_cabang');
 	}
     public function index()
     {
@@ -58,29 +58,43 @@ class Auth extends BaseController
             'password'  => sha1(htmlspecialchars($this->request->getVar('password'))),
         ];
         
-        $user = $this->user->getByUsername($mdata['username']);
+        $user = $this->cabang->getByUsername($mdata['username']);
         if (@$user->code==400){
             session()->setFlashdata('failed', $user->message);
             return redirect()->to(BASE_URL. 'login')->withInput();
 	    }
 
-        if ($mdata['password'] != $user->message->passwd) {
+        if ($mdata['password'] != $user->message->password) {
             session()->setFlashdata('failed', 'Invalid username or password');
             return redirect()->to(BASE_URL. 'login')->withInput();
         }
 
-        // Set SESSION logged_user
-        $this->session->set('logged_user', $mdata);
+        $mdata += [
+            'role' => $user->message->role,
+            'id_cabang' => $user->message->id
+        ]; 
 
-        // If Success set session and redirect
+        // Set SESSION logged_user
         session()->setFlashdata('success', "Selamat datang <b>".$mdata['username']."</b>");
-        return redirect()->to(BASE_URL . "admin/background");
-        exit();
+
+        if ($mdata['role'] === 'user') {
+            // Simpan di cookie selama 1 tahun
+            setcookie('logged_user', json_encode($mdata), time() + (365 * 24 * 60 * 60), "/");
+            return redirect()->to(BASE_URL) ;
+        } else {
+            $this->session->set('logged_user', $mdata);
+            return redirect()->to(BASE_URL . "admin/background");
+        }
     }
 
     public function logout(){
         // unset($_SESSION['item']);
         session()->destroy();
+
+        // Hapus cookie jika ada
+        if (isset($_COOKIE['logged_user'])) {
+            setcookie('logged_user', '', time() - 3600, "/");
+        }
         return redirect()->to(BASE_URL. "login")->withInput();
         exit;
     }

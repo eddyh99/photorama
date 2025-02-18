@@ -44,6 +44,10 @@ class Frame extends BaseController
             'name'     => [
                 'label'     => 'Nama',
                 'rules'     => 'required'
+            ],
+            'koordinat'     => [
+                'label'     => 'Koordinat',
+                'rules'     => 'required'
             ]
         ]);
 
@@ -61,8 +65,11 @@ class Frame extends BaseController
         }
 
         $mdata = [
-            'file'    => 'frame/' .$frameName,
-            'name' => $name
+            'frame' => [
+                'file'    => 'frame/' . $frameName,
+                'name' => $name
+            ],
+            'koordinat' => json_decode($this->request->getVar('koordinat')) ?? []
         ];
 
         $result = $this->frame->insertFrame($mdata);
@@ -85,6 +92,12 @@ class Frame extends BaseController
     public function destroy($id) {
         $result = $this->frame->deleteById(base64_decode($id));
         if($result->code == 200){
+            $file_path = FCPATH . 'assets/img/' . $result->file;
+
+            // Hapus file jika ada
+            if (!empty($result->file) && file_exists($file_path)) {
+                unlink($file_path);
+            }
             session()->setFlashdata('success', $result->message);
             return redirect()->to(BASE_URL."admin/frame");
         }else{

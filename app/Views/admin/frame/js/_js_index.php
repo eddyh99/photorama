@@ -27,7 +27,7 @@
 				data: 'file',
 				render: function(data, type, row) {
 					return data ?
-						`<img src="<?= BASE_URL ?>assets/img/${encodeURIComponent(data)}" alt="Background" style="width: 50px; height: 50px;">` :
+						`<img src="<?= BASE_URL ?>assets/img/${encodeURI(data)}" alt="Frame" style="width: 50px; height: 50px;">` :
 						'<span class="text-center">-</span>';
 				}
 			},
@@ -40,7 +40,7 @@
 					var del = `<a href="<?= BASE_URL ?>admin/frame/destroy/${encodeURI(btoa(data.id))}" class="del-data">
                                                 <i class="bx bx-trash bx-md fs-5 text-danger"></i>
                                           </a>`;
-					return `${edit} ${del}`;
+					return `${del}`;
 				}
 			},
 		],

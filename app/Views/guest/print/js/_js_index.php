@@ -1,7 +1,5 @@
 <script>
     $(function() {
-        const bg = <?= $background ? json_encode($background) : 'null'; ?>;
-        $("#content-bg").css("background-image", bg ? `url('${bg}')` : 'none');
         const img = $("#photo").attr('src');
         const print = <?= json_encode(session()->get('print')) ?> || 1;
 

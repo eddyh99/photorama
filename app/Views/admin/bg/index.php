@@ -49,6 +49,7 @@
                                     <tr>
                                         <th>Tampilan</th>
                                         <th>Background</th>
+                                        <th>Cabang</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

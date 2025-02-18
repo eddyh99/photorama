@@ -110,7 +110,15 @@ class Filters extends BaseFilters
             'before' =>
             [
                 'admin/*',
-            ]
+                '/',
+                'order',
+                '/payment/*',
+                '/frame',
+                'camera/*',
+                '/capture/*',
+                '/filter/*',
+                '/print/*'
+            ],
         ]
     ];
 }

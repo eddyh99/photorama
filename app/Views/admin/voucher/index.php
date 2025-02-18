@@ -23,25 +23,6 @@
     <!-- Content -->
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row">
-            <div class="col-12 order-0">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-12 mb-2">
-                        <div class="card">
-                            <div class="card-body">
-                            <div class="row form-group">
-                                    <label class="col-form-label col-sm-1">Price</label>
-                                    <div class="col-sm-2">
-                                        <input type="number" name="price" id="price" class="form-control" placeholder="Rp" value="<?= $price ?? '' ?>">
-                                    </div>
-                                    <div class="col-2">
-                                        <button class="btn btn-primary" id="update" disabled>Update</button>
-                                    </div>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="col-lg-12 mb-4 order-1">
                     <div class="card border-expat w-100">
                         <div class="card-body">

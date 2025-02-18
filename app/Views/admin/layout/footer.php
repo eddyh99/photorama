@@ -9,6 +9,18 @@
         <script src="<?= BASE_URL?>assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
         <script src="<?= BASE_URL?>assets/vendor/js/menu.js"></script>
         <!-- endbuild -->
+
+        <!-- custom bg -->
+        <?php if (!empty($background)): ?>
+            <script>
+                $("#content-bg").css({
+                    "background-image": `url(<?= json_encode(BASE_URL . "assets/img/" . $background) ?>)`,
+                    "background-size": "cover",
+                    "background-position": "center",
+                    "background-repeat": "no-repeat"
+                });
+            </script>
+        <?php endif; ?>
         
         <!-- Vendors JS -->
         <script src="<?= BASE_URL?>assets/vendor/libs/apex-charts/apexcharts.js"></script>
@@ -34,6 +46,9 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+        <!-- SWIPER -->
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
         <?php
             if (@isset($extra)) {

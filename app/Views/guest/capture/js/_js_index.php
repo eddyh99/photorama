@@ -7,7 +7,7 @@
     const recordedVideoContainer = document.getElementById('recordedVideoContainer');
     const frameCanvas = document.getElementById('frame');
 
-    const frameImageSrc = "<?= BASE_URL ?>assets/img/<?= $frame->file ?>"; // Path to your frame image
+    const frameImageSrc = "<?= BASE_URL ?>assets/img/<?= $frame[0]->file ?>"; // Path to frame image
     const frameImage = new Image();
     frameImage.src = frameImageSrc;
 
@@ -16,7 +16,7 @@
     let blobResultImage;
     let pictureCount = 0;
     let mediaRecorder, recordedChunks;
-
+    const positions = <?= json_encode($frame) ?> || [];
     // Access the webcam
     async function startWebcam() {
         try {
@@ -50,34 +50,34 @@
     }
 
     function startRecording(stream) {
-    recordedChunks = []; // Reset recorded chunks for new recording
-    mediaRecorder = new MediaRecorder(stream);
-    
-    mediaRecorder.ondataavailable = event => {
-        if (event.data.size > 0) {
-            recordedChunks.push(event.data);
-        }
-    };
-    
-    mediaRecorder.onstop = () => {
-        const blob = new Blob(recordedChunks, {
-            type: 'video/webm'
-        });
+        recordedChunks = []; // Reset recorded chunks for new recording
+        mediaRecorder = new MediaRecorder(stream);
 
-        capturedVideos.push(blob);
+        mediaRecorder.ondataavailable = event => {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
 
-        const recordedVideo = document.createElement('video');
-        recordedVideo.src = URL.createObjectURL(blob);
-        recordedVideo.controls = true;
-        recordedVideoContainer.appendChild(recordedVideo);
-    };
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, {
+                type: 'video/mp4'
+            });
 
-    mediaRecorder.start();
-}
+            capturedVideos.push(blob);
+
+            const recordedVideo = document.createElement('video');
+            recordedVideo.src = URL.createObjectURL(blob);
+            recordedVideo.controls = true;
+            recordedVideoContainer.appendChild(recordedVideo);
+        };
+
+        mediaRecorder.start();
+    }
 
     // Countdown and capture photo
     async function startPictureCountdown() {
-        if (pictureCount < 3) {
+        if (pictureCount < 10) {
             pictureCount += 1;
 
             let countdown = 1;
@@ -106,29 +106,31 @@
                     snapshotContext.drawImage(video, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
 
                     const photo = new Image();
-                    photo.src = snapshotCanvas.toDataURL('image/png');
-                    capturedPhotos.push(photo.src);
-                    photosContainer.innerHTML += `
-                    <div class="col px-2">
-                        <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected" onclick="selectPhoto(this)">
-                    </div>
-                `;
-                mediaRecorder.stop();
+                    snapshotCanvas.toBlob(function(blob) {
+                        let photoURL = URL.createObjectURL(blob);
+                        capturedPhotos.push(blob);
+                        photo.src = photoURL;
+
+                        photosContainer.innerHTML += `
+                        <div class="col px-2">
+                            <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected" onclick="selectPhoto(this)">
+                        </div>
+                    `;
+                    }, 'image/png');
+                    mediaRecorder.stop();
                     // Prepare for the next photo
-                    if (pictureCount < 3) {
-                    setTimeout(() => {
-                        startRecording(video.srcObject); // Start a new recording
-                        startPictureCountdown(); // Start the countdown for the next photo
-                    }, 2000);
-                }
+                    if (pictureCount < 10) {
+                        setTimeout(() => {
+                            startRecording(video.srcObject); // Start a new recording
+                            startPictureCountdown(); // Start the countdown for the next photo
+                        }, 2000);
+                    }
                 }
             }, 1000);
         }
     }
 
     $(function() {
-        const bg = <?= $background ? json_encode($background) : 'null'; ?>;
-        $("#content-bg").css("background-image", bg ? `url('${bg}')` : 'none');
         startWebcam();
     });
 
@@ -141,10 +143,10 @@
             selectedPhotos.splice(imgIndex, 1);
             img.classList.remove('border-5', 'border-primary', 'shadow-lg');
         }
-        if (selectedPhotos.length > 0) {
-            $('#select').prop('disabled', false);
-        } else {
+        if (selectedPhotos.length !== positions.length) {
             $('#select').prop('disabled', true);
+        } else {
+            $('#select').prop('disabled', false);
         }
     }
 
@@ -157,17 +159,6 @@
         frameCanvas.width = frameImage.width;
         frameCanvas.height = frameImage.height;
 
-        // koordinat
-        const positions = [{
-                x: 50,
-                y: 100
-            },
-            {
-                x: 132,
-                y: 825
-            }
-        ];
-
         selectedPhotos.forEach((photo, index) => {
             const selectedImage = new Image();
             selectedImage.src = photo.src;
@@ -175,8 +166,10 @@
             selectedImage.onload = function() {
                 const selectedImageX = positions[index].x;
                 const selectedImageY = positions[index].y;
+                const selectedImageWidth = positions[index].width;
+                const selectedImageHeight = positions[index].height;
 
-                ctx.drawImage(selectedImage, selectedImageX, selectedImageY, selectedImage.width, selectedImage.height);
+                ctx.drawImage(selectedImage, selectedImageX, selectedImageY, selectedImageWidth, selectedImageHeight);
             };
         });
 
@@ -185,21 +178,35 @@
 
         frame.onload = function() {
             ctx.drawImage(frame, 0, 0, frame.width, frame.height); // Gambar frame di depan gambar
-            frameCanvas.toBlob(blob => blobResultImage = blob) ;
+            frameCanvas.toBlob(blob => blobResultImage = blob);
         };
         $('#select-filter').removeAttr('hidden');
     });
 
     $('#select-filter').on('click', function() {
+        Swal.fire({
+            title: "Menyimpan foto",
+            text: "Loading..",
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
         const formData = new FormData();
+        formData.append('photos', blobResultImage);
 
-         capturedVideos.forEach((blob, index) => {
-            formData.append('video' + index, blob);
+        capturedVideos.forEach((blob, index) => {
+            formData.append('video-' + (index + 1), blob);
         });
 
-        console.log(blobResultImage);
+        capturedPhotos.forEach((blob, index) => {
+            formData.append('photos-' + (index + 1), blob);
+        });
 
-        formData.append('photo', blobResultImage);   
+        console.log("Isi FormData:");
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
+        }
+
         $.ajax({
             url: "<?= BASE_URL ?>home/saveRecords",
             type: 'POST',
@@ -208,12 +215,23 @@
             contentType: false,
             success: function(response) {
                 const mdata = JSON.parse(response)
-                console.log(mdata);
-                if(mdata.success) {
-                    window.location.href = "<?= BASE_URL ?>filter/" + mdata.folder 
+                // console.log(response);
+                if (mdata.success) {
+                    window.location.href = "<?= BASE_URL ?>filter/" + mdata.folder
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Harap coba lagi.',
+                    });
                 }
             },
             error: function(xhr, status, error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Kesalahan pada server.',
+                });
                 console.error('Error saving videos:', error);
             }
         });

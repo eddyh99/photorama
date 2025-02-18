@@ -45,7 +45,7 @@ class Payment extends BaseController
                 "data" => (object) [
                     "tanggal" => $timestamp,
                     "invoice" => $jsonObject->partnerReferenceNo,
-                    "qris"    => $qrcode->size(250)->generate($jsonObject->qrContent)
+                    "qris"    => $qrcode->size(220)->generate($jsonObject->qrContent)
                 ]
             ];
         }

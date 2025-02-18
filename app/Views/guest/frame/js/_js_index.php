@@ -2,8 +2,6 @@
     // custom background
     $(function() {
         let id;
-        const bg = <?= $background ? json_encode($background) : 'null'; ?>;
-        $("#content-bg").css("background-image", bg ? `url('${bg}')` : 'none');
 
         $('.frame').hover(
             function() { 
