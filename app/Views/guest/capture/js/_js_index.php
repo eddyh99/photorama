@@ -7,6 +7,7 @@
     const recordedVideoContainer = document.getElementById('recordedVideoContainer');
     const frameCanvas = document.getElementById('frame');
     const cameraSound = new Audio('<?= BASE_URL ?>assets/audio/camera-13695.mp3');
+    const cheeseSound = new Audio('<?= BASE_URL ?>assets/audio/say-cheese.mp3');
 
     const frameImageSrc = "<?= BASE_URL ?>assets/img/<?= $frame[0]->file ?>"; // Path to frame image
     const frameImage = new Image();
@@ -87,6 +88,7 @@
             countdownOverlay.style.display = 'flex';
             countdownOverlay.textContent = countdown;
 
+            cheeseSound.play();
             const countdownInterval = setInterval(async() => {
                 countdown -= 1;
 
