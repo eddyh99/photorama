@@ -7,7 +7,13 @@
     const recordedVideoContainer = document.getElementById('recordedVideoContainer');
     const frameCanvas = document.getElementById('frame');
     const cameraSound = new Audio('<?= BASE_URL ?>assets/audio/camera-13695.mp3');
-    const cheeseSound = new Audio('<?= BASE_URL ?>assets/audio/say-cheese.mp3');
+    const listAudio = [
+        "get-ready.mp3",
+        "smile.mp3",
+        "say-cheese.mp3",
+        "last-one.mp3",
+        "next-pose.mp3"
+    ];
 
     const frameImageSrc = "<?= BASE_URL ?>assets/img/<?= $frame[0]->file ?>"; // Path to frame image
     const frameImage = new Image();
@@ -88,8 +94,9 @@
             countdownOverlay.style.display = 'flex';
             countdownOverlay.textContent = countdown;
 
-            cheeseSound.play();
-            const countdownInterval = setInterval(async() => {
+            randomIndex = Math.floor(Math.random() * listAudio.length);
+            new Audio('<?= BASE_URL ?>assets/audio/' + listAudio[randomIndex]).play();
+            const countdownInterval = setInterval(async () => {
                 countdown -= 1;
 
                 if (countdown > 0) {
@@ -244,25 +251,24 @@
     });
 
     function flash() {
-    return new Promise((resolve) => {
-        $('#countdown-camera')
-            .animate({ opacity: 0.5 }, 300) // Redup
-            .fadeOut(300, function () {
-                $(this).css('background-color', '#fff').show();
-                cameraSound.play();
+        return new Promise((resolve) => {
+            $('#countdown-camera')
+                .animate({
+                    opacity: 0.5
+                }, 300) // Redup
+                .fadeOut(300, function() {
+                    $(this).css('background-color', '#fff').show();
+                    cameraSound.play();
 
-                setTimeout(() => {
-                    $(this).css({
-                        'background-color': '', // Hapus putih setelah 1 detik
-                        'opacity': 1,
-                        'display': 'none' // Sembunyikan elemen
-                    });
-                    resolve(); // Selesaikan Promise setelah efek selesai
-                }, 500);
-            });
-    });
-}
-
-
-
+                    setTimeout(() => {
+                        $(this).css({
+                            'background-color': '', // Hapus putih setelah 1 detik
+                            'opacity': 1,
+                            'display': 'none' // Sembunyikan elemen
+                        });
+                        resolve(); // Selesaikan Promise setelah efek selesai
+                    }, 500);
+                });
+        });
+    }
 </script>
