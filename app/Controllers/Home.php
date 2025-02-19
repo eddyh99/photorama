@@ -31,6 +31,7 @@ class Home extends BaseController
     {
         session()->set('print', 0);
         $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
+        // dd($background);
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'content'       => 'guest/beranda/index',
@@ -41,7 +42,7 @@ class Home extends BaseController
     }
 
     public function order() {
-        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
+        $background = $this->background->backgroundByScreen('screen_order', $this->id_cabang);
         $price = $this->price->getBy_cabang($this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_order', $this->id_cabang);
         $mdata = [
@@ -89,7 +90,7 @@ class Home extends BaseController
         ];
 
         $this->pembayaran->addInvoice($inv);
-        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang); $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
+        $background = $this->background->backgroundByScreen('screen_payment', $this->id_cabang);
         $qris_bg = $this->qris->getBy_cabang($this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_payment', $this->id_cabang);
         $mdata = [
@@ -109,7 +110,7 @@ class Home extends BaseController
     }
 
     public function frame() {
-        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
+        $background = $this->background->backgroundByScreen('screen_frame', $this->id_cabang);
         $frame = $this->frame->allFrame();
         $timer = $this->timer->get_byCabang_andScreen('screen_frame', $this->id_cabang);
 
@@ -126,7 +127,7 @@ class Home extends BaseController
     }
 
     public function camera($frame) {
-        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
+        $background = $this->background->backgroundByScreen('screen_select_camera', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_select_camera', $this->id_cabang);
 
         $mdata = [
@@ -144,7 +145,7 @@ class Home extends BaseController
     public function capture($frame) {
         $frame = $this->frame->getById(base64_decode($frame));
         if(!$frame) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
+        $background = $this->background->backgroundByScreen('screen_capture_photo', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_capture_photo', $this->id_cabang);
 
         $mdata = [
@@ -196,7 +197,7 @@ class Home extends BaseController
     }
 
     public function filter($dir) {
-        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
+        $background = $this->background->backgroundByScreen('screen_filter', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_filter', $this->id_cabang);
 
         $mdata = [
@@ -213,7 +214,7 @@ class Home extends BaseController
     }
 
     public function print($dir) {
-        $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
+        $background = $this->background->backgroundByScreen('screen_print', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
         $qrcode = new Generator;
 
@@ -233,7 +234,7 @@ class Home extends BaseController
 
     public function finish() {
         $background = $this->background->backgroundByScreen('screen_finish', $this->id_cabang);
-        $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
+        $timer = $this->timer->get_byCabang_andScreen('screen_finish', $this->id_cabang);
         $mdata = [
             'title'         => 'Print - ' . NAMETITLE,
             'content'       => 'guest/finish/index',

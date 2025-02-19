@@ -41,6 +41,18 @@
                                 </div>
                             <div class="row row-cols-2">
                             <div class="mb-3">
+                                    <label class="form-label" for="upload foto">Screen Start</label>
+                                    <div class="input-group input-group-merge">
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="file"
+                                            name="screen_start"
+                                            accept=".png"
+                                            onchange="previewImage(this)" />
+                                    </div>
+                                </div>
+                            <div class="mb-3">
                                     <label class="form-label" for="upload foto">Screen Order</label>
                                     <div class="input-group input-group-merge">
                                         <input

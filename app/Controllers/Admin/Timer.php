@@ -11,7 +11,7 @@ class Timer extends BaseController
     {
         $this->setting = model('App\Models\Mdl_settings');
         $this->timer = model('App\Models\Mdl_timer');
-        $this->cabang       = model('App\Models\Mdl_Cabang');
+        $this->cabang       = model('App\Models\Mdl_cabang');
     }
     public function index()
     {
