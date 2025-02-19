@@ -15,8 +15,8 @@
                 <div class="row row-cols-2 mx-2 my-2" id="photos"></div>
                 <canvas id="frame" class="w-100 p-2" hidden></canvas>
                 <div id="btn-action" class="d-flex justify-content-center gap-4 mb-2 d-none" hidden>
-                    <a href="<?= BASE_URL ?>frame" class="btn btn-danger"> <i class="bx bx-border-all fs-4 me-2"></i>Change Frame</a>
-                    <button class="btn btn-primary" onclick="window.location.reload();"><i class="bx bx-camera fs-4 me-2"></i>Retake</button>
+                    <button onclick="change_frame()" class="btn btn-danger"> <i class="bx bx-border-all fs-4 me-2"></i>Change Frame</button>
+                    <button class="btn btn-primary" onclick="retake_photo()"><i class="bx bx-camera fs-4 me-2"></i>Retake</button>
                 </div>
 
             </div>

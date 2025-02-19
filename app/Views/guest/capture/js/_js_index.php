@@ -229,6 +229,7 @@
                 const mdata = JSON.parse(response)
                 // console.log(response);
                 if (mdata.success) {
+                    localStorage.removeItem("sisa_waktu");
                     window.location.href = "<?= BASE_URL ?>filter/" + mdata.folder
                 } else {
                     Swal.fire({
@@ -271,5 +272,15 @@
                     }, 500);
                 });
         });
+    }
+
+    function retake_photo() {
+        localStorage.setItem("sisa_waktu", waktu);
+        window.location.reload();
+    }
+
+    function change_frame() {
+        localStorage.removeItem("sisa_waktu");
+        window.location.href = "<?= BASE_URL ?>frame";
     }
 </script>

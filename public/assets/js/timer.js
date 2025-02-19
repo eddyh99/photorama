@@ -1,4 +1,4 @@
-let waktu = parseInt($('#timer').data('time')) || 1;
+let waktu = parseInt(localStorage.getItem("sisa_waktu")) || parseInt($('#timer').data('time')) || 1;
 let countdownElement = document.getElementById("countdown");
 
 function formatWaktu(seconds) {
@@ -19,6 +19,7 @@ let interval = setInterval(() => {
 
   if (waktu <= 0) {
     clearInterval(interval);
+    localStorage.removeItem("sisa_waktu");
     window.location.href = window.location.origin;
   }
 }, 1000);
