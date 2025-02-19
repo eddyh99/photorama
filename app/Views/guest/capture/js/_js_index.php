@@ -80,22 +80,23 @@
         if (pictureCount < 10) {
             pictureCount += 1;
 
-            let countdown = 1;
+            let countdown = 3;
 
             // Show the countdown overlay and set the initial value
             countdownOverlay.style.display = 'flex';
             countdownOverlay.textContent = countdown;
 
-            const countdownInterval = setInterval(() => {
+            const countdownInterval = setInterval(async() => {
                 countdown -= 1;
 
                 if (countdown > 0) {
                     countdownOverlay.textContent = countdown;
                 } else {
                     clearInterval(countdownInterval);
+                    await flash();
 
                     // Hide the countdown overlay
-                    countdownOverlay.style.display = 'none';
+                    // countdownOverlay.style.display = 'none';
 
                     // Capture photo
                     const snapshotCanvas = document.createElement('canvas');
@@ -238,4 +239,26 @@
 
 
     });
+
+    function flash() {
+    return new Promise((resolve) => {
+        $('#countdown-camera')
+            .animate({ opacity: 0.5 }, 300) // Redup
+            .fadeOut(300, function () {
+                $(this).css('background-color', '#fff').show();
+
+                setTimeout(() => {
+                    $(this).css({
+                        'background-color': '', // Hapus putih setelah 1 detik
+                        'opacity': 1,
+                        'display': 'none' // Sembunyikan elemen
+                    });
+                    resolve(); // Selesaikan Promise setelah efek selesai
+                }, 500);
+            });
+    });
+}
+
+
+
 </script>
