@@ -85,7 +85,7 @@
 
     // Countdown and capture photo
     async function startPictureCountdown() {
-        if (pictureCount < 10) {
+        if (pictureCount < positions.length) {
             pictureCount += 1;
 
             let countdown = 3;
@@ -130,7 +130,7 @@
                     }, 'image/png');
                     mediaRecorder.stop();
                     // Prepare for the next photo
-                    if (pictureCount < 10) {
+                    if (pictureCount < positions.length) {
                         setTimeout(() => {
                             startRecording(video.srcObject); // Start a new recording
                             startPictureCountdown(); // Start the countdown for the next photo
@@ -163,6 +163,7 @@
 
     $("#select").on('click', function() {
         $('#frame').removeAttr('hidden');
+        $('#btn-action').removeClass('d-none');
         $("#photos").hide();
         $(this).hide();
 
