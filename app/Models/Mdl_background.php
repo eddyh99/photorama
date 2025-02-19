@@ -25,6 +25,20 @@ class Mdl_background extends Model
         return $this->db->query($sql, [$screen, $cabang])->getRow()->file ?? null;
     }
 
+    public function backgroundByIdCabang($id_cabang) {
+        $sql = "SELECT
+                    b.display,
+                    b.file,
+                    c.nama_cabang
+                FROM
+                    background b
+                    INNER JOIN cabang c ON c.id = b.cabang_id
+                WHERE
+                    b.cabang_id = ?";
+
+        return $this->db->query($sql, [$id_cabang])->getResult();
+    }
+
     public function deleteById($id)
     {
 

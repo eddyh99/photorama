@@ -38,7 +38,7 @@
 			{
 				data: null,
 				"mRender": function(data, type, full, meta) {
-					var edit = `<a href="#">
+					var edit = `<a href="<?= BASE_URL ?>admin/background/edit/${data.cabang_id}">
                                                 <i class="bx bx-edit bx-md fs-5 text-black"></i>
                                           </a>`;
 					var del = `<a href="<?= BASE_URL ?>admin/background/destroy/${encodeURI(btoa(data.id))}" class="del-data">

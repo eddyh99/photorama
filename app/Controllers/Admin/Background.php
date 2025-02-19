@@ -45,6 +45,7 @@ class Background extends BaseController
         $postData = $this->request->getPost();
         $mdata = [];
 
+        // dd($postData);
         // validasi cabang
         if (!isset($postData['cabang_id'])) {
             session()->setFlashdata('failed', 'Cabang ID harus diisi!');
@@ -80,7 +81,7 @@ class Background extends BaseController
 
 
         foreach ($_FILES as $field => $file) {
-            $bg_name = "$field" . time() . '.png';
+            $bg_name = $field ."_". $cabangId . '.png';
             $mdata[$field]['file'] = 'background/' . $bg_name;
             move_uploaded_file($file['tmp_name'], FCPATH . 'assets/img/background/' . $bg_name);
         }
@@ -103,6 +104,73 @@ class Background extends BaseController
     public function get_all_bg() {
         $result = $this->background->allBackground();
         echo json_encode($result);
+    }
+
+    public function edit($id_cabang) {
+        $background = $this->background->backgroundByIdCabang($id_cabang);
+
+        $mdata = [
+            'title'     => 'Background - ' . NAMETITLE,
+            'content'   => 'admin/bg/edit',
+            'extra'     => 'admin/bg/js/_js_create',
+            'menuactive_bg'   => 'active open',
+            'id_cabang' => $id_cabang,
+            'nama_cabang' => $background[0]->nama_cabang ?? null,
+            'backgrounds' => $background
+        ];
+
+        return view('admin/layout/wrapper', $mdata);
+    }
+
+    public function update($id_cabang)
+    {
+        $postData = $this->request->getPost();
+        $rules_bg = [];
+        $hasFile = false;
+
+        foreach ($_FILES as $field => $file) {
+
+            // Pastikan ada file yang diunggah dan tidak terjadi kesalahan saat upload
+            if (isset($file['name']) && $file['error'] === UPLOAD_ERR_OK) {
+                // dd('masuk');
+                $rules_bg[$field] = 'is_image[' . $field . ']|mime_in[' . $field . ',image/jpg,image/jpeg,image/png]|max_size[' . $field . ',2048]';
+                $hasFile = true;
+            }
+        }
+
+        if (!$hasFile) {
+            session()->setFlashdata('failed', 'Nothing to update');
+            return redirect()->to(base_url("admin/background/edit/" . $id_cabang))->withInput();
+        }
+
+        $rules = $this->validate($rules_bg);
+        // Jalankan validasi
+        if (!$rules) {
+            session()->setFlashdata('failed', $this->validation->listErrors());
+            return redirect()->to(base_url("admin/background/edit/" . $id_cabang))->withInput();
+        }
+
+
+        foreach ($_FILES as $field => $file) {
+            if (isset($file['name']) && $file['error'] === UPLOAD_ERR_OK) {
+                $bg_name = $field . "_" . $id_cabang . '.png';
+                $newBg = 'assets/img/background/' . $bg_name; // Path file baru
+                $oldBg = FCPATH . $newBg;
+
+                if (file_exists($oldBg)) {
+                    unlink($oldBg);
+                }
+
+                // Simpan file baru
+            if (!move_uploaded_file($file['tmp_name'], $oldBg)) {
+                session()->setFlashdata('failed', "Gagal mengunggah file {$file['name']}");
+                return redirect()->to(base_url("admin/background/edit/" . $id_cabang))->withInput();
+            }
+            }
+        }
+
+        session()->setFlashdata('success', 'Background cabang ' . $postData["cabang"]  . ' berhasil diupdate');
+        return redirect()->to(BASE_URL . "admin/background");
     }
 
     public function destroy($id) {
