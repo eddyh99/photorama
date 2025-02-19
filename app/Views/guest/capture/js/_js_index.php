@@ -6,6 +6,7 @@
     const photosContainer = document.getElementById('photos');
     const recordedVideoContainer = document.getElementById('recordedVideoContainer');
     const frameCanvas = document.getElementById('frame');
+    const cameraSound = new Audio('<?= BASE_URL ?>assets/audio/camera-13695.mp3');
 
     const frameImageSrc = "<?= BASE_URL ?>assets/img/<?= $frame[0]->file ?>"; // Path to frame image
     const frameImage = new Image();
@@ -246,6 +247,7 @@
             .animate({ opacity: 0.5 }, 300) // Redup
             .fadeOut(300, function () {
                 $(this).css('background-color', '#fff').show();
+                cameraSound.play();
 
                 setTimeout(() => {
                     $(this).css({
