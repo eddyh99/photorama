@@ -226,8 +226,9 @@
             processData: false,
             contentType: false,
             success: function(response) {
+                console.log(response);
                 const mdata = JSON.parse(response)
-                // console.log(response);
+                console.log(mdata);
                 if (mdata.success) {
                     localStorage.removeItem("sisa_waktu");
                     window.location.href = "<?= BASE_URL ?>filter/" + mdata.folder
