@@ -171,6 +171,7 @@ class Home extends BaseController
         }
 
         $response = ['success' => false];
+        $response += ['form' => $_FILES];
         foreach ($_FILES as $key => $file) {
             if ($file['error'] === UPLOAD_ERR_OK) {
                 $uploadFile = "$uploadDir/" . ($file['type'] == "image/png" ? "$key.png" : "$key.mp4");
@@ -178,7 +179,8 @@ class Home extends BaseController
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     $response = [
                         'success' => true,
-                        'folder'  => base64_encode($time)
+                        'folder'  => base64_encode($time),
+                        'form'    => null
                     ];
                 }
             }
