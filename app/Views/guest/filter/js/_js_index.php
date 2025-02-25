@@ -9,9 +9,18 @@
             willReadFrequently: true
         });
 
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0, img.width, img.height);
+        
+        if (img.complete) {
+            drawImage();
+        } else {
+            img.onload = drawImage;
+        }
+
+        function drawImage() {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+        }
 
         $("#grayscale").on('click', function() {
             let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);

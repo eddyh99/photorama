@@ -226,7 +226,6 @@
             processData: false,
             contentType: false,
             success: function(response) {
-                console.log(response);
                 const mdata = JSON.parse(response)
                 console.log(mdata);
                 if (mdata.success) {
