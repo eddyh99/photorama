@@ -1,4 +1,5 @@
 <script>
+    const camera = sessionStorage.getItem('camera') || null;
     const selectedPhotos = [];
     const video = document.getElementById('webcam');
     const overlayCanvas = document.getElementById('overlay');
@@ -29,7 +30,7 @@
     async function startWebcam() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
-                video: true,
+                video: { deviceId: { exact: camera }},
                 audio: false
             });
             video.srcObject = stream;
@@ -54,6 +55,9 @@
 
         } catch (error) {
             console.error('Error accessing webcam: ', error);
+            if (confirm('No camera selected. Do you want to go back to Home?')) {
+                window.location.href = "<?= BASE_URL ?>"
+            }
         }
     }
 

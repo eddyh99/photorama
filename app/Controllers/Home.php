@@ -34,6 +34,7 @@ class Home extends BaseController
         // dd($background);
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
+            'extra'         => 'guest/beranda/js/_js_index',
             'content'       => 'guest/beranda/index',
             'background'    =>  $background ?? null
         ];

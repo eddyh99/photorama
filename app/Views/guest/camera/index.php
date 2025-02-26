@@ -9,7 +9,7 @@
                     <video id="camera1" width="100%" height="100%" autoplay></video>
                 </div>
                 <div class="d-grid">
-                    <a href="<?= BASE_URL ?>capture/<?= $frame ?>" class="btn btn-primary fs-3 mx-5 ">CAMERA 1</a>
+                    <btn class="btn btn-primary fs-3 mx-5 " onclick="setCamera(1)">CAMERA 1</btn>
                 </div>
             </div>
             <!-- Bagian kanan -->
@@ -19,7 +19,7 @@
                     <video id="camera2" width="100%" height="100%" autoplay></video>
                 </div>
                 <div class="d-grid">
-                    <a href="<?= BASE_URL ?>capture/<?= $frame ?>" class="btn btn-primary fs-3 mx-5">CAMERA 2</a>
+                <btn class="btn btn-primary fs-3 mx-5 " onclick="setCamera(2)">CAMERA 2</btn>
                 </div>
             </div>
         </div>
