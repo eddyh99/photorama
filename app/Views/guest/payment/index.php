@@ -20,9 +20,9 @@
                 </div>
                 <div class="col">
                     <div class="card text-white" style="background-image: url('<?= BASE_URL ?>assets/img/<?= $bg_qris ?? 'bg-qris.png' ?>');width: 400px;height: 500px;">
-                        <div class="mx-auto" style="margin-top: 140px;">
+                        <div class="mx-auto" style="margin-top: 180px;">
                             <!-- Alamat -->
-                             <h4 class="text-center py-0" style="color: black;"><?= $cabang ?></h4>
+                             <!-- <h4 class="text-center py-0" style="color: black;"><?= $cabang ?></h4> -->
 
                             <!-- Logo QRIS -->
                             <?= $qris ?>

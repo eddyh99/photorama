@@ -30,7 +30,7 @@ class Branch extends BaseController
             'title'     => 'Cabang - ' . NAMETITLE,
             'content'   => 'admin/cabang/create',
             'extra'     => 'admin/cabang/js/_js_create',
-            'menuactive_bg'   => 'active open'
+            'menuactive_cabang'   => 'active open'
         ];
 
         return view('admin/layout/wrapper', $mdata);
