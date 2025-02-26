@@ -56,7 +56,7 @@
             <h2 class="text-center mt-4">404</h2>
             <p class="text-center">Not Found</p>
         <?php else: ?>
-            <h4 class="text-center my-0">User- <?= date('Y-m-d', $folder) ?></h4>
+            <h4 class="text-center my-0"><?= $folder ?></h4>
 
             <!-- Main slider -->
             <div class="swiper mySwiper2">

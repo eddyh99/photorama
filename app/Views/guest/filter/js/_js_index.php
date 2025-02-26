@@ -1,6 +1,6 @@
 <script>
     $(function() {
-        const dir = btoa(<?= $dir ?>);
+        const dir = btoa(<?= json_encode($dir) ?>);
         const canvasToBlob = (canvas) => new Promise((resolve) => canvas.toBlob(resolve));
 
         let img = document.getElementById("photo");

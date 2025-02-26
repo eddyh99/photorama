@@ -3,7 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
+// use CodeIgniter\HTTP\ResponseInterface;
 
 class Photo extends BaseController
 {
@@ -32,9 +32,10 @@ class Photo extends BaseController
         $mdata = [];
 
         foreach ($folders as $folder) {
+            $time = explode("-", $folder);
             array_push($mdata, [
-                'user' => 'user-' . $folder,
-                'date' => date('d-m-Y', $folder),
+                'user' => $folder,
+                'date' => date("Y-m-d H:i:s", end($time)),
                 'url_download' => base_url("download/" . base64_encode($folder)),
                 'url_delete' => base_url("delete/" . base64_encode($folder)),
             ]);
