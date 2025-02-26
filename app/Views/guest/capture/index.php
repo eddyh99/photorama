@@ -2,7 +2,7 @@
     <div class="row flex-grow-1 text-black">
         <!-- Bagian kiri (SELECT FRAME) -->
         <div class="col-md-8 d-flex flex-column p-3">
-            <div class="video-container">
+            <div class="video-container" style="background-color: black;">
                 <video id="webcam" autoplay playsinline muted></video>
                 <canvas id="overlay"></canvas>
                 <div id="countdown-camera" class="countdown-overlay"></div>

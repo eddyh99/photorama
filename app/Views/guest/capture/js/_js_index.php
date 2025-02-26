@@ -30,7 +30,11 @@
     async function startWebcam() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
-                video: { deviceId: { exact: camera }},
+                video: {
+                    deviceId: {
+                        exact: camera
+                    }
+                },
                 audio: false
             });
             video.srcObject = stream;
@@ -146,8 +150,22 @@
     }
 
     $(function() {
-        startWebcam();
+        Swal.fire({
+            title: "Are you ready?",
+            text: "Click OK to start",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "OK",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                startWebcam(); // Memulai kamera hanya jika pengguna menekan OK
+            } else {
+                window.location.href = "<?= BASE_URL ?>"; // Arahkan ke home jika Cancel
+            }
+        });
     });
+
 
     function selectPhoto(img) {
         const imgIndex = selectedPhotos.findIndex(photo => photo === img);
