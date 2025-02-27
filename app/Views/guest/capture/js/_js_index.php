@@ -1,4 +1,5 @@
 <script>
+    const camera = sessionStorage.getItem('camera') || null;
     const selectedPhotos = [];
     const video = document.getElementById('webcam');
     const overlayCanvas = document.getElementById('overlay');
@@ -29,7 +30,11 @@
     async function startWebcam() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
-                video: true,
+                video: {
+                    deviceId: {
+                        exact: camera
+                    }
+                },
                 audio: false
             });
             video.srcObject = stream;
@@ -54,6 +59,9 @@
 
         } catch (error) {
             console.error('Error accessing webcam: ', error);
+            if (confirm('No camera selected. Do you want to go back to Home?')) {
+                window.location.href = "<?= BASE_URL ?>"
+            }
         }
     }
 
@@ -142,8 +150,22 @@
     }
 
     $(function() {
-        startWebcam();
+        Swal.fire({
+            title: "Are you ready?",
+            text: "Click OK to start",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "OK",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                startWebcam(); // Memulai kamera hanya jika pengguna menekan OK
+            } else {
+                window.location.href = "<?= BASE_URL ?>"; // Arahkan ke home jika Cancel
+            }
+        });
     });
+
 
     function selectPhoto(img) {
         const imgIndex = selectedPhotos.findIndex(photo => photo === img);

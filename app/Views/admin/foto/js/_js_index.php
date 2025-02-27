@@ -29,10 +29,13 @@
 			{
 				data: null,
 				"mRender": function(data, type, full, meta) {
-					var download = `<a href="${data.url}" target="_blank">
+					var download = `<a href="${data.url_download}" target="_blank">
                                                 <i class="bx bx-link-external bx-md fs-5 text-primary"></i>
                                           </a>`;
-					return download;
+					var del = `<a href="${data.url_delete}">
+                                                <i class="bx bx-trash bx-md fs-5 text-danger"></i>
+                                          </a>`;
+					return `${download} ${del}`;
 				}
 			},
 		],

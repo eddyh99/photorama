@@ -23,13 +23,13 @@
                             <i class="bx bx-chevron-left fs-2"></i>
                             Back
                         </a>
-                        <h5 class="mb-1">Tambah Cabang</h5>
+                        <h5 class="mb-1">Tambah Cabang/Event</h5>
                     </div>
                     <div class="card-body">
                         <form action="<?= BASE_URL ?>admin/branch/store" method="POST" enctype="multipart/form-data">
                             <div class="row row-cols-2">
                             <div class="mb-3">
-                                    <label class="form-label" for="namabarang">Nama Cabang</label>
+                                    <label class="form-label" for="namabarang">Nama Cabang/Event</label>
                                     <div class="input-group input-group-merge">
                                         <input class="form-control" name="nama_cabang" type="text"/>
                                     </div>

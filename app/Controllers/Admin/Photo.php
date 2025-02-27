@@ -3,7 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
+// use CodeIgniter\HTTP\ResponseInterface;
 
 class Photo extends BaseController
 {
@@ -32,13 +32,32 @@ class Photo extends BaseController
         $mdata = [];
 
         foreach ($folders as $folder) {
+            $time = explode("-", $folder);
             array_push($mdata, [
-                'user' => 'user-' . $folder,
-                'date' => date('d-m-Y', $folder),
-                'url' => base_url("download/" . base64_encode($folder))
+                'user' => $folder,
+                'date' => date("Y-m-d H:i:s", end($time)),
+                'url_download' => base_url("download/" . base64_encode($folder)),
+                'url_delete' => base_url("delete/" . base64_encode($folder)),
             ]);
         }
 
         return $this->response->setJSON($mdata);
+    }
+
+    public function delete_userFiles($folder) {
+        $path = FCPATH . "assets/photobooth/" . base64_decode($folder);
+        
+        if (!is_dir($path)) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        if (delete_files($path, true)) {
+            rmdir($path);
+            session()->setFlashdata('success', 'Files Berhasil dihapus');
+            return redirect()->to(base_url("admin/photo"));
+        } else {
+            session()->setFlashdata('failed', 'Files gagal dihapus');
+            return redirect()->to(base_url("admin/photo"));
+        }
     }
 }
