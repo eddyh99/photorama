@@ -144,12 +144,13 @@ class Price extends BaseController
     }
 
     public function image() {
-
+        $image_order = $this->setting->value('img_order');
         $mdata = [
             'title'     => 'Image Order - ' . NAMETITLE,
             'content'   => 'admin/price/image',
             'extra'     => 'admin/price/js/_js_image',
-            'menuactive_price'   => 'active open'
+            'menuactive_price'   => 'active open',
+            'image'     => $image_order
         ];
 
         return view('admin/layout/wrapper', $mdata);
@@ -172,7 +173,7 @@ class Price extends BaseController
         $file = $this->request->getFile('img_order');
         if ($file && $file->isValid()) {
             $file_name = "image_order.png";
-            $file->move('assets/img/order', $file_name);
+            $file->move('assets/img/order', $file_name, true);
         }
 
         $result = $this->setting->store('img_order', 'order/' . $file_name);

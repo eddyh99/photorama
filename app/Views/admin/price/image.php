@@ -27,7 +27,11 @@
                     </div>
                     <div class="card-body">
                         <form action="<?= BASE_URL ?>admin/price/image_edit" method="POST" enctype="multipart/form-data">
-                            <img class="img-preview img-fluid col-sm-5 d-block">
+                            <?php if(isset($image)): ?>
+                                <img class="img-preview img-fluid col-sm-5 d-block" src="<?= BASE_URL ?>assets/img/<?= $image ?>">
+                            <?php else: ?>
+                                <img class="img-preview img-fluid col-sm-5 d-block">
+                            <?php endif ?>
                             <div class="row">
                                 <div class="mb-3">
                                     <label class="form-label" for="upload foto">Upload Image</label>
