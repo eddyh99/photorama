@@ -14,8 +14,13 @@ class Mdl_voucher extends Model
         $this->db = \Config\Database::connect();
     }
 
-    public function allVoucher() {
-        return $this->db->query('SELECT * FROM voucher')->getResult();
+    public function allVoucher()
+    {
+        return $this->db->query(
+            'SELECT voucher.*, cabang.nama_cabang
+                FROM voucher
+                LEFT JOIN cabang ON cabang.id = voucher.cabang_id'
+        )->getResult();
     }
 
     public function voucherByKode($kode)
@@ -40,7 +45,7 @@ class Mdl_voucher extends Model
             // For other database-related errors, return generic server error
             return (object) array(
                 "code"      => 500,
-                "message"   => "Periksa inputan anda."
+                "message"   => "Periksa inputan anda." . $e
             );
         } catch (\Exception $e) {
             // Handle any other general exceptions

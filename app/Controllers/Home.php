@@ -23,7 +23,6 @@ class Home extends BaseController
 	}
 
     public function testing() {
-
         return view('guest/script');
     }
 
@@ -67,7 +66,7 @@ class Home extends BaseController
         $kd_voucher = $this->request->getVar('voucher');
         if(!empty($kd_voucher)) {
             $voucher = new Voucher;
-            $result = $voucher->cekVoucher($kd_voucher);
+            $result = $voucher->cekVoucher($kd_voucher, $this->id_cabang);
 
             if (!$result->success) {
                 session()->setFlashdata('failed', $result->message);

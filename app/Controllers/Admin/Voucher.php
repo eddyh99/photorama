@@ -10,17 +10,20 @@ class Voucher extends BaseController
     {   
         $this->voucher       = model('App\Models\Mdl_voucher');
         $this->setting       = model('App\Models\Mdl_settings');
+        $this->cabang       = model('App\Models\Mdl_cabang');
 	}
 
     public function index()
     {
         $price = $this->setting->value('price');
+        $cabang = $this->cabang->allCabang();
         $mdata = [
             'title'     => 'Voucher - ' . NAMETITLE,
             'content'   => 'admin/voucher/index',
             'extra'     => 'admin/voucher/js/_js_index',
             'menuactive_voc'   => 'active open',
-            'price'     => $price
+            'price'     => $price,
+            'cabang'    => $cabang
         ];
 
         return view('admin/layout/wrapper', $mdata);
@@ -30,9 +33,11 @@ class Voucher extends BaseController
 
         $kd_voucher = strtoupper(substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 8));
         $diskon = $this->request->getVar('diskon');
+        $id_cabang = $this->request->getVar('id_cabang');
 
         $mdata = [
             'kode_voucher'   => $kd_voucher,
+            'cabang_id'      => $id_cabang ?? null,
             'potongan_harga' => !empty($diskon) ? $diskon : null,
             'expired'        => date('Y-m-d', strtotime($this->request->getVar('expired')))
         ];
@@ -42,7 +47,7 @@ class Voucher extends BaseController
     }
 
 
-    public function cekVoucher($voucher)
+    public function cekVoucher($voucher, $id_cabang)
     {
         // Mengambil data voucher berdasarkan kode
         $result = $this->voucher->voucherByKode($voucher);
@@ -52,6 +57,13 @@ class Voucher extends BaseController
             return (object) [
                 "success" => false,
                 "message" => "Voucher tidak tersedia."
+            ];
+        }
+
+        if($result->cabang_id !== null && $result->cabang_id != $id_cabang) {
+            return (object) [
+                "success" => false,
+                "message" => "Voucher tidak berlaku."
             ];
         }
     

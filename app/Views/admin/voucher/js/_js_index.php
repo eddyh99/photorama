@@ -24,6 +24,9 @@
 				data: 'kode_voucher'
 			},
             {
+				data: row => row.nama_cabang ?? 'Semua cabang'
+			},
+            {
 				data: 'expired'
 			},
             { 
@@ -64,6 +67,7 @@
             type: "POST", // Method POST
             data: {
                 diskon: $('#diskon').val(),
+                id_cabang: $('#cabang').val(),
                 expired: $('#tgl').val()
             },
             success: function(response) {
