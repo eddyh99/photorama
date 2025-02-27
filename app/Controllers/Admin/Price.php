@@ -11,6 +11,7 @@ class Price extends BaseController
     {   
         $this->price       = model('App\Models\Mdl_price');
         $this->cabang       = model('App\Models\Mdl_cabang');
+        $this->setting       = model('App\Models\Mdl_settings');
 	}
 
     public function index()
@@ -139,6 +140,49 @@ class Price extends BaseController
         }else{
             session()->setFlashdata('failed', $result->message);
             return redirect()->to(BASE_URL."admin/price");
+        }
+    }
+
+    public function image() {
+
+        $mdata = [
+            'title'     => 'Image Order - ' . NAMETITLE,
+            'content'   => 'admin/price/image',
+            'extra'     => 'admin/price/js/_js_image',
+            'menuactive_price'   => 'active open'
+        ];
+
+        return view('admin/layout/wrapper', $mdata);
+    }
+
+    public function image_edit() {
+        $rules = $this->validate([
+            'img_order' => [
+                'label' => 'Image Order',
+                'rules' => 'uploaded[img_order]|is_image[img_order]|mime_in[img_order,image/png]'
+            ]
+        ]);
+
+        // Checking Validation
+        if (!$rules){
+            session()->setFlashdata('failed', $this->validation->listErrors());
+            return redirect()->to(BASE_URL . "admin/price/image")->withInput();
+        }
+
+        $file = $this->request->getFile('img_order');
+        if ($file && $file->isValid()) {
+            $file_name = "image_order.png";
+            $file->move('assets/img/order', $file_name);
+        }
+
+        $result = $this->setting->store('img_order', 'order/' . $file_name);
+
+        if ($result->code == 201) {
+            session()->setFlashdata('success', $result->message);
+            return redirect()->to(BASE_URL . "admin/price");
+        }else{
+            session()->setFlashdata('failed', $result->message);
+            return redirect()->to(BASE_URL . "admin/price/image")->withInput();
         }
     }
 }

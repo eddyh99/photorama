@@ -23,7 +23,7 @@
                     <div class="card" style="background-color: white;">
                         <div class="card-body text-center">
                             <h2 class="card-title text-uppercase fw-bold">How Many Prints <br>Do You Wants?</h2>
-                            <img class="d-block mx-auto" width="300" src="<?= BASE_URL ?>assets/img/img-order.png" alt="Order">
+                            <img class="d-block mx-auto" width="300" src="<?= $image ?>" alt="Order">
                             <div>
                                 <div class="d-flex justify-content-center align-items-center mb-3">
                                     <!-- Button kurang -->

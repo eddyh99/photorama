@@ -46,12 +46,14 @@ class Home extends BaseController
         $background = $this->background->backgroundByScreen('screen_order', $this->id_cabang);
         $price = $this->price->getBy_cabang($this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_order', $this->id_cabang);
+        $image_order = $this->setting->value('img_order');
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'content'       => 'guest/order/index',
             'extra'         => 'guest/order/js/_js_index',
             'background'    =>  $background ?? null,
             'price'         => $price,
+            'image'         => BASE_URL . 'assets/img/' . ($image_order ?? 'order/img-default.png'),
             'timer'         => $timer
         ];
 
