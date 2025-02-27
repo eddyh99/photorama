@@ -35,6 +35,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <a href="<?= BASE_URL?>admin/price/add" class="btn btn-primary">Tambah</a>
+                                    <a href="<?= BASE_URL?>admin/price/image" class="btn btn-warning">Custom Image</a>
                                 </div>
                             </div>
                         </div>
