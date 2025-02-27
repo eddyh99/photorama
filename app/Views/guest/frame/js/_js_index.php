@@ -2,6 +2,7 @@
     // custom background
     $(function() {
         let id;
+        let selectedFrame;
 
         $('.frame').hover(
             function() { 
@@ -23,10 +24,12 @@
         $(function() {
         $('.frame').click(function() {
             $('#preview-frame').attr('src', $(this).find('img').attr('src'));
+            selectedFrame = $(this).find('img').attr('src');
             id = btoa($(this).find('img').attr('id'));
         });
 
         $('#start').click(function() {
+            sessionStorage.setItem("selected_frame", selectedFrame);
             window.location.href = "<?= BASE_URL ?>camera/" + id;
         })
     });

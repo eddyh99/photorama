@@ -2,6 +2,8 @@
     $(function() {
         const dir = btoa(<?= json_encode($dir) ?>);
         const canvasToBlob = (canvas) => new Promise((resolve) => canvas.toBlob(resolve));
+        const frame = new Image();
+        frame.src = sessionStorage.getItem("selected_frame") || null;
 
         let img = document.getElementById("photo");
         let canvas = document.getElementById("canvas");
@@ -9,7 +11,7 @@
             willReadFrequently: true
         });
 
-        
+
         if (img.complete) {
             drawImage();
         } else {
@@ -20,6 +22,9 @@
             canvas.width = img.width;
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0, img.width, img.height);
+            frame.onload = function() {
+            ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+        };
         }
 
         $("#grayscale").on('click', function() {
@@ -38,6 +43,7 @@
             }
 
             ctx.putImageData(imageData, 0, 0);
+            ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
         });
 
         $("#normal").on('click', function() {
@@ -61,6 +67,7 @@
             }
 
             ctx.putImageData(imageData, 0, 0);
+            ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
         })
 
         $("#polaroid").on('click', function() {
@@ -80,6 +87,7 @@
             }
 
             ctx.putImageData(imageData, 0, 0);
+            ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
         })
 
         $("#next").on('click', async function() {
@@ -104,33 +112,33 @@
             }
         });
 
-        
-            async function updatePhoto() {
-                const formData = new FormData();
-                formData.append('photo', await canvasToBlob(canvas));
 
-                return new Promise((resolve, reject) => {
-                    $.ajax({
-                        url: "<?= BASE_URL ?>home/updateRecord/" + dir,
-                        type: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
-                            const mdata = JSON.parse(response)
-                            resolve(mdata.success);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error saving videos:', error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal',
-                                text: 'Terjadi kesalahan.',
-                            });
-                        }
-                    });
+        async function updatePhoto() {
+            const formData = new FormData();
+            formData.append('photo', await canvasToBlob(canvas));
+
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: "<?= BASE_URL ?>home/updateRecord/" + dir,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        const mdata = JSON.parse(response)
+                        resolve(mdata.success);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error saving videos:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: 'Terjadi kesalahan.',
+                        });
+                    }
                 });
-            }
+            });
+        }
 
     });
 </script>
