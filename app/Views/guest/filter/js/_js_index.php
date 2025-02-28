@@ -23,8 +23,8 @@
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0, img.width, img.height);
             frame.onload = function() {
-            ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
-        };
+                ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+            };
         }
 
         $("#grayscale").on('click', function() {
@@ -89,6 +89,129 @@
             ctx.putImageData(imageData, 0, 0);
             ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
         })
+
+        $("#bnw-glam").on('click', function() {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            let data = imageData.data;
+
+            let minGray = 255;
+            let maxGray = 0;
+
+            // Pertama: Hitung nilai grayscale minimum dan maksimum
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i];
+                let g = data[i + 1];
+                let b = data[i + 2];
+
+                let gray = 0.3 * r + 0.59 * g + 0.11 * b; // Grayscale standard
+
+                minGray = Math.min(minGray, gray);
+                maxGray = Math.max(maxGray, gray);
+            }
+
+            // Kedua: Terapkan kontras dengan stretching
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i];
+                let g = data[i + 1];
+                let b = data[i + 2];
+
+                let gray = 0.3 * r + 0.59 * g + 0.11 * b;
+
+                // Kontras lebih dramatis menggunakan kontras stretching
+                gray = ((gray - minGray) / (maxGray - minGray)) * 255;
+
+                // Optional: Tambahkan efek pencahayaan
+                gray = gray > 128 ? Math.min(gray * 1.3, 255) : Math.max(gray * 0.8, 0);
+
+                data[i] = data[i + 1] = data[i + 2] = gray;
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+            ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+        });
+
+
+
+        $("#gotham").on("click", function() {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            let data = imageData.data;
+
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i];
+                let g = data[i + 1];
+                let b = data[i + 2];
+
+                // Konversi ke grayscale
+                let gray = 0.3 * r + 0.59 * g + 0.11 * b;
+
+                // Tambahkan efek biru dengan sedikit peningkatan biru
+                data[i] = gray * 0.9; // Red sedikit lebih gelap
+                data[i + 1] = gray * 0.9; // Green sedikit lebih gelap
+                data[i + 2] = gray * 1.2; // Biru lebih terang untuk efek dingin
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+            ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+        });
+
+        $("#brannan").on("click", function() {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            let data = imageData.data;
+
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i];
+                let g = data[i + 1];
+                let b = data[i + 2];
+
+                // Kurangi kontras dengan mencampurkan warna ke nilai rata-rata
+                let avg = (r + g + b) / 3;
+                r = (r + avg * 0.7) / 2;
+                g = (g + avg * 0.6) / 2;
+                b = (b + avg * 0.5) / 2;
+
+                // Tambahkan efek sepia (hangat)
+                r *= 1.2;
+                g *= 1.1;
+                b *= 0.9;
+
+                data[i] = Math.min(255, r);
+                data[i + 1] = Math.min(255, g);
+                data[i + 2] = Math.min(255, b);
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+            ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+        });
+
+        $("#xpro").on("click", function() {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            let data = imageData.data;
+
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i];
+                let g = data[i + 1];
+                let b = data[i + 2];
+
+                // Tingkatkan kontras
+                r = Math.min(255, r * 1.2);
+                g = Math.min(255, g * 1.3);
+                b = Math.min(255, b * 0.8);
+
+                // Berikan sedikit efek hijau-kuning
+                data[i] = r;
+                data[i + 1] = g;
+                data[i + 2] = b;
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+            ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+        });
+
+
 
         $("#next").on('click', async function() {
             Swal.fire({
