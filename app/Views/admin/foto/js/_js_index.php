@@ -24,6 +24,12 @@
 				data: 'user'
 			},
 			{
+				data: 'thumbnail',
+				render: function(data, type, row) {
+					return `<img src="<?= BASE_URL ?>assets/photobooth/${data}" alt="thumbnail" style="width: 50px; height: 50px;" onclick="showPhoto('${encodeURIComponent(data)}')">`;
+				}
+			},
+			{
 				data: 'date'
 			},
 			{
@@ -41,8 +47,14 @@
 		],
 	});
 
-	$("#auto-print").on("change", function () {
-            $("#form").submit();
-	});
+	function showPhoto(src) {
+		const photo = `<img src="<?= BASE_URL ?>assets/photobooth/${src}" alt="thumbnail" style="width: 100%; height: auto;">`;
+		$('#modalDataBody').html(photo);
+		$("#photoModal").modal('show');
+	}
 
+
+	$("#auto-print").on("change", function() {
+		$("#form").submit();
+	});
 </script>

@@ -44,6 +44,7 @@ class Photo extends BaseController
             array_push($mdata, [
                 'user' => $folder,
                 'date' => date("Y-m-d H:i:s", end($time)),
+                'thumbnail' => $folder . '/photos-1.png',
                 'url_download' => base_url("download/" . base64_encode($folder)),
                 'url_delete' => base_url("delete/" . base64_encode($folder)),
             ]);
