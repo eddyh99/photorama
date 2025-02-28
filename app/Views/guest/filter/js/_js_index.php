@@ -1,9 +1,15 @@
 <script>
+    const dir = btoa(<?= json_encode($dir) ?>);
+
+    function redirecTo() {
+        window.location.href = '<?= BASE_URL ?>print/' +dir;
+    }
+
     $(function() {
-        const dir = btoa(<?= json_encode($dir) ?>);
         const canvasToBlob = (canvas) => new Promise((resolve) => canvas.toBlob(resolve));
         const frame = new Image();
-        frame.src = sessionStorage.getItem("selected_frame") || null;
+        const selectedFrame = sessionStorage.getItem("selected_frame");
+        frame.src = selectedFrame ? '<?= BASE_URL ?>assets/img/' + selectedFrame : null;
 
         let img = document.getElementById("photo");
         let canvas = document.getElementById("canvas");

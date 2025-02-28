@@ -21,6 +21,6 @@ $routes->get('/finish', 'Home::finish');
 $routes->get('/filter/(:any)', 'Home::filter/$1');
 $routes->get('/download/(:any)', 'Home::userFiles/$1');
 $routes->get('/delete/(:any)', 'Admin\Photo::delete_userFiles/$1');
-$routes->get('/camera/(:any)', 'Home::camera/$1');
-$routes->get('/capture/(:any)', 'Home::capture/$1');
+$routes->get('/camera', 'Home::camera');
+$routes->get('/capture', 'Home::capture');
 $routes->get('/login', 'Auth::index');

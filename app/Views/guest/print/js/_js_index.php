@@ -1,18 +1,21 @@
 <script>
-$(function() {
-    const img = $("#photo").attr('src');
-    const autoPrint = <?= json_encode($auto_print) ?>;
-    const print = <?= json_encode(session()->get('print')) ?> || 1;
+    function redirecTo() {
+        window.location.href = '<?= BASE_URL ?>finish';
+    }
+    $(function() {
+        const img = $("#photo").attr('src');
+        const autoPrint = <?= json_encode($auto_print) ?>;
+        const print = <?= json_encode(session()->get('print')) ?> || 1;
 
-    function printImage() {
-        var printWindow = window.open('', '_blank', 'width=600,height=600');
+        function printImage() {
+            var printWindow = window.open('', '_blank', 'width=600,height=600');
 
-        if (!printWindow) {
-            alert("Pop-up terblokir! Izinkan pop-up untuk mencetak.");
-            return;
-        }
+            if (!printWindow) {
+                alert("Pop-up terblokir! Izinkan pop-up untuk mencetak.");
+                return;
+            }
 
-        printWindow.document.write(`
+            printWindow.document.write(`
             <html>
             <head>
                 <title>Print Image</title>
@@ -25,33 +28,31 @@ $(function() {
             <body>
         `);
 
-        for (var i = 0; i < print; i++) {
-            printWindow.document.write(`<img src="${img}" />`);
+            for (var i = 0; i < print; i++) {
+                printWindow.document.write(`<img src="${img}" />`);
+            }
+
+            printWindow.document.write(`</body></html>`);
+            printWindow.document.close();
+
+            printWindow.focus();
+
+            setTimeout(function() {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
         }
 
-        printWindow.document.write(`</body></html>`);
-        printWindow.document.close();
+        // Cetak otomatis jika session print aktif
+        if (autoPrint) {
+            setTimeout(printImage, 1000);
+        } else {
+            $("#print").removeAttr("hidden");
+        }
 
-        printWindow.focus();
-
-        setTimeout(function() {
-            printWindow.print();
-            printWindow.close();
-        }, 500);
-    }
-
-    // Cetak otomatis jika session print aktif
-    if (autoPrint) {
-        setTimeout(printImage, 1000);
-    } else {
-        $("#print").removeAttr("hidden");
-    }
-
-    // Cetak manual jika tombol ditekan
-    $("#print").on('click', function() {
-        printImage();
+        // Cetak manual jika tombol ditekan
+        $("#print").on('click', function() {
+            printImage();
+        });
     });
-});
-
-
 </script>

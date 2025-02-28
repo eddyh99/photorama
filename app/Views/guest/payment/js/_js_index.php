@@ -1,4 +1,7 @@
 <script>
+    function redirecTo() {
+        window.location.href = '<?= BASE_URL ?>';
+    }
     // custom background
     $(function() {
         const prints = <?= json_encode($print) ?>;
