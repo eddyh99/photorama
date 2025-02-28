@@ -41,4 +41,8 @@
 		],
 	});
 
+	$("#auto-print").on("change", function () {
+            $("#form").submit();
+	});
+
 </script>

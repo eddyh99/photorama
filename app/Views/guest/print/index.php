@@ -20,6 +20,7 @@
                     <p class="text-white">OR</p>
                     <div class="d-grid gap-2">
                         <button class="btn btn-warning">EMAIL SOFT COPY</button>
+                        <button id="print" class="btn btn-info" hidden>PRINT</button>
                         <a href="<?= BASE_URL ?>finish" class="btn btn-primary">DONE</a>
                     </div>
                 </div>

@@ -7,13 +7,21 @@ use App\Controllers\BaseController;
 
 class Photo extends BaseController
 {
+
+    public function __construct()
+    {
+        $this->setting       = model('App\Models\Mdl_settings');
+    }
+
     public function index()
     {
+        $auto_print = $this->setting->value('auto_print');
         $mdata = [
             'title'     => 'Photos User- ' . NAMETITLE,
             'content'   => 'admin/foto/index',
             'extra'     => 'admin/foto/js/_js_index',
-            'menuactive_photo'   => 'active open'
+            'menuactive_photo'   => 'active open',
+            'auto_print' => filter_var($auto_print, FILTER_VALIDATE_BOOLEAN)
         ];
 
         return view('admin/layout/wrapper', $mdata);
@@ -59,5 +67,11 @@ class Photo extends BaseController
             session()->setFlashdata('failed', 'Files gagal dihapus');
             return redirect()->to(base_url("admin/photo"));
         }
+    }
+
+    public function print_setting() {
+        $status = filter_var($this->request->getVar('auto-print'), FILTER_VALIDATE_BOOLEAN);
+        $this->setting->store('auto_print', $status);
+        return redirect()->to(base_url("admin/photo"));
     }
 }

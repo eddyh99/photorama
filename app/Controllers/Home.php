@@ -223,6 +223,7 @@ class Home extends BaseController
         $background = $this->background->backgroundByScreen('screen_print', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
         $qrcode = new Generator;
+        $auto_print = $this->setting->value('auto_print');
 
         $mdata = [
             'title'         => 'Print - ' . NAMETITLE,
@@ -231,6 +232,7 @@ class Home extends BaseController
             'background'    =>  $background ?? null,
             'timer'         => $timer,
             'dir'           => base64_decode($dir),
+            'auto_print'    => $auto_print ? filter_var($auto_print, FILTER_VALIDATE_BOOLEAN) : false,
             'qrcode'        => $qrcode->size(250)->generate(base_url("download/$dir"))
         ];
 
