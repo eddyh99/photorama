@@ -1,3 +1,4 @@
+<script src="<?= BASE_URL ?>assets/js/payment-check.js"></script>
 <script>
     let video1 = document.getElementById("camera1");
     let video2 = document.getElementById("camera2");

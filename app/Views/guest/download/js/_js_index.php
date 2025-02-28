@@ -1,3 +1,4 @@
+<script src="<?= BASE_URL ?>assets/js/payment-check.js"></script>
 <script>
     var swiper = new Swiper(".mySwiper", {
         loop: true,

@@ -1,3 +1,4 @@
+<script src="<?= BASE_URL ?>assets/js/payment-check.js"></script>
 <script>
     const camera = sessionStorage.getItem('camera') || null;
     const selectedPhotos = [];
@@ -26,8 +27,12 @@
     let blobResultImage;
     let pictureCount = 0;
     let mediaRecorder, recordedChunks;
-
     const positions = [];
+
+    function redirecTo() {
+        save();
+    }
+
     async function getCoordinates(frame) {
         try {
             let url = encodeURIComponent(frame);
@@ -248,6 +253,10 @@
     });
 
     $('#select-filter').on('click', function() {
+        save();
+    });
+
+    function save() {
         Swal.fire({
             title: "Menyimpan foto",
             text: "Loading..",
@@ -301,8 +310,7 @@
             }
         });
 
-
-    });
+    }
 
     function flash() {
         return new Promise((resolve) => {

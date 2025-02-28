@@ -36,6 +36,7 @@
             $.get("<?= BASE_URL?>payment/check/" +<?= $inv ?> + "/" + prints, function(data, status) {
                 mdata = JSON.parse(data);
                 if(mdata.status == 'paid') {
+                    sessionStorage.setItem('is_paid', true);
                     window.location.href = '<?= BASE_URL ?>frame';
                 }
         });
