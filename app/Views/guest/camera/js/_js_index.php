@@ -2,6 +2,15 @@
     let video1 = document.getElementById("camera1");
     let video2 = document.getElementById("camera2");
     let devices = [];
+    const frame = sessionStorage.getItem('selected_frame');
+    console.log(frame);
+    
+
+    if (!frame || frame === "undefined") {
+        alert('No frame selected. Redirecting to frame selection...');
+        window.location.href = "<?= BASE_URL ?>frame";
+    }
+
 
     function redirecTo() {
         sessionStorage.setItem("camera", devices[0].deviceId); //default camera 1

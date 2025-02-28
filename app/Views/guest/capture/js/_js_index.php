@@ -72,8 +72,8 @@
 
         } catch (error) {
             console.error('Error accessing webcam: ', error);
-            if (confirm('No camera selected. Do you want to go back to Home?')) {
-                window.location.href = "<?= BASE_URL ?>"
+            if (confirm('No camera selected. Do you want to go back?')) {
+                window.location.href = "<?= BASE_URL ?>camera"
             }
         }
     }
