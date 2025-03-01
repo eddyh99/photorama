@@ -43,6 +43,22 @@ class Mdl_frame extends Model
         return $this->db->query($sql, [$id])->getResult() ?? null;
     }
 
+    public function getByFile($file)
+    {
+        $sql = "SELECT
+                    frame.file,
+                    fk.x,
+                    fk.y,
+                    fk.width,
+                    fk.height
+                FROM
+                    frame
+                    JOIN frame_koordinat fk ON fk.frame_id = frame.id
+                WHERE
+                    frame.file = ?";
+        return $this->db->query($sql, [$file])->getResult() ?? null;
+    }
+
     // public function backgroundByScreen($screen) {
     //     $sql = "SELECT file from background WHERE display = ?";
     //     return $this->db->query($sql, [$screen])->getRow();

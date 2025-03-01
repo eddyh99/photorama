@@ -1,3 +1,4 @@
+<script src="<?= BASE_URL ?>assets/js/payment-check.js"></script>
 <script>
     const camera = sessionStorage.getItem('camera') || null;
     const selectedPhotos = [];
@@ -16,7 +17,8 @@
         "next-pose.mp3"
     ];
 
-    const frameImageSrc = "<?= BASE_URL ?>assets/img/<?= $frame[0]->file ?>"; // Path to frame image
+    const frame = sessionStorage.getItem("selected_frame") || null;
+    const frameImageSrc = '<?= BASE_URL ?>assets/img/' + frame;
     const frameImage = new Image();
     frameImage.src = frameImageSrc;
 
@@ -25,7 +27,23 @@
     let blobResultImage;
     let pictureCount = 0;
     let mediaRecorder, recordedChunks;
-    const positions = <?= json_encode($frame) ?> || [];
+    const positions = [];
+
+    function redirecTo() {
+        save();
+    }
+
+    async function getCoordinates(frame) {
+        try {
+            let url = encodeURIComponent(frame);
+            const response = await $.get(`<?= BASE_URL ?>home/get_coordinates?frame=${url}`);
+            const pos = JSON.parse(response);
+            positions.push(...pos);
+        } catch (error) {
+            alert('Failed to get coordinates from frame');
+            window.location.reload();
+        }
+    }
     // Access the webcam
     async function startWebcam() {
         try {
@@ -59,8 +77,8 @@
 
         } catch (error) {
             console.error('Error accessing webcam: ', error);
-            if (confirm('No camera selected. Do you want to go back to Home?')) {
-                window.location.href = "<?= BASE_URL ?>"
+            if (confirm('No camera selected. Do you want to go back?')) {
+                window.location.href = "<?= BASE_URL ?>camera"
             }
         }
     }
@@ -93,6 +111,7 @@
 
     // Countdown and capture photo
     async function startPictureCountdown() {
+
         if (pictureCount < positions.length) {
             pictureCount += 1;
 
@@ -102,8 +121,22 @@
             countdownOverlay.style.display = 'flex';
             countdownOverlay.textContent = countdown;
 
-            randomIndex = Math.floor(Math.random() * listAudio.length);
-            new Audio('<?= BASE_URL ?>assets/audio/' + listAudio[randomIndex]).play();
+            // Pilih audio secara acak dari daftar
+            let randomIndex = Math.floor(Math.random() * listAudio.length);
+            let audio = new Audio('<?= BASE_URL ?>assets/audio/' + listAudio[randomIndex]);
+
+            // Coba mainkan audio dengan error handling
+            let playPromise = audio.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log("Audio is playing successfully!");
+                }).catch(error => {
+                    // bug chrome
+                    console.warn("Audio play was prevented:", error);
+                });
+            }
+
             const countdownInterval = setInterval(async () => {
                 countdown -= 1;
 
@@ -157,8 +190,10 @@
             showCancelButton: true,
             confirmButtonText: "OK",
             cancelButtonText: "Cancel"
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
+                await getCoordinates(frame);
+
                 startWebcam(); // Memulai kamera hanya jika pengguna menekan OK
             } else {
                 window.location.href = "<?= BASE_URL ?>"; // Arahkan ke home jika Cancel
@@ -218,6 +253,10 @@
     });
 
     $('#select-filter').on('click', function() {
+        save();
+    });
+
+    function save() {
         Swal.fire({
             title: "Menyimpan foto",
             text: "Loading..",
@@ -271,8 +310,7 @@
             }
         });
 
-
-    });
+    }
 
     function flash() {
         return new Promise((resolve) => {

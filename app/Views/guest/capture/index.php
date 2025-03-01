@@ -3,6 +3,7 @@
         <!-- Bagian kiri (SELECT FRAME) -->
         <div class="col-md-8 d-flex flex-column p-3">
             <div class="video-container" style="background-color: black;">
+                <span class="text-center text-white">Camera Loading...</span>
                 <video id="webcam" autoplay playsinline muted></video>
                 <canvas id="overlay"></canvas>
                 <div id="countdown-camera" class="countdown-overlay"></div>

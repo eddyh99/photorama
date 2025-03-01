@@ -23,7 +23,6 @@ class Home extends BaseController
 	}
 
     public function testing() {
-
         return view('guest/script');
     }
 
@@ -67,7 +66,7 @@ class Home extends BaseController
         $kd_voucher = $this->request->getVar('voucher');
         if(!empty($kd_voucher)) {
             $voucher = new Voucher;
-            $result = $voucher->cekVoucher($kd_voucher);
+            $result = $voucher->cekVoucher($kd_voucher, $this->id_cabang);
 
             if (!$result->success) {
                 session()->setFlashdata('failed', $result->message);
@@ -129,7 +128,7 @@ class Home extends BaseController
         return view('guest/wrapper', $mdata);
     }
 
-    public function camera($frame) {
+    public function camera() {
         $background = $this->background->backgroundByScreen('screen_select_camera', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_select_camera', $this->id_cabang);
 
@@ -138,16 +137,13 @@ class Home extends BaseController
             'content'       => 'guest/camera/index',
             'extra'         => 'guest/camera/js/_js_index',
             'background'    =>  $background ?? null,
-            'timer'         => $timer,
-            'frame'         => $frame
+            'timer'         => $timer
         ];
 
         return view('guest/wrapper', $mdata);
     }
 
-    public function capture($frame) {
-        $frame = $this->frame->getById(base64_decode($frame));
-        if(!$frame) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+    public function capture() {
         $background = $this->background->backgroundByScreen('screen_capture_photo', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_capture_photo', $this->id_cabang);
 
@@ -156,7 +152,6 @@ class Home extends BaseController
             'content'       => 'guest/capture/index',
             'extra'         => 'guest/capture/js/_js_index',
             'background'    =>  $background ?? null,
-            'frame'         => $frame,
             'timer'         => $timer
         ];
 
@@ -224,6 +219,7 @@ class Home extends BaseController
         $background = $this->background->backgroundByScreen('screen_print', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
         $qrcode = new Generator;
+        $auto_print = $this->setting->value('auto_print');
 
         $mdata = [
             'title'         => 'Print - ' . NAMETITLE,
@@ -232,6 +228,7 @@ class Home extends BaseController
             'background'    =>  $background ?? null,
             'timer'         => $timer,
             'dir'           => base64_decode($dir),
+            'auto_print'    => $auto_print ? filter_var($auto_print, FILTER_VALIDATE_BOOLEAN) : false,
             'qrcode'        => $qrcode->size(250)->generate(base_url("download/$dir"))
         ];
 
@@ -245,6 +242,7 @@ class Home extends BaseController
         $mdata = [
             'title'         => 'Print - ' . NAMETITLE,
             'content'       => 'guest/finish/index',
+            'extra'         => 'guest/finish/js/_js_index',
             'background'    =>  $background ?? 'thx.png',
             'timer'         => $timer
         ];
@@ -272,4 +270,11 @@ class Home extends BaseController
 
         return view('guest/wrapper', $mdata);
     }
+
+    public function get_coordinates() {
+        $frame = $this->request->getVar('frame');
+        $result = $this->frame->getByFile(urldecode($frame));
+        echo json_encode($result);
+    }
+
 }

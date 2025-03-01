@@ -20,7 +20,7 @@ let interval = setInterval(() => {
   if (waktu <= 0) {
     clearInterval(interval);
     localStorage.removeItem("sisa_waktu");
-    window.location.href = window.location.origin;
+    redirecTo();
   }
 }, 1000);
 
