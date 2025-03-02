@@ -170,7 +170,7 @@
                             <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected" onclick="selectPhoto(this)">
                         </div>
                     `;
-                    }, 'image/png');
+                    }, 'image/jpeg', 0.7);
                     mediaRecorder.stop();
                     // Prepare for the next photo
                     if (pictureCount < positions.length) {
@@ -249,7 +249,7 @@
 
         frame.onload = function() {
             ctx.drawImage(frame, 0, 0, frame.width, frame.height); // Gambar frame di depan gambar
-            frameCanvas.toBlob(blob => blobResultImage = blob);
+            frameCanvas.toBlob(blob => blobResultImage = blob, 'image/jpeg', 0.7);
         };
         $('#select-filter').removeAttr('hidden');
     });

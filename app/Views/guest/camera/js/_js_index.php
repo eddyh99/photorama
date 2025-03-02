@@ -77,7 +77,7 @@
             sessionStorage.setItem("camera", selectedDeviceId);
             window.location.href = '<?= BASE_URL ?>capture';
         } else {
-            alert('cant select camera');
+            alert('Camera is not ready!');
 
         }
 

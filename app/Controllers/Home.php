@@ -173,7 +173,7 @@ class Home extends BaseController
         $response += ['form' => $_FILES];
         foreach ($_FILES as $key => $file) {
             if ($file['error'] === UPLOAD_ERR_OK) {
-                $uploadFile = "$uploadDir/" . ($file['type'] == "image/png" ? "$key.png" : "$key.mp4");
+                $uploadFile = "$uploadDir/" . ($file['type'] == "image/jpeg" ? "$key.jpg" : "$key.mp4");
                 
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     $response = [
@@ -193,7 +193,7 @@ class Home extends BaseController
         $uploadDir = "assets/photobooth/" . base64_decode($dir) . "/";
         if (!is_dir($uploadDir)) return json_encode(['success' => false]);
     
-        $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "photos.png");
+        $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "photos.jpg");
         return json_encode(['success' => $success]);
     }
 
