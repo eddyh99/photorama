@@ -67,4 +67,8 @@
 			}
 		})
 	});
+
+	$("#disable-payment").on("change", function() {
+		$("#form").submit();
+	});
 </script>
