@@ -4,7 +4,7 @@
             <!-- Bagian kiri (SELECT FRAME) -->
             <div class="col-8 d-flex flex-column h-100">
                 <div class="mt-auto fs-3 fw-bold">SELECT FRAME</div>
-                <div class="flex-grow-1 mt-2" style="background-color: green; overflow-y: auto; max-height: 100%;">
+                <div class="flex-grow-1 mt-2 rounded" style="background-image: url(<?= $bg_container ?>); overflow-y: auto; max-height: 100%;">
                     <div class="row row-cols-4 mx-2 g-3 my-3">
                         <?php foreach ($frame as $fr): ?>
                             <div class="col">

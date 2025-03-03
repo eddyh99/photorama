@@ -113,6 +113,7 @@ class Home extends BaseController
 
     public function frame() {
         $background = $this->background->backgroundByScreen('screen_frame', $this->id_cabang);
+        $bg_container = $this->background->backgroundByScreen('container_frame', $this->id_cabang);
         $frame = $this->frame->allFrame();
         $timer = $this->timer->get_byCabang_andScreen('screen_frame', $this->id_cabang);
 
@@ -121,6 +122,7 @@ class Home extends BaseController
             'content'       => 'guest/frame/index',
             'extra'         => 'guest/frame/js/_js_index',
             'background'    =>  $background ?? null,
+            'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container ?? 'background/default.jpg'),
             'frame'         =>  $frame,
             'timer'         => $timer
         ];
@@ -198,8 +200,8 @@ class Home extends BaseController
     }
 
     public function filter($dir) {
-        // dd(base64_decode($dir));
         $background = $this->background->backgroundByScreen('screen_filter', $this->id_cabang);
+        $bg_container = $this->background->backgroundByScreen('container_filter', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_filter', $this->id_cabang);
 
         $mdata = [
@@ -207,6 +209,7 @@ class Home extends BaseController
             'content'       => 'guest/filter/index',
             'extra'         => 'guest/filter/js/_js_index',
             'background'    =>  $background ?? null,
+            'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container ?? 'background/default.jpg'),
             'timer'         => $timer,
             'dir'           => base64_decode($dir)
         ];
@@ -217,6 +220,7 @@ class Home extends BaseController
 
     public function print($dir) {
         $background = $this->background->backgroundByScreen('screen_print', $this->id_cabang);
+        $bg_container = $this->background->backgroundByScreen('container_print', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
         $qrcode = new Generator;
         $auto_print = $this->setting->value('auto_print');
@@ -231,6 +235,7 @@ class Home extends BaseController
             'content'       => 'guest/print/index',
             'extra'         => 'guest/print/js/_js_index',
             'background'    =>  $background ?? null,
+            'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container ?? 'background/default.jpg'),
             'timer'         => $timer,
             'dir'           => $dir,
             'videos'        => $videos,

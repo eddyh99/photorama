@@ -3,7 +3,7 @@
         <div class="row text-black h-100">
             <!-- Bagian kiri (SELECT FRAME) -->
             <div class="col-8 d-flex flex-column justify-content-center h-100">
-                <div class="mt-2 d-flex justify-content-center align-items-center h-100" style="background-color: green;">
+                <div class="mt-2 d-flex justify-content-center align-items-center h-100" style="background-image: url(<?= $bg_container ?>); ">
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-md-6 text-center">
