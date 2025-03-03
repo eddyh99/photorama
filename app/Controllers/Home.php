@@ -220,6 +220,11 @@ class Home extends BaseController
         $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
         $qrcode = new Generator;
         $auto_print = $this->setting->value('auto_print');
+        $dir = base64_decode($dir);
+        $videos = glob(FCPATH . 'assets/photobooth/'. $dir . '/video*', GLOB_BRACE);
+        $videos = array_map(function ($video) use ($dir) {
+            return BASE_URL . 'assets/photobooth/' . $dir . '/' . basename($video);
+        }, $videos);
 
         $mdata = [
             'title'         => 'Print - ' . NAMETITLE,
@@ -227,7 +232,8 @@ class Home extends BaseController
             'extra'         => 'guest/print/js/_js_index',
             'background'    =>  $background ?? null,
             'timer'         => $timer,
-            'dir'           => base64_decode($dir),
+            'dir'           => $dir,
+            'videos'        => $videos,
             'auto_print'    => $auto_print ? filter_var($auto_print, FILTER_VALIDATE_BOOLEAN) : false,
             'qrcode'        => $qrcode->size(250)->generate(base_url("download/$dir"))
         ];
