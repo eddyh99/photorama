@@ -173,7 +173,7 @@ class Home extends BaseController
         $response += ['form' => $_FILES];
         foreach ($_FILES as $key => $file) {
             if ($file['error'] === UPLOAD_ERR_OK) {
-                $uploadFile = "$uploadDir/" . ($file['type'] == "image/png" ? "$key.png" : "$key.mp4");
+                $uploadFile = "$uploadDir/" . ($file['type'] == "image/jpeg" ? "$key.jpg" : "$key.mp4");
                 
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     $response = [
@@ -193,7 +193,7 @@ class Home extends BaseController
         $uploadDir = "assets/photobooth/" . base64_decode($dir) . "/";
         if (!is_dir($uploadDir)) return json_encode(['success' => false]);
     
-        $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "photos.png");
+        $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "photos.jpg");
         return json_encode(['success' => $success]);
     }
 
@@ -220,6 +220,11 @@ class Home extends BaseController
         $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
         $qrcode = new Generator;
         $auto_print = $this->setting->value('auto_print');
+        $dir = base64_decode($dir);
+        $videos = glob(FCPATH . 'assets/photobooth/'. $dir . '/video*', GLOB_BRACE);
+        $videos = array_map(function ($video) use ($dir) {
+            return BASE_URL . 'assets/photobooth/' . $dir . '/' . basename($video);
+        }, $videos);
 
         $mdata = [
             'title'         => 'Print - ' . NAMETITLE,
@@ -227,7 +232,8 @@ class Home extends BaseController
             'extra'         => 'guest/print/js/_js_index',
             'background'    =>  $background ?? null,
             'timer'         => $timer,
-            'dir'           => base64_decode($dir),
+            'dir'           => $dir,
+            'videos'        => $videos,
             'auto_print'    => $auto_print ? filter_var($auto_print, FILTER_VALIDATE_BOOLEAN) : false,
             'qrcode'        => $qrcode->size(250)->generate(base_url("download/$dir"))
         ];

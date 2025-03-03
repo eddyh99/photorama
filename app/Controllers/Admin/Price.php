@@ -21,7 +21,7 @@ class Price extends BaseController
             'title'     => 'Price - ' . NAMETITLE,
             'content'   => 'admin/price/index',
             'extra'     => 'admin/price/js/_js_index',
-            'menuactive_price'   => 'active open',
+            'menuactive_price'   => 'active open'
         ];
 
         return view('admin/layout/wrapper', $mdata);

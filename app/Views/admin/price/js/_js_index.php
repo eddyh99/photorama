@@ -3,7 +3,10 @@
 		setTimeout(() => {
 			$("#failedtoast").toast('show')
 			$("#successtoast").toast('show')
-		}, 0)
+		}, 0);
+
+		let isChecked = localStorage.getItem("disable_payment") === "true";
+        $("#disable-payment").prop("checked", isChecked);
 	});
 	$('#table_list_bg').DataTable({
 		"scrollX": true,
@@ -66,5 +69,11 @@
 				document.location.href = url_href;
 			}
 		})
+	});
+
+	$("#disable-payment").on("change", function() {
+		let isChecked = $(this).prop("checked");
+        localStorage.setItem("disable_payment", isChecked); 
+		window.location.reload();
 	});
 </script>

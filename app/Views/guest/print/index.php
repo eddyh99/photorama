@@ -4,11 +4,21 @@
             <!-- Bagian kiri (SELECT FRAME) -->
             <div class="col-8 d-flex flex-column justify-content-center h-100">
                 <div class="mt-2 d-flex justify-content-center align-items-center h-100" style="background-color: green;">
-                    <div class="text-center w-100" style="max-height: 100%;">
-                        <img id="photo" class="img-fluid mt-4" style="max-height: 75vh; object-fit: contain;" src="<?= BASE_URL ?>assets/photobooth/<?= $dir ?>/photos.png">
-                        <p class="text-white mt-1 fs-3">- THANK YOU -</p>
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 text-center">
+                                <img id="photo" class="img-fluid mt-4" style="max-height: 75vh; object-fit: contain;"
+                                    src="<?= BASE_URL ?>assets/photobooth/<?= $dir ?>/photos.jpg"
+                                    alt="Photo Booth 1">
+                            </div>
+                            <div class="col-md-6 text-center">
+                                <canvas id="frame-video" class="img-fluid mt-4" style="max-height: 75vh; object-fit: contain;"></canvas>
+                            </div>
+                        </div>
+                        <p class="text-white text-center mt-3 fs-3">- THANK YOU -</p>
                     </div>
                 </div>
+
             </div>
             <!-- Bagian kanan (PREVIEW FRAME) -->
             <div class="col-4 d-flex flex-column h-100">

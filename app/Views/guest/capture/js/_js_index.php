@@ -49,6 +49,8 @@
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
+                    width: {ideal: 1080},
+                    height: {ideal: 768},
                     deviceId: {
                         exact: camera
                     }
@@ -59,8 +61,8 @@
 
             // Overlay frame on video in real-time
             const context = overlayCanvas.getContext('2d');
-            overlayCanvas.width = video.videoWidth || 640;
-            overlayCanvas.height = video.videoHeight || 480;
+            overlayCanvas.width = video.videoWidth || 1080;
+            overlayCanvas.height = video.videoHeight || 768;
 
             video.addEventListener('play', () => {
                 function renderFrame() {
@@ -151,8 +153,8 @@
 
                     // Capture photo
                     const snapshotCanvas = document.createElement('canvas');
-                    snapshotCanvas.width = video.videoWidth || 640;
-                    snapshotCanvas.height = video.videoHeight || 480;
+                    snapshotCanvas.width = video.videoWidth || 1080;
+                    snapshotCanvas.height = video.videoHeight || 768;
 
                     const snapshotContext = snapshotCanvas.getContext('2d');
                     snapshotContext.drawImage(video, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
@@ -168,7 +170,7 @@
                             <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected" onclick="selectPhoto(this)">
                         </div>
                     `;
-                    }, 'image/png');
+                    }, 'image/jpeg', 0.7);
                     mediaRecorder.stop();
                     // Prepare for the next photo
                     if (pictureCount < positions.length) {
@@ -247,7 +249,7 @@
 
         frame.onload = function() {
             ctx.drawImage(frame, 0, 0, frame.width, frame.height); // Gambar frame di depan gambar
-            frameCanvas.toBlob(blob => blobResultImage = blob);
+            frameCanvas.toBlob(blob => blobResultImage = blob, 'image/jpeg', 0.7);
         };
         $('#select-filter').removeAttr('hidden');
     });
