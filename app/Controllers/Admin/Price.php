@@ -17,13 +17,11 @@ class Price extends BaseController
     public function index()
     {
 
-        $disable_payment = $this->setting->value('disable_payment') ?? false;
         $mdata = [
             'title'     => 'Price - ' . NAMETITLE,
             'content'   => 'admin/price/index',
             'extra'     => 'admin/price/js/_js_index',
-            'menuactive_price'   => 'active open',
-            'disable_payment' => filter_var($disable_payment, FILTER_VALIDATE_BOOLEAN)
+            'menuactive_price'   => 'active open'
         ];
 
         return view('admin/layout/wrapper', $mdata);
@@ -187,11 +185,5 @@ class Price extends BaseController
             session()->setFlashdata('failed', $result->message);
             return redirect()->to(BASE_URL . "admin/price/image")->withInput();
         }
-    }
-
-    public function payment_setting() {
-        $status = filter_var($this->request->getVar('status'), FILTER_VALIDATE_BOOLEAN);
-        $this->setting->store('disable_payment', $status);
-        return redirect()->to(base_url("admin/price"));
     }
 }

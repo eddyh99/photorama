@@ -30,14 +30,12 @@ class Home extends BaseController
     {
         session()->set('print', 0);
         $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
-        $disable_payment = $this->setting->value('disable_payment');
         // dd($background);
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'extra'         => 'guest/beranda/js/_js_index',
             'content'       => 'guest/beranda/index',
-            'background'    =>  $background ?? null,
-            'disable_payment' => filter_var($disable_payment, FILTER_VALIDATE_BOOLEAN)
+            'background'    =>  $background ?? null
         ];
 
         return view('guest/wrapper', $mdata);

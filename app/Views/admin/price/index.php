@@ -39,8 +39,8 @@
                                <a href="<?= BASE_URL ?>admin/price/image" class="btn btn-warning">Custom Image</a>
                                </div>
                                 <div class="form-check form-switch">
-                                <form id="form" action="<?= BASE_URL ?>admin/price/payment_setting">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="disable-payment" name="status" <?= $disable_payment ? 'checked' : '' ?>>
+                                <form id="form">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="disable-payment" name="status">
                                     <label class="form-check-label" for="flexSwitchCheckDefault">Disable Payment</label>
                                 </form>
                                 </div>
