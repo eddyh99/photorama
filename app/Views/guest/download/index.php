@@ -36,6 +36,7 @@
         height: 20%;
         width: 100%;
     }
+
     .download-btn {
         position: absolute;
         top: 10px;
@@ -68,12 +69,14 @@
                             $fileUrl = base_url("assets/photobooth/$folder/$file");
                             if (in_array(strtolower($ext), ['mp4', 'webm'])):
                             ?>
+                                <a href="<?= BASE_URL ?>home/download_all/<?= $folder ?>" class="download-btn me-5" download><i class="bx bx-download"></i> Download all</a>
                                 <video controls playsinline>
                                     <source src="<?= $fileUrl ?>" type="video/<?= $ext ?>">
                                     Your browser does not support the video tag.
                                 </video>
                                 <a href="<?= $fileUrl ?>" class="download-btn" download><i class="bx bx-download"></i></a>
                             <?php else: ?>
+                                <a href="<?= BASE_URL ?>home/download_all/<?= $folder ?>" class="download-btn me-5" download><i class="bx bx-download"></i> Download all</a>
                                 <img src="<?= $fileUrl ?>" alt="Random Image">
                                 <a href="<?= $fileUrl ?>" class="download-btn" download><i class="bx bx-download"></i></a>
                             <?php endif; ?>

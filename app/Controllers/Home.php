@@ -288,4 +288,57 @@ class Home extends BaseController
         echo json_encode($result);
     }
 
+    public function download_all($dir)
+    {
+        // Tentukan path folder yang akan di-zip
+        $folderPath = FCPATH . 'assets/photobooth/' . $dir;
+
+        // Pastikan folder ada
+        if (!is_dir($folderPath)) {
+            return redirect()->to('/')->with('error', 'Folder tidak ditemukan.');
+        }
+
+        // Nama file zip yang akan dihasilkan
+        $zipFileName = $dir . '.zip';
+        $zipFilePath = $folderPath . $zipFileName;
+
+        // Membuat objek ZipArchive
+        $zip = new \ZipArchive();
+
+        // Buat zip file
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE) !== TRUE) {
+            return redirect()->to('/')->with('error', 'Gagal membuat zip file.');
+        }
+
+        // Menambahkan folder ke dalam zip
+        $this->addFolderToZip($folderPath, $zip, $dir);
+
+        // Tutup zip file
+        $zip->close();
+
+        // Kirim file zip ke browser
+        return $this->response->download($zipFilePath, null)->setFileName($zipFileName);
+    }
+
+    // Fungsi untuk menambahkan folder dan isinya ke dalam zip
+    private function addFolderToZip($folderPath, $zip, $zipFolderName)
+    {
+        // Ambil daftar file dan folder dalam folder
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($folderPath),
+            \RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
+        foreach ($files as $file) {
+            if (!$file->isDir()) {
+                // Ambil nama relatif file terhadap folder
+                $filePath = $file->getRealPath();
+                $relativePath = substr($filePath, strlen($folderPath) + 1);
+
+                // Tambahkan file ke zip
+                $zip->addFile($filePath, $zipFolderName . '/' . $relativePath);
+            }
+        }
+    }
+
 }
