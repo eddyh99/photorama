@@ -166,16 +166,17 @@
                     const photo = new Image();
                     snapshotCanvas.toBlob(function(blob) {
                         let photoURL = URL.createObjectURL(blob);
-                        capturedPhotos.push(blob);
                         photo.src = photoURL;
 
                         if (idx !== null && idx !== undefined) {
 
+                            capturedPhotos[idx] = blob
                             selectedPhotos[idx] = photo;
                             $('#select').click();
 
                         } else {
                             selectedPhotos.push(photo);
+                            capturedPhotos.push(blob);
                         }
 
                         photosContainer.innerHTML += `
@@ -292,6 +293,7 @@
         const formData = new FormData();
         formData.append('photos', blobResultImage);
 
+        // fix->retake
         capturedVideos.forEach((blob, index) => {
             formData.append('video-' + (index + 1), blob);
         });
