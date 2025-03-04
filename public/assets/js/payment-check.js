@@ -1,7 +1,7 @@
 // Mengambil nilai dari sessionStorage
 const isPaid = sessionStorage.getItem('is_paid');
 
-fetch('home/get_payment_status')
+fetch(window.location.origin + '/home/get_payment_status')
     .then(response => {
         if (!response.ok) {
             throw new Error('Server is busy');
@@ -10,7 +10,6 @@ fetch('home/get_payment_status')
     })
     .then(data => {
         const payment_on = data.status;
-        console.log(payment_on);
 
         if (!isPaid && payment_on) {
             Swal.fire({
@@ -24,6 +23,6 @@ fetch('home/get_payment_status')
         }
     })
     .catch(error => {
-        alert('Server sibuk, coba lagi nanti');
+        alert('Server sibuks, coba lagi nanti' + error);
         window.location.href = window.location.origin;
     });
