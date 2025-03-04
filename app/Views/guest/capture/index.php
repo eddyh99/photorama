@@ -15,9 +15,20 @@
             <div class="bg-warning overflow-auto" style="height: 85vh">
                 <div class="row row-cols-2 mx-2 my-2" id="photos"></div>
                 <canvas id="frame" class="w-100 p-2" hidden></canvas>
-                <div id="btn-action" class="d-flex justify-content-center gap-4 mb-2 d-none" hidden>
-                    <button onclick="change_frame()" class="btn btn-danger"> <i class="bx bx-border-all fs-4 me-2"></i>Change Frame</button>
-                    <button class="btn btn-primary" onclick="retake_photo()"><i class="bx bx-camera fs-4 me-2"></i>Retake</button>
+                <div id="btn-action" class="row d-flex justify-content-center text-center w-100 d-none">
+                    <div class="col-12 mb-2">
+                        <button onclick="change_frame()" class="btn btn-info">
+                            <i class="bx bx-border-all fs-4"></i> Change Frame
+                        </button>
+                    </div>
+                    <div class="col-12">
+                        <span class="d-block mb-2" style="color: white;">Retake:</span>
+                        <div id="btn-retake" class="d-flex flex-wrap justify-content-center gap-2 mb-3" style="overflow-x: hidden;">
+                            <!-- btn retake -->
+                        </div>
+                    </div>
+
+
                 </div>
 
             </div>
