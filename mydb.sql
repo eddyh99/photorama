@@ -33,7 +33,7 @@ CREATE TABLE `background` (
   PRIMARY KEY (`id`),
   KEY `fk_background_cabang` (`cabang_id`),
   CONSTRAINT `fk_background_cabang` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,14 +43,18 @@ CREATE TABLE `background` (
 LOCK TABLES `background` WRITE;
 /*!40000 ALTER TABLE `background` DISABLE KEYS */;
 INSERT INTO `background` VALUES
-(46,'screen_order','background/screen_order_2.png',2,'2025-02-19 12:09:02','2025-02-19 12:09:02'),
-(47,'screen_payment','background/screen_payment_2.png',2,'2025-02-19 12:09:02','2025-02-19 12:09:02'),
-(48,'screen_frame','background/screen_frame_2.png',2,'2025-02-19 12:09:02','2025-02-19 12:09:02'),
-(49,'screen_select_camera','background/screen_select_camera_2.png',2,'2025-02-19 12:09:02','2025-02-19 12:09:02'),
-(50,'screen_capture_photo','background/screen_capture_photo_2.png',2,'2025-02-19 12:09:02','2025-02-19 12:09:02'),
-(51,'screen_filter','background/screen_filter_2.png',2,'2025-02-19 12:09:02','2025-02-19 12:09:02'),
-(52,'screen_print','background/screen_print_2.png',2,'2025-02-19 12:09:02','2025-02-19 12:09:02'),
-(53,'screen_finish','background/screen_finish_2.png',2,'2025-02-19 12:09:02','2025-02-19 12:09:02');
+(55,'screen_start','background/screen_start_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
+(56,'screen_order','background/screen_order_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
+(57,'screen_payment','background/screen_payment_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
+(58,'screen_frame','background/screen_frame_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
+(59,'screen_select_camera','background/screen_select_camera_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
+(60,'screen_capture_photo','background/screen_capture_photo_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
+(61,'screen_filter','background/screen_filter_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
+(62,'screen_print','background/screen_print_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
+(63,'screen_finish','background/screen_finish_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
+(64,'container_frame','background/container_frame_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
+(65,'container_filter','background/container_filter_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
+(66,'container_print','background/container_print_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57');
 /*!40000 ALTER TABLE `background` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -71,6 +75,8 @@ CREATE TABLE `cabang` (
   `username` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` enum('admin','user') DEFAULT 'user',
+  `payment_status` tinyint(1) NOT NULL DEFAULT 1,
+  `retake_status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -83,9 +89,9 @@ CREATE TABLE `cabang` (
 LOCK TABLES `cabang` WRITE;
 /*!40000 ALTER TABLE `cabang` DISABLE KEYS */;
 INSERT INTO `cabang` VALUES
-(2,'Photo Uye','Jl. Cempaka Putih',0,'2025-02-10 09:33:23','2025-02-10 11:11:09','user','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user'),
-(3,'Aku Admin','Jl. Jayabana',0,'2025-02-10 09:33:23','2025-02-10 09:33:23','admin','f865b53623b121fd34ee5426c792e5c33af8c227','admin'),
-(5,'Kodak Modern','Jl. Tegal Ampel',0,'2025-02-10 09:33:23','2025-02-10 09:33:23','user2','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user');
+(2,'Photo Uye','Jl. Cempaka Putih',0,'2025-02-10 09:33:23','2025-03-04 16:04:02','user','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,0),
+(3,'Aku Admin','Jl. Jayabana',0,'2025-02-10 09:33:23','2025-03-04 14:55:38','admin','f865b53623b121fd34ee5426c792e5c33af8c227','admin',0,1),
+(5,'Kodak Modern','Jl. Tegal Ampel',0,'2025-02-10 09:33:23','2025-03-04 15:59:18','user2','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1);
 /*!40000 ALTER TABLE `cabang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,7 +109,7 @@ CREATE TABLE `frame` (
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -114,7 +120,8 @@ LOCK TABLES `frame` WRITE;
 /*!40000 ALTER TABLE `frame` DISABLE KEYS */;
 INSERT INTO `frame` VALUES
 (22,'nataru','frame/nataru1738035603.png','2025-01-28 10:40:03','2025-01-28 10:40:03'),
-(32,'musix','frame/musix1738915735.png','2025-02-07 15:08:55','2025-02-07 15:08:55');
+(32,'musix','frame/musix1738915735.png','2025-02-07 15:08:55','2025-02-07 15:08:55'),
+(33,'Frame cloud','frame/Frame cloud1740634806.png','2025-02-27 12:40:06','2025-02-27 12:40:06');
 /*!40000 ALTER TABLE `frame` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -135,7 +142,7 @@ CREATE TABLE `frame_koordinat` (
   PRIMARY KEY (`id`),
   KEY `frame_id` (`frame_id`),
   CONSTRAINT `frame_koordinat_ibfk_1` FOREIGN KEY (`frame_id`) REFERENCES `frame` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,7 +161,10 @@ INSERT INTO `frame_koordinat` VALUES
 (17,32,13.752808988764,328.4125,178.78651685393,116.09),
 (18,32,215.4606741573,47.3525,174.20224719101,117.6175),
 (19,32,220.04494382022,187.8825,174.20224719101,116.09),
-(20,32,216.98876404494,323.83,172.67415730337,117.6175);
+(20,32,216.98876404494,323.83,172.67415730337,117.6175),
+(21,33,232.05,92.82,352.17,262.08),
+(22,33,237.51,371.28,335.79,242.97),
+(23,33,242.97,627.9,333.06,273);
 /*!40000 ALTER TABLE `frame_koordinat` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -205,7 +215,7 @@ CREATE TABLE `pembayaran` (
   `cabang` varchar(100) NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,85 +225,25 @@ CREATE TABLE `pembayaran` (
 LOCK TABLES `pembayaran` WRITE;
 /*!40000 ALTER TABLE `pembayaran` DISABLE KEYS */;
 INSERT INTO `pembayaran` VALUES
-(31,'133509',4.00,'2025-01-31','paid','-','2025-01-31 11:23:26'),
-(32,'613323',4.00,'2025-01-31','paid','-','2025-01-31 11:24:28'),
-(33,'276933',4.00,'2025-02-02','pending','-','2025-02-02 04:39:08'),
-(34,'206938',1.00,'2025-02-05','pending','-','2025-02-05 07:37:55'),
-(35,'448113',2.00,'2025-02-05','pending','-','2025-02-05 07:43:17'),
-(36,'129708',2.00,'2025-02-05','pending','-','2025-02-05 07:58:27'),
-(37,'830939',4.00,'2025-02-05','pending','-','2025-02-05 07:58:34'),
-(38,'823585',4.00,'2025-02-05','pending','-','2025-02-05 07:59:53'),
-(39,'737609',4.00,'2025-02-05','pending','-','2025-02-05 08:00:35'),
-(40,'735079',4.00,'2025-02-05','pending','-','2025-02-05 08:03:07'),
-(41,'840055',4.00,'2025-02-05','pending','-','2025-02-05 08:03:22'),
-(42,'279266',4.00,'2025-02-05','pending','-','2025-02-05 08:03:29'),
-(43,'476040',4.00,'2025-02-05','pending','-','2025-02-05 08:03:34'),
-(44,'822759',400.00,'2025-02-05','paid','-','2025-02-05 08:03:59'),
-(45,'351150',200.00,'2025-02-05','paid','-','2025-02-05 08:05:34'),
-(46,'534954',200.00,'2025-02-05','pending','-','2025-02-05 08:08:00'),
-(47,'623395',200.00,'2025-02-05','pending','-','2025-02-05 08:09:54'),
-(48,'416431',200.00,'2025-02-05','pending','-','2025-02-05 08:10:26'),
-(49,'176527',300.00,'2025-02-05','pending','-','2025-02-05 08:11:05'),
-(50,'580871',300.00,'2025-02-05','paid','-','2025-02-05 08:13:11'),
-(51,'645474',300.00,'2025-02-05','paid','-','2025-02-05 08:45:00'),
-(52,'625426',999999.00,'2025-02-10','pending','-','2025-02-10 12:05:28'),
-(53,'614670',5500.00,'2025-02-10','pending','-','2025-02-10 14:11:21'),
-(54,'627018',5500.00,'2025-02-10','pending','-','2025-02-10 14:11:47'),
-(55,'778414',16000.00,'2025-02-10','pending','-','2025-02-10 15:27:34'),
-(56,'876864',5500.00,'2025-02-11','pending','-','2025-02-11 03:03:55'),
-(57,'233348',5500.00,'2025-02-11','pending','-','2025-02-11 03:07:02'),
-(58,'260092',5500.00,'2025-02-11','pending','-','2025-02-11 03:09:20'),
-(59,'601618',5500.00,'2025-02-11','pending','-','2025-02-11 03:09:48'),
-(60,'262712',5500.00,'2025-02-11','pending','-','2025-02-11 03:18:02'),
-(61,'678266',5500.00,'2025-02-11','pending','-','2025-02-11 03:18:16'),
-(62,'152657',5500.00,'2025-02-11','pending','-','2025-02-11 03:18:38'),
-(63,'754186',5500.00,'2025-02-11','pending','-','2025-02-11 03:18:49'),
-(64,'412173',5500.00,'2025-02-11','pending','-','2025-02-11 03:19:12'),
-(65,'972976',5500.00,'2025-02-11','pending','-','2025-02-11 03:19:35'),
-(66,'913984',5500.00,'2025-02-11','pending','-','2025-02-11 03:20:26'),
-(67,'355723',5500.00,'2025-02-11','pending','-','2025-02-11 03:20:43'),
-(68,'367065',5500.00,'2025-02-11','pending','-','2025-02-11 03:28:50'),
-(69,'800756',5500.00,'2025-02-11','pending','-','2025-02-11 03:29:10'),
-(70,'141430',5500.00,'2025-02-11','pending','-','2025-02-11 03:29:37'),
-(71,'791490',5500.00,'2025-02-11','pending','-','2025-02-11 03:30:07'),
-(72,'684484',5500.00,'2025-02-11','pending','-','2025-02-11 03:30:31'),
-(73,'501868',5500.00,'2025-02-11','pending','-','2025-02-11 03:31:01'),
-(74,'900686',5500.00,'2025-02-11','pending','-','2025-02-11 03:31:30'),
-(75,'744595',5500.00,'2025-02-11','pending','-','2025-02-11 03:32:13'),
-(76,'290522',5500.00,'2025-02-11','pending','-','2025-02-11 03:32:49'),
-(77,'361651',5500.00,'2025-02-11','pending','-','2025-02-11 03:33:03'),
-(78,'581192',5500.00,'2025-02-11','pending','-','2025-02-11 03:35:05'),
-(79,'920140',5500.00,'2025-02-11','pending','-','2025-02-11 03:35:18'),
-(80,'192461',5500.00,'2025-02-11','pending','-','2025-02-11 03:35:32'),
-(81,'692841',5500.00,'2025-02-11','pending','-','2025-02-11 03:35:58'),
-(82,'287328',5500.00,'2025-02-11','pending','-','2025-02-11 03:36:20'),
-(83,'733297',5500.00,'2025-02-11','pending','-','2025-02-11 03:36:33'),
-(84,'781801',5500.00,'2025-02-11','pending','-','2025-02-11 03:37:15'),
-(85,'738806',5500.00,'2025-02-11','pending','-','2025-02-11 03:39:44'),
-(86,'276400',5500.00,'2025-02-11','pending','-','2025-02-11 03:40:01'),
-(87,'429759',5500.00,'2025-02-11','pending','-','2025-02-11 03:40:13'),
-(88,'212686',5500.00,'2025-02-11','pending','-','2025-02-11 03:40:40'),
-(89,'106933',5500.00,'2025-02-11','pending','-','2025-02-11 03:41:03'),
-(90,'264551',5500.00,'2025-02-11','pending','-','2025-02-11 03:41:22'),
-(91,'147934',5500.00,'2025-02-11','pending','-','2025-02-11 03:41:37'),
-(92,'625569',5500.00,'2025-02-11','pending','-','2025-02-11 03:42:34'),
-(93,'541701',5500.00,'2025-02-11','pending','-','2025-02-11 03:42:45'),
-(94,'199671',5500.00,'2025-02-11','pending','-','2025-02-11 03:42:57'),
-(95,'286652',5500.00,'2025-02-11','pending','-','2025-02-11 03:43:30'),
-(96,'238303',5500.00,'2025-02-11','pending','-','2025-02-11 03:43:51'),
-(97,'120802',5500.00,'2025-02-11','pending','-','2025-02-11 03:48:49'),
-(98,'340074',5500.00,'2025-02-11','pending','-','2025-02-11 03:49:16'),
-(99,'468511',5500.00,'2025-02-11','pending','-','2025-02-11 03:51:56'),
-(100,'457727',5500.00,'2025-02-11','pending','-','2025-02-11 04:40:54'),
-(101,'544827',5500.00,'2025-02-11','pending','-','2025-02-11 04:45:13'),
-(102,'187013',8000.00,'2025-02-11','pending','-','2025-02-11 04:45:56'),
-(103,'891936',16000.00,'2025-02-11','pending','-','2025-02-11 04:47:22'),
-(104,'557087',8000.00,'2025-02-11','pending','-','2025-02-11 05:10:19'),
-(105,'258957',8000.00,'2025-02-11','pending','-','2025-02-11 05:10:49'),
-(106,'974442',999999.00,'2025-02-11','pending','-','2025-02-11 05:52:38'),
-(107,'905361',8000.00,'2025-02-11','pending','-','2025-02-11 05:53:19'),
-(108,'372945',8000.00,'2025-02-11','pending','-','2025-02-11 12:34:14'),
-(109,'761641',5500.00,'2025-02-18','pending','-','2025-02-18 11:56:53');
+(123,'457304',4500.00,'2025-02-27','pending','-','2025-02-27 06:32:16'),
+(124,'829013',5000.00,'2025-02-27','pending','-','2025-02-27 06:33:45'),
+(125,'373153',5500.00,'2025-02-27','pending','-','2025-02-27 06:44:07'),
+(126,'852690',5000.00,'2025-02-27','pending','-','2025-02-27 06:44:30'),
+(127,'186987',4500.00,'2025-02-27','pending','-','2025-02-27 06:45:39'),
+(128,'297216',5000.00,'2025-02-27','pending','-','2025-02-27 06:46:08'),
+(129,'901475',4500.00,'2025-02-27','pending','-','2025-02-27 06:46:53'),
+(130,'659312',5500.00,'2025-02-27','pending','-','2025-02-27 07:15:47'),
+(131,'852372',5496.00,'2025-02-27','pending','-','2025-02-27 07:16:08'),
+(132,'523608',4500.00,'2025-02-27','pending','-','2025-02-27 07:16:34'),
+(133,'329461',4500.00,'2025-02-27','pending','-','2025-02-27 07:16:39'),
+(134,'589165',5500.00,'2025-02-28','pending','-','2025-02-28 06:54:09'),
+(135,'283159',5500.00,'2025-02-28','pending','-','2025-02-28 06:54:38'),
+(136,'356936',5500.00,'2025-02-28','pending','-','2025-02-28 06:54:50'),
+(137,'878296',5500.00,'2025-02-28','pending','-','2025-02-28 08:50:26'),
+(138,'724262',5500.00,'2025-02-28','pending','-','2025-02-28 09:36:33'),
+(139,'470134',5500.00,'2025-02-28','pending','-','2025-02-28 09:36:59'),
+(140,'649532',5500.00,'2025-02-28','paid','-','2025-02-28 09:37:34'),
+(141,'278529',5500.00,'2025-03-03','pending','-','2025-03-03 15:13:01');
 /*!40000 ALTER TABLE `pembayaran` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -342,7 +292,7 @@ CREATE TABLE `setting` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `name_2` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -352,9 +302,8 @@ CREATE TABLE `setting` (
 LOCK TABLES `setting` WRITE;
 /*!40000 ALTER TABLE `setting` DISABLE KEYS */;
 INSERT INTO `setting` VALUES
-(11,'timer_payment','1000'),
-(12,'timer_frame','20'),
-(13,'timer_order','10');
+(24,'auto_print','0'),
+(59,'disable_payment','1');
 /*!40000 ALTER TABLE `setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -375,7 +324,7 @@ CREATE TABLE `timer` (
   PRIMARY KEY (`id`),
   KEY `cabang_id` (`cabang_id`),
   CONSTRAINT `timer_ibfk_1` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -385,21 +334,22 @@ CREATE TABLE `timer` (
 LOCK TABLES `timer` WRITE;
 /*!40000 ALTER TABLE `timer` DISABLE KEYS */;
 INSERT INTO `timer` VALUES
-(4,'screen_order',30,2,'2025-02-10 13:35:26','2025-02-10 16:21:19'),
-(5,'screen_frame',30,2,'2025-02-10 13:35:26','2025-02-10 16:21:19'),
-(6,'screen_payment',2000,2,'2025-02-10 13:35:26','2025-02-11 03:04:41'),
-(8,'screen_select_camera',30,2,'2025-02-10 13:35:26','2025-02-10 16:21:19'),
-(9,'screen_capture_photo',3000,2,'2025-02-10 13:35:26','2025-02-19 01:32:05'),
-(10,'screen_filter',30,2,'2025-02-10 13:35:26','2025-02-10 16:21:19'),
-(11,'screen_print',30,2,'2025-02-10 13:35:26','2025-02-10 16:21:19'),
+(4,'screen_order',1000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
+(5,'screen_frame',1000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
+(6,'screen_payment',50,2,'2025-02-10 13:35:26','2025-02-28 09:37:24'),
+(8,'screen_select_camera',1000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
+(9,'screen_capture_photo',4000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
+(10,'screen_filter',3000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
+(11,'screen_print',1000,2,'2025-02-10 13:35:26','2025-03-03 02:05:06'),
 (12,'screen_order',20,5,'2025-02-10 15:26:15','2025-02-10 16:17:45'),
 (13,'screen_payment',20,5,'2025-02-10 15:26:15','2025-02-10 16:18:31'),
-(14,'screen_frame',20,5,'2025-02-10 15:26:15','2025-02-10 16:17:45'),
+(14,'screen_frame',2000,5,'2025-02-10 15:26:15','2025-03-04 15:33:59'),
 (15,'screen_select_camera',20,5,'2025-02-10 15:26:15','2025-02-10 16:18:31'),
-(16,'screen_capture_photo',20,5,'2025-02-10 15:26:15','2025-02-10 16:17:45'),
+(16,'screen_capture_photo',2000,5,'2025-02-10 15:26:15','2025-03-04 15:12:08'),
 (17,'screen_filter',20,5,'2025-02-10 15:26:15','2025-02-10 16:18:31'),
 (18,'screen_print',20,5,'2025-02-10 15:26:15','2025-02-10 16:18:12'),
-(19,'screen_finish',20,5,'2025-02-10 15:26:15','2025-02-10 16:18:31');
+(19,'screen_finish',20,5,'2025-02-10 15:26:15','2025-02-10 16:18:31'),
+(28,'screen_finish',5,2,'2025-02-10 15:26:15','2025-02-10 16:18:31');
 /*!40000 ALTER TABLE `timer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -414,7 +364,10 @@ CREATE TABLE `voucher` (
   `kode_voucher` varchar(10) NOT NULL,
   `expired` date NOT NULL,
   `potongan_harga` decimal(10,0) NOT NULL,
-  UNIQUE KEY `kode_voucher` (`kode_voucher`)
+  `cabang_id` int(11) DEFAULT NULL,
+  UNIQUE KEY `kode_voucher` (`kode_voucher`),
+  KEY `fk_voucher_cabang` (`cabang_id`),
+  CONSTRAINT `fk_voucher_cabang` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -425,8 +378,9 @@ CREATE TABLE `voucher` (
 LOCK TABLES `voucher` WRITE;
 /*!40000 ALTER TABLE `voucher` DISABLE KEYS */;
 INSERT INTO `voucher` VALUES
-('0A64DZHL','2025-02-01',7000),
-('4CRLDWB6','2025-01-01',7000);
+('3Y4NGZHJ','2025-02-27',500,NULL),
+('6JB9H4KO','2026-02-27',4,2),
+('Y0QIZBOD','2026-02-27',2,3);
 /*!40000 ALTER TABLE `voucher` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -439,4 +393,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-02-19 12:27:07
+-- Dump completed on 2025-03-04 23:05:10
