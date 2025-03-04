@@ -50,6 +50,8 @@
                                     <th>Nama</th>
                                     <th>Lokasi</th>
                                     <th>User</th>
+                                    <th>Payment</th>
+                                    <th>Retake</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

@@ -30,6 +30,28 @@
 				data: 'username'
 			},
 			{
+				data: 'payment_status',
+				"mRender": function(data, type, full) {
+					return `<form class="form-check form-switch status_payment_form" method="POST" action="<?= BASE_URL ?>admin/branch/update_status_payment">
+                    <input type="hidden" name="id" value="${full.id}">
+                    <input class="form-check-input" type="checkbox" role="switch" 
+                        name="payment_status" ${data == 1 ? 'checked' : ''} 
+                        onchange="this.form.submit()">
+                </form>`;
+				}
+			},
+			{
+				data: 'retake_status',
+				"mRender": function(data, type, full) {
+					return `<form class="form-check form-switch status_payment_form" method="POST" action="<?= BASE_URL ?>admin/branch/update_status_retake">
+                    <input type="hidden" name="id" value="${full.id}">
+                    <input class="form-check-input" type="checkbox" role="switch" 
+                        name="retake_status" ${data == 1 ? 'checked' : ''} 
+                        onchange="this.form.submit()">
+                </form>`;
+				}
+			},
+			{
 				data: null,
 				"mRender": function(data, type, full, meta) {
 					var edit = `<a href="<?= BASE_URL ?>admin/branch/edit/${encodeURI(btoa(data.id))}">

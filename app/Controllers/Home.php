@@ -148,12 +148,14 @@ class Home extends BaseController
     public function capture() {
         $background = $this->background->backgroundByScreen('screen_capture_photo', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_capture_photo', $this->id_cabang);
+        $is_retake = $this->cabang->get_status('retake_status', $this->id_cabang)->message;
 
         $mdata = [
             'title'         => 'Take Photo - ' . NAMETITLE,
             'content'       => 'guest/capture/index',
             'extra'         => 'guest/capture/js/_js_index',
             'background'    =>  $background ?? null,
+            'retake'        => filter_var($is_retake, FILTER_VALIDATE_BOOLEAN),
             'timer'         => $timer
         ];
 

@@ -21,7 +21,7 @@
                             <i class="bx bx-border-all fs-4"></i> Change Frame
                         </button>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 <?= $retake ? '': 'd-none' ?>">
                         <span class="d-block mb-2" style="color: white;">Retake:</span>
                         <div id="btn-retake" class="d-flex flex-wrap justify-content-center gap-2 mb-3" style="overflow-x: hidden;">
                             <!-- btn retake -->

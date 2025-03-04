@@ -169,4 +169,37 @@ class Branch extends BaseController
         $result = $this->cabang->allCabang();
         echo json_encode($result);
     }
+
+    public function update_status_payment() {
+        $mdata = [
+            'id' => $this->request->getVar('id'),
+            'payment_status' => $this->request->getVar('payment_status') ? true : false,
+        ];
+
+        $result = $this->cabang->update_status($mdata);
+        if ($result->code == 201) {
+            session()->setFlashdata('success', $result->message);
+            return redirect()->to(BASE_URL . "admin/branch");
+        }else{
+            session()->setFlashdata('failed', $result->message);
+            return redirect()->to(BASE_URL . "admin/branch");
+        }
+    }
+
+
+    public function update_status_retake() {
+        $mdata = [
+            'id' => $this->request->getVar('id'),
+            'retake_status' => $this->request->getVar('retake_status') ? true : false,
+        ];
+
+        $result = $this->cabang->update_status($mdata);
+        if ($result->code == 201) {
+            session()->setFlashdata('success', $result->message);
+            return redirect()->to(BASE_URL . "admin/branch");
+        }else{
+            session()->setFlashdata('failed', $result->message);
+            return redirect()->to(BASE_URL . "admin/branch");
+        }
+    }
 }
