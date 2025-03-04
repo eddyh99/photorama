@@ -87,7 +87,9 @@ class Branch extends BaseController
             'nama_cabang' => $this->request->getVar('nama_cabang'),
             'username' => $this->request->getVar('username'),
             'password' => sha1($this->request->getVar('password')),
-            'lokasi' => $this->request->getVar('lokasi')
+            'lokasi' => $this->request->getVar('lokasi'),
+            'payment_status' => $this->request->getVar('payment_status') ? true : false,
+            'retake_status' => $this->request->getVar('retake_status') ? true : false,
         ];
 
         $result = $this->cabang->insertCabang($mdata);

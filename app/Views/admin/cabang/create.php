@@ -28,28 +28,28 @@
                     <div class="card-body">
                         <form action="<?= BASE_URL ?>admin/branch/store" method="POST" enctype="multipart/form-data">
                             <div class="row row-cols-2">
-                            <div class="mb-3">
+                                <div class="mb-3">
                                     <label class="form-label" for="namabarang">Nama Cabang/Event</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="nama_cabang" type="text"/>
+                                        <input class="form-control" name="nama_cabang" type="text" />
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="username">Username</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="username" type="text"/>
+                                        <input class="form-control" name="username" type="text" />
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="namabarang">Password</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="password" type="password"/>
+                                        <input class="form-control" name="password" type="password" />
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="namabarang">Konfirmasi Password</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="konfirmasi_password" type="password"/>
+                                        <input class="form-control" name="konfirmasi_password" type="password" />
                                     </div>
                                 </div>
                             </div>
@@ -59,7 +59,20 @@
                                     <textarea class="form-control" name="lokasi" rows="4"></textarea>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <div class="d-flex justify-content-start align-items-center">
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                <div class="form-check form-switch ms-4">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="payment_status" checked>
+                                    <label class="form-check-label" for="payment_status">Payment</label>
+                                </div>
+
+                                <div class="form-check form-switch ms-3">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="retake_status" checked>
+                                    <label class="form-check-label" for="retake_status">Retake Photo</label>
+                                </div>
+                            </div>
+
+
                         </form>
                     </div>
                 </div>
