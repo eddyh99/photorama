@@ -30,11 +30,12 @@ class Home extends BaseController
     {
         session()->set('print', 0);
         $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
-        // dd($background);
+        $payment_status = $this->cabang->get_status('payment_status', $this->id_cabang)->message;
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'extra'         => 'guest/beranda/js/_js_index',
             'content'       => 'guest/beranda/index',
+            'payment_on' => filter_var($payment_status, FILTER_VALIDATE_BOOLEAN),
             'background'    =>  $background ?? null
         ];
 
@@ -288,6 +289,12 @@ class Home extends BaseController
         $frame = $this->request->getVar('frame');
         $result = $this->frame->getByFile(urldecode($frame));
         echo json_encode($result);
+    }
+
+    public function get_payment_status() {
+        $payment_status = $this->cabang->get_status('payment_status', $this->id_cabang)->message ?? true;
+        $result = ['status' => filter_var($payment_status, FILTER_VALIDATE_BOOLEAN)];
+        return $this->response->setJSON($result);
     }
 
     public function download_all($dir)

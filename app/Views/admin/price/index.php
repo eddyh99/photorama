@@ -38,12 +38,12 @@
                                <a href="<?= BASE_URL ?>admin/price/add" class="btn btn-primary">Tambah</a>
                                <a href="<?= BASE_URL ?>admin/price/image" class="btn btn-warning">Custom Image</a>
                                </div>
-                                <div class="form-check form-switch">
+                                <!-- <div class="form-check form-switch">
                                 <form id="form">
                                     <input class="form-check-input" type="checkbox" role="switch" id="disable-payment" name="status">
                                     <label class="form-check-label" for="flexSwitchCheckDefault">Disable Payment</label>
                                 </form>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
