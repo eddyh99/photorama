@@ -49,8 +49,12 @@
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
-                    width: {ideal: 1080},
-                    height: {ideal: 768},
+                    width: {
+                        ideal: 1080
+                    },
+                    height: {
+                        ideal: 768
+                    },
                     deviceId: {
                         exact: camera
                     }
@@ -112,7 +116,7 @@
     }
 
     // Countdown and capture photo
-    async function startPictureCountdown() {
+    async function startPictureCountdown(idx = null) {
 
         if (pictureCount < positions.length) {
             pictureCount += 1;
@@ -165,11 +169,25 @@
                         capturedPhotos.push(blob);
                         photo.src = photoURL;
 
+                        if (idx !== null && idx !== undefined) {
+
+                            selectedPhotos[idx] = photo;
+                            $('#select').click();
+
+                        } else {
+                            selectedPhotos.push(photo);
+                        }
+
                         photosContainer.innerHTML += `
                         <div class="col px-2">
-                            <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected" onclick="selectPhoto(this)">
-                        </div>
-                    `;
+                        <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected" onclick="selectPhoto(this)">
+                        </div>`;
+
+                        if (selectedPhotos.length === positions.length) {
+                            $('#select').prop('disabled', false);
+                        } else {
+                            $('#select').prop('disabled', true);
+                        }
                     }, 'image/jpeg', 0.7);
                     mediaRecorder.stop();
                     // Prepare for the next photo
@@ -242,6 +260,20 @@
 
                 ctx.drawImage(selectedImage, selectedImageX, selectedImageY, selectedImageWidth, selectedImageHeight);
             };
+
+            let buttonId = "retake-btn-" + index;
+            // Cek apakah tombol dengan ID ini sudah ada
+            if ($("#" + buttonId).length === 0) {
+                let retakeButton = $("<button>")
+                    .attr("id", buttonId) // Tambahkan ID unik agar bisa dicek keberadaannya
+                    .text("Photo #" + (index + 1))
+                    .addClass("btn btn-danger")
+                    .on("click", function() {
+                        retake_photo(index);
+                    });
+
+                $('#btn-retake').append(retakeButton);
+            }
         });
 
         const frame = new Image();
@@ -336,9 +368,20 @@
         });
     }
 
-    function retake_photo() {
-        localStorage.setItem("sisa_waktu", waktu);
-        window.location.reload();
+    function retake_photo(index) {
+        Swal.fire({
+            title: "Retake Photo #" + (index + 1),
+            text: "Are you sure you want to retake this photo?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, retake!",
+            cancelButtonText: "Cancel"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                pictureCount = (positions.length - 1);
+                startPictureCountdown(index);
+            }
+        });
     }
 
     function change_frame() {
