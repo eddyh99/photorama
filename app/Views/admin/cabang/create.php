@@ -62,6 +62,10 @@
                             <div class="d-flex justify-content-start align-items-center">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                                 <div class="form-check form-switch ms-4">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="is_event">
+                                    <label class="form-check-label" for="is_event">Mode Event</label>
+                                </div>
+                                <div class="form-check form-switch ms-4">
                                     <input class="form-check-input" type="checkbox" role="switch" name="payment_status" checked>
                                     <label class="form-check-label" for="payment_status">Payment</label>
                                 </div>
