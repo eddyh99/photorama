@@ -197,11 +197,27 @@ class Home extends BaseController
     public function updateRecord($dir)
     {
         $uploadDir = "assets/photobooth/" . base64_decode($dir) . "/";
-        if (!is_dir($uploadDir)) return json_encode(['success' => false]);
     
-        $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "photos.jpg");
+        // Jika direktori tidak ada, kembalikan false
+        if (!is_dir($uploadDir)) {
+            return json_encode(['success' => false, 'message' => 'Folder tidak ditemukan']);
+        }
+    
+        $success = false; // Default gagal
+    
+        // Proses unggah foto jika ada
+        if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+            $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "photos.jpg") || $success;
+        }
+    
+        // Proses unggah video jika ada
+        if (isset($_FILES['video']) && $_FILES['video']['error'] === UPLOAD_ERR_OK) {
+            $success = move_uploaded_file($_FILES['video']['tmp_name'], $uploadDir . "video.mp4") || $success;
+        }
+    
         return json_encode(['success' => $success]);
     }
+    
 
     public function filter($dir) {
         $background = $this->background->backgroundByScreen('screen_filter', $this->id_cabang);
