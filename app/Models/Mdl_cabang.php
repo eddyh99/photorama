@@ -183,4 +183,57 @@ class Mdl_cabang extends Model
             "message"   => "cabang berhasil diperbarui"
         );
     }
+
+    public function update_status($mdata)
+    {
+        try {
+            $cabang = $this->db->table("cabang")->where('id', $mdata['id']);
+
+            // Insert data into 'pengguna' table
+            if (!$cabang->update($mdata)) {
+                // Handle case when insert fails (not due to exception)
+                return (object) array(
+                    "code"      => 400,
+                    "message"   => "Gagal memperbarui status"
+                );
+            }
+        } catch (DatabaseException $e) {
+            // For other database-related errors, return generic server error
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        } catch (\Exception $e) {
+            // Handle any other general exceptions
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        }
+
+        return (object) array(
+            "code"      => 201,
+            "message"   => "status berhasil diperbarui"
+        );
+    }
+
+    public function get_status($status, $id)
+    {
+        $sql = "SELECT * FROM cabang WHERE id=?";
+        $query = $this->db->query($sql, [$id])->getRow();
+        
+        if (!$query) {
+	        $error=[
+	            "code"       => "400",
+	            "message"    => null
+	        ];
+            return (object) $error;
+        }
+
+        $response=[
+            "code"       => "200",
+            "message"    => $query->$status
+        ];
+        return (object) $response;
+    }
 }

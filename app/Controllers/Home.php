@@ -30,11 +30,12 @@ class Home extends BaseController
     {
         session()->set('print', 0);
         $background = $this->background->backgroundByScreen('screen_start', $this->id_cabang);
-        // dd($background);
+        $payment_status = $this->cabang->get_status('payment_status', $this->id_cabang)->message;
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
             'extra'         => 'guest/beranda/js/_js_index',
             'content'       => 'guest/beranda/index',
+            'payment_on' => filter_var($payment_status, FILTER_VALIDATE_BOOLEAN),
             'background'    =>  $background ?? null
         ];
 
@@ -113,6 +114,7 @@ class Home extends BaseController
 
     public function frame() {
         $background = $this->background->backgroundByScreen('screen_frame', $this->id_cabang);
+        $bg_container = $this->background->backgroundByScreen('container_frame', $this->id_cabang);
         $frame = $this->frame->allFrame();
         $timer = $this->timer->get_byCabang_andScreen('screen_frame', $this->id_cabang);
 
@@ -121,6 +123,7 @@ class Home extends BaseController
             'content'       => 'guest/frame/index',
             'extra'         => 'guest/frame/js/_js_index',
             'background'    =>  $background ?? null,
+            'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container ?? 'background/default.jpg'),
             'frame'         =>  $frame,
             'timer'         => $timer
         ];
@@ -146,12 +149,14 @@ class Home extends BaseController
     public function capture() {
         $background = $this->background->backgroundByScreen('screen_capture_photo', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_capture_photo', $this->id_cabang);
+        $is_retake = $this->cabang->get_status('retake_status', $this->id_cabang)->message;
 
         $mdata = [
             'title'         => 'Take Photo - ' . NAMETITLE,
             'content'       => 'guest/capture/index',
             'extra'         => 'guest/capture/js/_js_index',
             'background'    =>  $background ?? null,
+            'retake'        => filter_var($is_retake, FILTER_VALIDATE_BOOLEAN),
             'timer'         => $timer
         ];
 
@@ -198,8 +203,8 @@ class Home extends BaseController
     }
 
     public function filter($dir) {
-        // dd(base64_decode($dir));
         $background = $this->background->backgroundByScreen('screen_filter', $this->id_cabang);
+        $bg_container = $this->background->backgroundByScreen('container_filter', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_filter', $this->id_cabang);
 
         $mdata = [
@@ -207,6 +212,7 @@ class Home extends BaseController
             'content'       => 'guest/filter/index',
             'extra'         => 'guest/filter/js/_js_index',
             'background'    =>  $background ?? null,
+            'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container ?? 'background/default.jpg'),
             'timer'         => $timer,
             'dir'           => base64_decode($dir)
         ];
@@ -217,6 +223,7 @@ class Home extends BaseController
 
     public function print($dir) {
         $background = $this->background->backgroundByScreen('screen_print', $this->id_cabang);
+        $bg_container = $this->background->backgroundByScreen('container_print', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
         $qrcode = new Generator;
         $auto_print = $this->setting->value('auto_print');
@@ -231,6 +238,7 @@ class Home extends BaseController
             'content'       => 'guest/print/index',
             'extra'         => 'guest/print/js/_js_index',
             'background'    =>  $background ?? null,
+            'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container ?? 'background/default.jpg'),
             'timer'         => $timer,
             'dir'           => $dir,
             'videos'        => $videos,
@@ -281,6 +289,65 @@ class Home extends BaseController
         $frame = $this->request->getVar('frame');
         $result = $this->frame->getByFile(urldecode($frame));
         echo json_encode($result);
+    }
+
+    public function get_payment_status() {
+        $payment_status = $this->cabang->get_status('payment_status', $this->id_cabang)->message ?? true;
+        $result = ['status' => filter_var($payment_status, FILTER_VALIDATE_BOOLEAN)];
+        return $this->response->setJSON($result);
+    }
+
+    public function download_all($dir)
+    {
+        // Tentukan path folder yang akan di-zip
+        $folderPath = FCPATH . 'assets/photobooth/' . $dir;
+
+        // Pastikan folder ada
+        if (!is_dir($folderPath)) {
+            return redirect()->to('/')->with('error', 'Folder tidak ditemukan.');
+        }
+
+        // Nama file zip yang akan dihasilkan
+        $zipFileName = $dir . '.zip';
+        $zipFilePath = $folderPath . $zipFileName;
+
+        // Membuat objek ZipArchive
+        $zip = new \ZipArchive();
+
+        // Buat zip file
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE) !== TRUE) {
+            return redirect()->to('/')->with('error', 'Gagal membuat zip file.');
+        }
+
+        // Menambahkan folder ke dalam zip
+        $this->addFolderToZip($folderPath, $zip, $dir);
+
+        // Tutup zip file
+        $zip->close();
+
+        // Kirim file zip ke browser
+        return $this->response->download($zipFilePath, null)->setFileName($zipFileName);
+    }
+
+    // Fungsi untuk menambahkan folder dan isinya ke dalam zip
+    private function addFolderToZip($folderPath, $zip, $zipFolderName)
+    {
+        // Ambil daftar file dan folder dalam folder
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($folderPath),
+            \RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
+        foreach ($files as $file) {
+            if (!$file->isDir()) {
+                // Ambil nama relatif file terhadap folder
+                $filePath = $file->getRealPath();
+                $relativePath = substr($filePath, strlen($folderPath) + 1);
+
+                // Tambahkan file ke zip
+                $zip->addFile($filePath, $zipFolderName . '/' . $relativePath);
+            }
+        }
     }
 
 }

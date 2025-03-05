@@ -49,8 +49,12 @@
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
-                    width: {ideal: 1080},
-                    height: {ideal: 768},
+                    width: {
+                        ideal: 1080
+                    },
+                    height: {
+                        ideal: 768
+                    },
                     deviceId: {
                         exact: camera
                     }
@@ -112,7 +116,7 @@
     }
 
     // Countdown and capture photo
-    async function startPictureCountdown() {
+    async function startPictureCountdown(idx = null) {
 
         if (pictureCount < positions.length) {
             pictureCount += 1;
@@ -162,14 +166,29 @@
                     const photo = new Image();
                     snapshotCanvas.toBlob(function(blob) {
                         let photoURL = URL.createObjectURL(blob);
-                        capturedPhotos.push(blob);
                         photo.src = photoURL;
+
+                        if (idx !== null && idx !== undefined) {
+
+                            capturedPhotos[idx] = blob
+                            selectedPhotos[idx] = photo;
+                            $('#select').click();
+
+                        } else {
+                            selectedPhotos.push(photo);
+                            capturedPhotos.push(blob);
+                        }
 
                         photosContainer.innerHTML += `
                         <div class="col px-2">
-                            <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected" onclick="selectPhoto(this)">
-                        </div>
-                    `;
+                        <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected">
+                        </div>`;
+
+                        if (selectedPhotos.length === positions.length) {
+                            $('#select').prop('disabled', false);
+                        } else {
+                            $('#select').prop('disabled', true);
+                        }
                     }, 'image/jpeg', 0.7);
                     mediaRecorder.stop();
                     // Prepare for the next photo
@@ -203,56 +222,61 @@
         });
     });
 
-
-    function selectPhoto(img) {
-        const imgIndex = selectedPhotos.findIndex(photo => photo === img);
-        if (imgIndex === -1) {
-            selectedPhotos.push(img);
-            img.classList.add('border-5', 'border-primary', 'shadow-lg');
-        } else {
-            selectedPhotos.splice(imgIndex, 1);
-            img.classList.remove('border-5', 'border-primary', 'shadow-lg');
-        }
-        if (selectedPhotos.length !== positions.length) {
-            $('#select').prop('disabled', true);
-        } else {
-            $('#select').prop('disabled', false);
-        }
-    }
-
     $("#select").on('click', function() {
         $('#frame').removeAttr('hidden');
         $('#btn-action').removeClass('d-none');
         $("#photos").hide();
         $(this).hide();
+        $('#select-filter').removeAttr('hidden');
 
         const ctx = frameCanvas.getContext('2d');
         frameCanvas.width = frameImage.width;
         frameCanvas.height = frameImage.height;
+        ctx.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
 
+        let loadedImages = 0;
         selectedPhotos.forEach((photo, index) => {
             const selectedImage = new Image();
             selectedImage.src = photo.src;
 
             selectedImage.onload = function() {
-                const selectedImageX = positions[index].x;
-                const selectedImageY = positions[index].y;
-                const selectedImageWidth = positions[index].width;
-                const selectedImageHeight = positions[index].height;
+                const {
+                    x,
+                    y,
+                    width,
+                    height
+                } = positions[index];
+                ctx.drawImage(selectedImage, x, y, width, height);
+                loadedImages++;
 
-                ctx.drawImage(selectedImage, selectedImageX, selectedImageY, selectedImageWidth, selectedImageHeight);
+                // Jika semua foto sudah dimuat, gambar frame
+                if (loadedImages === selectedPhotos.length) {
+                    const frame = new Image();
+                    frame.src = frameImageSrc;
+
+                    frame.onload = function() {
+                        ctx.drawImage(frame, 0, 0, frame.width, frame.height);
+                        frameCanvas.toBlob(blob => blobResultImage = blob, 'image/jpeg', 0.7);
+                    };
+                }
             };
+
+            // Tambahkan tombol retake jika belum ada
+            let buttonId = "retake-btn-" + index;
+            if ($("#" + buttonId).length === 0) {
+                let retakeButton = $("<button>")
+                    .attr("id", buttonId)
+                    .text("Photo #" + (index + 1))
+                    .addClass("btn btn-danger")
+                    .on("click", function() {
+                        retake_photo(index);
+                    });
+
+                $('#btn-retake').append(retakeButton);
+            }
         });
-
-        const frame = new Image();
-        frame.src = frameImageSrc;
-
-        frame.onload = function() {
-            ctx.drawImage(frame, 0, 0, frame.width, frame.height); // Gambar frame di depan gambar
-            frameCanvas.toBlob(blob => blobResultImage = blob, 'image/jpeg', 0.7);
-        };
-        $('#select-filter').removeAttr('hidden');
     });
+
 
     $('#select-filter').on('click', function() {
         save();
@@ -269,6 +293,7 @@
         const formData = new FormData();
         formData.append('photos', blobResultImage);
 
+        // fix->retake
         capturedVideos.forEach((blob, index) => {
             formData.append('video-' + (index + 1), blob);
         });
@@ -336,9 +361,20 @@
         });
     }
 
-    function retake_photo() {
-        localStorage.setItem("sisa_waktu", waktu);
-        window.location.reload();
+    function retake_photo(index) {
+        Swal.fire({
+            title: "Retake Photo #" + (index + 1),
+            text: "Are you sure you want to retake this photo?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, retake!",
+            cancelButtonText: "Cancel"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                pictureCount = (positions.length - 1);
+                startPictureCountdown(index);
+            }
+        });
     }
 
     function change_frame() {

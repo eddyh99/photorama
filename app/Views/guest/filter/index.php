@@ -20,7 +20,7 @@
             <!-- Bagian kiri (SELECT FRAME) -->
             <div class="col-8 d-flex flex-column min-vh-0">
                 <div class="flex-grow-1 mt-2 d-flex justify-content-center align-items-center" 
-                     style="background-color: green; max-height: 90vh; overflow: hidden;">
+                     style="background-image: url(<?= $bg_container ?>); max-height: 90vh; overflow: hidden;">
                     <img id="photo" class="img-fluid d-none" 
                         src="<?= BASE_URL ?>assets/photobooth/<?= $dir ?>/photos.jpg"
                         style="max-width: 100%; max-height: 100%; object-fit: contain; aspect-ratio: 4/3;">

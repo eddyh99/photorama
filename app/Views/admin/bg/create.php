@@ -148,6 +148,47 @@
                                             onchange="previewImage(this)" />
                                     </div>
                                 </div>
+
+                                <!-- opsional -->
+                                <div class="mb-3">
+                                    <label class="form-label" for="username">Container Frame</label>
+                                    <div class="input-group input-group-merge">
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="file"
+                                            name="container_frame"
+                                            accept=".png"
+                                            onchange="previewImage(this)" />
+                                        </div>
+                                        <small class="text-danger">*opsional</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="username">Container Filter</label>
+                                    <div class="input-group input-group-merge">
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="file"
+                                            name="container_filter"
+                                            accept=".png"
+                                            onchange="previewImage(this)" />
+                                        </div>
+                                        <small class="text-danger">*opsional</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="username">Container Print</label>
+                                    <div class="input-group input-group-merge">
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            id="file"
+                                            name="container_print"
+                                            accept=".png"
+                                            onchange="previewImage(this)" />
+                                        </div>
+                                        <small class="text-danger">*opsional</small>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </form>

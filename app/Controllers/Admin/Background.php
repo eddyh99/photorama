@@ -44,8 +44,8 @@ class Background extends BaseController
 
         $postData = $this->request->getPost();
         $mdata = [];
+        $excludedFields = ['container_frame', 'container_filter', 'container_print'];
 
-        // dd($postData);
         // validasi cabang
         if (!isset($postData['cabang_id'])) {
             session()->setFlashdata('failed', 'Cabang ID harus diisi!');
@@ -58,6 +58,11 @@ class Background extends BaseController
         // Loop semua input selain cabang_id untuk menyusun array data
         $rules_bg = [];
         foreach ($_FILES as $field => $file) {
+            // skip
+            if (in_array($field, $excludedFields)) {
+                continue;
+            }
+
             // Pastikan ada file yang diunggah dan tidak terjadi kesalahan saat upload
             if (isset($file['name']) && $file['error'] === UPLOAD_ERR_OK) {
                 $rules_bg[$field] = 'uploaded[' . $field . ']|is_image[' . $field . ']|mime_in[' . $field . ',image/jpg,image/jpeg,image/png]|max_size[' . $field . ',2048]';
@@ -81,6 +86,11 @@ class Background extends BaseController
 
 
         foreach ($_FILES as $field => $file) {
+            // skip
+            if (in_array($field, $excludedFields)) {
+                continue;
+            }
+
             $bg_name = $field ."_". $cabangId . '.png';
             $mdata[$field]['file'] = 'background/' . $bg_name;
             move_uploaded_file($file['tmp_name'], FCPATH . 'assets/img/background/' . $bg_name);
