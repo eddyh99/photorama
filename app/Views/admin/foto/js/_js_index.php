@@ -5,7 +5,7 @@
 			$("#successtoast").toast('show')
 		}, 0)
 	});
-	$('#table_list_bg').DataTable({
+var table =	$('#table_list_bg').DataTable({
 		"scrollX": true,
 		"dom": 'lBfrtip',
 		"lengthMenu": [
@@ -14,7 +14,10 @@
 		],
 		"ajax": {
 			"url": "<?= BASE_URL ?>admin/photo/list",
-			"type": "GET",
+			"type": "POST",
+			"data": function(d) {
+				d.cabang = $('#cabang').val();
+			},
 			"dataSrc": function(data) {
 				console.log(data);
 				return data;
@@ -46,6 +49,10 @@
 			},
 		],
 	});
+
+	$("#lihat").on("click",function(){
+     table.ajax.reload(); 
+  });
 
 	function showPhoto(src) {
 		const photo = `<img src="<?= BASE_URL ?>assets/photobooth/${src}" alt="thumbnail" style="width: 100%; height: auto;">`;

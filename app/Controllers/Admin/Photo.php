@@ -11,17 +11,20 @@ class Photo extends BaseController
     public function __construct()
     {
         $this->setting       = model('App\Models\Mdl_settings');
+        $this->cabang       = model('App\Models\Mdl_cabang');
     }
 
     public function index()
     {
         $auto_print = $this->setting->value('auto_print');
+        $cabang = $this->cabang->allCabang();
         $mdata = [
             'title'     => 'Photos User- ' . NAMETITLE,
             'content'   => 'admin/foto/index',
             'extra'     => 'admin/foto/js/_js_index',
             'menuactive_photo'   => 'active open',
-            'auto_print' => filter_var($auto_print, FILTER_VALIDATE_BOOLEAN)
+            'auto_print' => filter_var($auto_print, FILTER_VALIDATE_BOOLEAN),
+            'cabang'    => $cabang
         ];
 
         return view('admin/layout/wrapper', $mdata);
@@ -29,24 +32,29 @@ class Photo extends BaseController
 
     public function list()
     {
+        $mdata = [];
+        $cabang = $this->request->getVar('cabang');
+
+        if($cabang) {
+            $cabang = $cabang . '*';
+        } else {
+            return $this->response->setJSON($mdata);
+        }
         
         $path = FCPATH . "assets" . DIRECTORY_SEPARATOR . "photobooth" . DIRECTORY_SEPARATOR;
-        $items = array_diff(scandir($path), array('.', '..'));
+        $pattern = $path . $cabang;
+        $folders = glob($pattern, GLOB_ONLYDIR); 
 
-        // Filter hanya folder
-        $folders = array_filter($items, function ($item) use ($path) {
-            return is_dir($path . $item);
-        });
-        $mdata = [];
 
         foreach ($folders as $folder) {
-            $time = explode("-", $folder);
+            $folderName = basename($folder);
+            $time = explode("-", $folderName);
             array_push($mdata, [
-                'user' => $folder,
+                'user' => $folderName,
                 'date' => date("Y-m-d H:i:s", end($time)),
-                'thumbnail' => $folder . '/photos-1.jpg',
-                'url_download' => base_url("download/" . base64_encode($folder)),
-                'url_delete' => base_url("delete/" . base64_encode($folder)),
+                'thumbnail' => $folderName . '/photos-1.jpg',
+                'url_download' => base_url("download/" . base64_encode($folderName)),
+                'url_delete' => base_url("delete/" . base64_encode($folderName)),
             ]);
         }
 
