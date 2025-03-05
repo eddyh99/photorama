@@ -34,7 +34,7 @@ class Price extends BaseController
             'title'     => 'Price - ' . NAMETITLE,
             'content'   => 'admin/price/create',
             'extra'     => 'admin/price/js/_js_create',
-            'menuactive_bg'   => 'active open',
+             'menuactive_price'   => 'active open',
             'cabang'    => $cabang
         ];
 

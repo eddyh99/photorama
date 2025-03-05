@@ -32,7 +32,7 @@ class Timer extends BaseController
             'title'     => 'Cabang - ' . NAMETITLE,
             'content'   => 'admin/timer/create',
             'extra'     => 'admin/timer/js/_js_create',
-            'menuactive_bg'   => 'active open',
+            'menuactive_timer'   => 'active open',
             'cabang'    => $cabang
         ];
 

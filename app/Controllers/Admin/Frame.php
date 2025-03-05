@@ -29,7 +29,7 @@ class Frame extends BaseController
             'title'     => 'Frame - ' . NAMETITLE,
             'content'   => 'admin/frame/create',
             'extra'     => 'admin/frame/js/_js_create',
-            'menuactive_frame'   => 'active open'
+            'menuactive_fr'   => 'active open'
         ];
 
         return view('admin/layout/wrapper', $mdata);
