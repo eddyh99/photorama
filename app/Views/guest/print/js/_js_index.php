@@ -1,16 +1,17 @@
 <script src="<?= BASE_URL ?>assets/js/payment-check.js"></script>
 <script>
+    let videoBlob = null;
+    const dir = btoa(<?= json_encode($dir) ?>);
+
     function redirecTo() {
-        window.location.href = '<?= BASE_URL ?>finish';
+        save();
     }
+
     $(function async () {
         // variabel for record video
         let mediaRecorder;
         let recordedChunks = [];
-        let videoBlob = null;
         let recordingStarted = false; // Pastikan hanya merekam sekali
-
-        const dir = btoa(<?= json_encode($dir) ?>);
         
         const img = $("#photo").attr('src');
         const autoPrint = <?= json_encode($auto_print) ?>;
@@ -130,15 +131,10 @@
             printImage();
         });
 
-        $("#submit").on('click', function() {
-            save();
-        });
-
-
         function startRecording() {
-            if (recordingStarted) return; // Hindari perekaman ganda
+            if (recordingStarted) return;
 
-            let stream = canvas.captureStream(30); // Rekam dengan 30 FPS
+            let stream = canvas.captureStream(30); 
             mediaRecorder = new MediaRecorder(stream, {
                 mimeType: "video/webm; codecs=vp9"
             });
@@ -173,46 +169,46 @@
             }, 4000);
         }
 
-        function save() {
-            Swal.fire({
-                title: "Please be patient",
-                text: "finishing..",
-                didOpen: () => {
-                    Swal.showLoading();
-                },
-            });
-            const formData = new FormData();
-            formData.append('video', videoBlob);
+    });
+    function save() {
+        Swal.fire({
+            title: "Please be patient",
+            text: "finishing..",
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
+        const formData = new FormData();
+        formData.append('video', videoBlob);
 
-            $.ajax({
-                url: "<?= BASE_URL ?>home/updateRecord/" +dir,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    const mdata = JSON.parse(response)
-                    console.log(mdata);
-                    if (mdata.success) {
-                        window.location.href = "<?= BASE_URL ?>finish" 
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal',
-                            text: 'Harap coba lagi.',
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
+        $.ajax({
+            url: "<?= BASE_URL ?>home/updateRecord/" +dir,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                const mdata = JSON.parse(response)
+                console.log(mdata);
+                if (mdata.success) {
+                    window.location.href = "<?= BASE_URL ?>finish" 
+                } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal',
-                        text: 'Kesalahan pada server.',
+                        text: 'Harap coba lagi.',
                     });
-                    console.error('Error saving videos:', error);
                 }
-            });
+            },
+            error: function(xhr, status, error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Kesalahan pada server.',
+                });
+                console.error('Error saving videos:', error);
+            }
+        });
 
-        }
-    });
+    }
 </script>
