@@ -38,7 +38,7 @@
                             <div class="col-sm-2">
                                 <select name="cabang" id="cabang" class="form-control">
                                     <?php foreach ($cabang as $c) : ?>
-                                        <option value="<?= $c->nama_cabang ?>"><?= $c->nama_cabang ?></option>
+                                        <option value="<?= $c->nama_cabang ?>" data-is-event="<?= $c->is_event ?>"><?= $c->nama_cabang ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

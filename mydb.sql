@@ -70,6 +70,7 @@ CREATE TABLE `cabang` (
   `nama_cabang` varchar(255) NOT NULL,
   `lokasi` text NOT NULL,
   `is_delete` tinyint(1) NOT NULL DEFAULT 0,
+  `is_event` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `username` varchar(100) NOT NULL,
@@ -79,7 +80,7 @@ CREATE TABLE `cabang` (
   `retake_status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -89,9 +90,9 @@ CREATE TABLE `cabang` (
 LOCK TABLES `cabang` WRITE;
 /*!40000 ALTER TABLE `cabang` DISABLE KEYS */;
 INSERT INTO `cabang` VALUES
-(2,'Photo Uye','Jl. Cempaka Putih',0,'2025-02-10 09:33:23','2025-03-04 16:04:02','user','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,0),
-(3,'Aku Admin','Jl. Jayabana',0,'2025-02-10 09:33:23','2025-03-04 14:55:38','admin','f865b53623b121fd34ee5426c792e5c33af8c227','admin',0,1),
-(5,'Kodak Modern','Jl. Tegal Ampel',0,'2025-02-10 09:33:23','2025-03-04 15:59:18','user2','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1);
+(2,'Photo Uye','Jl. Cempaka Putih',0,0,'2025-02-10 09:33:23','2025-03-04 16:45:14','user','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,0),
+(3,'Aku Admin','Jl. Jayabana',0,0,'2025-02-10 09:33:23','2025-03-04 14:55:38','admin','f865b53623b121fd34ee5426c792e5c33af8c227','admin',0,1),
+(5,'Kodak Modern','Jl. Tegal Ampel',0,0,'2025-02-10 09:33:23','2025-03-05 04:28:50','user2','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1);
 /*!40000 ALTER TABLE `cabang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,7 +216,7 @@ CREATE TABLE `pembayaran` (
   `cabang` varchar(100) NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -243,7 +244,8 @@ INSERT INTO `pembayaran` VALUES
 (138,'724262',5500.00,'2025-02-28','pending','-','2025-02-28 09:36:33'),
 (139,'470134',5500.00,'2025-02-28','pending','-','2025-02-28 09:36:59'),
 (140,'649532',5500.00,'2025-02-28','paid','-','2025-02-28 09:37:34'),
-(141,'278529',5500.00,'2025-03-03','pending','-','2025-03-03 15:13:01');
+(141,'278529',5500.00,'2025-03-03','pending','-','2025-03-03 15:13:01'),
+(142,'782035',11000.00,'2025-03-04','pending','-','2025-03-04 16:38:39');
 /*!40000 ALTER TABLE `pembayaran` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -292,7 +294,7 @@ CREATE TABLE `setting` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `name_2` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -338,7 +340,7 @@ INSERT INTO `timer` VALUES
 (5,'screen_frame',1000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
 (6,'screen_payment',50,2,'2025-02-10 13:35:26','2025-02-28 09:37:24'),
 (8,'screen_select_camera',1000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
-(9,'screen_capture_photo',4000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
+(9,'screen_capture_photo',200,2,'2025-02-10 13:35:26','2025-03-04 16:48:43'),
 (10,'screen_filter',3000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
 (11,'screen_print',1000,2,'2025-02-10 13:35:26','2025-03-03 02:05:06'),
 (12,'screen_order',20,5,'2025-02-10 15:26:15','2025-02-10 16:17:45'),
@@ -393,4 +395,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-03-04 23:05:10
+-- Dump completed on 2025-03-05 11:29:23

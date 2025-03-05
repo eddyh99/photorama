@@ -34,15 +34,14 @@ class Photo extends BaseController
     {
         $mdata = [];
         $cabang = $this->request->getVar('cabang');
+        $is_event = filter_var($this->request->getVar('is_event'), FILTER_VALIDATE_BOOLEAN);
 
-        if($cabang) {
-            $cabang = $cabang . '*';
-        } else {
+        if(!$cabang) {
             return $this->response->setJSON($mdata);
         }
         
-        $path = FCPATH . "assets" . DIRECTORY_SEPARATOR . "photobooth" . DIRECTORY_SEPARATOR;
-        $pattern = $path . $cabang;
+        $path = FCPATH . "assets" . DIRECTORY_SEPARATOR . "photobooth" . DIRECTORY_SEPARATOR . ($is_event ? $cabang . DIRECTORY_SEPARATOR : null);
+        $pattern = $path . $cabang . '*';
         $folders = glob($pattern, GLOB_ONLYDIR); 
 
 
@@ -52,9 +51,10 @@ class Photo extends BaseController
             array_push($mdata, [
                 'user' => $folderName,
                 'date' => date("Y-m-d H:i:s", end($time)),
-                'thumbnail' => $folderName . '/photos-1.jpg',
+                'thumbnail' => ($is_event ? "$cabang/" : '') . $folderName . '/photos-1.jpg',
                 'url_download' => base_url("download/" . base64_encode($folderName)),
                 'url_delete' => base_url("delete/" . base64_encode($folderName)),
+                'is_event' => $is_event
             ]);
         }
 

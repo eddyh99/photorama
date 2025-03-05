@@ -5,7 +5,7 @@
 			$("#successtoast").toast('show')
 		}, 0)
 	});
-var table =	$('#table_list_bg').DataTable({
+	var table = $('#table_list_bg').DataTable({
 		"scrollX": true,
 		"dom": 'lBfrtip',
 		"lengthMenu": [
@@ -16,7 +16,10 @@ var table =	$('#table_list_bg').DataTable({
 			"url": "<?= BASE_URL ?>admin/photo/list",
 			"type": "POST",
 			"data": function(d) {
-				d.cabang = $('#cabang').val();
+				let selectedOption = $('#cabang').find(':selected');
+				d.cabang = selectedOption.val();
+				d.is_event = selectedOption.data('is-event');
+
 			},
 			"dataSrc": function(data) {
 				console.log(data);
@@ -24,7 +27,10 @@ var table =	$('#table_list_bg').DataTable({
 			}
 		},
 		"columns": [{
-				data: 'user'
+				data: 'user',
+				render: function(data, type, row) {
+					return row.is_event ? data + '<span class="badge bg-primary text-lowercase ms-2">event</span>': data
+				}
 			},
 			{
 				data: 'thumbnail',
@@ -50,9 +56,9 @@ var table =	$('#table_list_bg').DataTable({
 		],
 	});
 
-	$("#lihat").on("click",function(){
-     table.ajax.reload(); 
-  });
+	$("#lihat").on("click", function() {
+		table.ajax.reload();
+	});
 
 	function showPhoto(src) {
 		const photo = `<img src="<?= BASE_URL ?>assets/photobooth/${src}" alt="thumbnail" style="width: 100%; height: auto;">`;
