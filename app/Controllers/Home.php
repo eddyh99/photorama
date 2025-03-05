@@ -244,7 +244,7 @@ class Home extends BaseController
             'dir'           => $dir,
             'videos'        => $videos,
             'auto_print'    => $auto_print ? filter_var($auto_print, FILTER_VALIDATE_BOOLEAN) : false,
-            'qrcode'        => $qrcode->size(250)->generate(base_url("download/$dir"))
+            'qrcode'        => $qrcode->size(250)->generate(base_url("download/" . base64_encode($dir)))
         ];
 
         return view('guest/wrapper', $mdata);
