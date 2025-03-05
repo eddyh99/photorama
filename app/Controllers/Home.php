@@ -166,9 +166,10 @@ class Home extends BaseController
     public function saveRecords()
     {
         $time = time();
-        $cabang = $this->cabang->getCabang_byId($this->id_cabang)->nama_cabang ?? 'unknown';
-        $uploadDir = "assets/photobooth/" .$cabang. "-$time/";
-
+        $cabang = $this->cabang->getCabang_byId($this->id_cabang);
+        $is_event = filter_var($cabang->is_event, FILTER_VALIDATE_BOOLEAN);
+        $nama_cabang= $cabang->nama_cabang ?? 'unknown';
+        $uploadDir = "assets/photobooth/" . ($is_event ? "$nama_cabang/" : '' ) .$nama_cabang. "-$time/";
         // Buat direktori jika belum ada
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
@@ -183,7 +184,7 @@ class Home extends BaseController
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     $response = [
                         'success' => true,
-                        'folder'  => base64_encode($cabang . '-' .$time),
+                        'folder'  => base64_encode(($is_event ? "$nama_cabang/" : '') . $nama_cabang . '-' .$time),
                         'form'    => null
                     ];
                 }
