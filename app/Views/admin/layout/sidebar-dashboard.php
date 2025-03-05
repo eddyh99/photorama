@@ -97,11 +97,11 @@
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                 <div class="avatar avatar-online">
-                                    <span class="avatar-initial rounded-circle bg-label-warning">M</span>
+                                    <span class="avatar-initial rounded-circle bg-label-warning">A</span>
                                 </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                <span class="fw-semibold d-block">Miftahus</span>
+                                <span class="fw-semibold d-block">Admin</span>
                                 <small class="text-muted">Admin</small>
                                 </div>
                             </div>

@@ -23,7 +23,7 @@
                             <i class="bx bx-chevron-left fs-2"></i>
                             Back
                         </a>
-                        <h5 class="mb-1">Tambah Backgorund</h5>
+                        <h5 class="mb-1">Tambah Harga Per Cabang</h5>
                     </div>
                     <div class="card-body">
                         <form action="<?= BASE_URL ?>admin/price/store" method="POST">
