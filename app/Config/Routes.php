@@ -20,6 +20,7 @@ $routes->get('/frame', 'Home::frame');
 $routes->get('/finish', 'Home::finish');
 $routes->get('/filter/(:any)', 'Home::filter/$1');
 $routes->get('/download/(:any)', 'Home::userFiles/$1');
+$routes->get('/browse/(:any)', 'Home::browseFiles/$1');
 $routes->get('/delete/(:any)', 'Admin\Photo::delete_userFiles/$1');
 $routes->get('/camera', 'Home::camera');
 $routes->get('/capture', 'Home::capture');

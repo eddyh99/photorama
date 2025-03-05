@@ -52,8 +52,8 @@ class Photo extends BaseController
                 'user' => $folderName,
                 'date' => date("Y-m-d H:i:s", end($time)),
                 'thumbnail' => ($is_event ? "$cabang/" : '') . $folderName . '/photos-1.jpg',
-                'url_download' => base_url("download/" . base64_encode($folderName)),
-                'url_delete' => base_url("delete/" . base64_encode($folderName)),
+                'url_download' => base_url(  $is_event ? 'browse/' . $cabang : "download/" . base64_encode($folderName)),
+                'url_delete' => base_url("delete/". base64_encode( ($is_event ? "$cabang/" : '') . $folderName)),
                 'is_event' => $is_event
             ]);
         }

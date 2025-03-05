@@ -285,6 +285,26 @@ class Home extends BaseController
         return view('guest/wrapper', $mdata);
     }
 
+    public function browseFiles($folder)
+    {
+        $path = FCPATH . "assets/photobooth/" .$folder;
+        
+        if (!is_dir($path)) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $files = array_diff(scandir($path), array('.', '..'));
+
+        $mdata = [
+            'title'         => 'My Files - ' . NAMETITLE,
+            'content'       => 'guest/browse/index',
+            'files'         =>  $files,
+            'event'         => $folder
+        ];
+
+        return view('guest/wrapper', $mdata);
+    }
+
     public function get_coordinates() {
         $frame = $this->request->getVar('frame');
         $result = $this->frame->getByFile(urldecode($frame));
