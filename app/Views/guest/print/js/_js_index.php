@@ -1,9 +1,18 @@
 <script src="<?= BASE_URL ?>assets/js/payment-check.js"></script>
 <script>
+    let videoBlob = null;
+    const dir = btoa(<?= json_encode($dir) ?>);
+
     function redirecTo() {
-        window.location.href = '<?= BASE_URL ?>finish';
+        save();
     }
+
     $(function async () {
+        // variabel for record video
+        let mediaRecorder;
+        let recordedChunks = [];
+        let recordingStarted = false; // Pastikan hanya merekam sekali
+        
         const img = $("#photo").attr('src');
         const autoPrint = <?= json_encode($auto_print) ?>;
         const print = <?= json_encode(session()->get('print')) ?> || 1;
@@ -71,6 +80,7 @@
             });
             // Gambar frame utama
             ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+            startRecording();
         }
 
         function printImage() {
@@ -120,5 +130,85 @@
         $("#print").on('click', function() {
             printImage();
         });
+
+        function startRecording() {
+            if (recordingStarted) return;
+
+            let stream = canvas.captureStream(30); 
+            mediaRecorder = new MediaRecorder(stream, {
+                mimeType: "video/webm; codecs=vp9"
+            });
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = async () => {
+                const webmBlob = new Blob(recordedChunks, {
+                    type: "video/webm"
+                });
+                console.log("WebM video saved as Blob:", webmBlob);
+
+                // Simpan hasil dalam variabel global
+                videoBlob = webmBlob;
+
+                recordedChunks = [];
+            };
+
+            mediaRecorder.start();
+            recordingStarted = true;
+            console.log("Perekaman dimulai...");
+
+            // Hentikan rekaman setelah 5 detik
+            setTimeout(() => {
+                mediaRecorder.stop();
+                $('#submit').removeAttr('disabled');
+                console.log("Perekaman selesai.");
+            }, 4000);
+        }
+
     });
+    function save() {
+        Swal.fire({
+            title: "Please be patient",
+            text: "finishing..",
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
+        const formData = new FormData();
+        formData.append('video', videoBlob);
+
+        $.ajax({
+            url: "<?= BASE_URL ?>home/updateRecord/" +dir,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                const mdata = JSON.parse(response)
+                console.log(mdata);
+                if (mdata.success) {
+                    window.location.href = "<?= BASE_URL ?>finish" 
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Harap coba lagi.',
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Kesalahan pada server.',
+                });
+                console.error('Error saving videos:', error);
+            }
+        });
+
+    }
 </script>

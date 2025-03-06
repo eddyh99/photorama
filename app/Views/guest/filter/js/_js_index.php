@@ -7,7 +7,7 @@
     }
 
     $(function() {
-        const canvasToBlob = (canvas) => new Promise((resolve) => canvas.toBlob(resolve));
+        const canvasToBlob = (canvas) => new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.7));
         const frame = new Image();
         const selectedFrame = sessionStorage.getItem("selected_frame");
         frame.src = selectedFrame ? '<?= BASE_URL ?>assets/img/' + selectedFrame : null;

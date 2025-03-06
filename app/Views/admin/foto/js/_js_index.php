@@ -5,7 +5,7 @@
 			$("#successtoast").toast('show')
 		}, 0)
 	});
-	$('#table_list_bg').DataTable({
+	var table = $('#table_list_bg').DataTable({
 		"scrollX": true,
 		"dom": 'lBfrtip',
 		"lengthMenu": [
@@ -14,14 +14,23 @@
 		],
 		"ajax": {
 			"url": "<?= BASE_URL ?>admin/photo/list",
-			"type": "GET",
+			"type": "POST",
+			"data": function(d) {
+				let selectedOption = $('#cabang').find(':selected');
+				d.cabang = selectedOption.val();
+				d.is_event = selectedOption.data('is-event');
+
+			},
 			"dataSrc": function(data) {
 				console.log(data);
 				return data;
 			}
 		},
 		"columns": [{
-				data: 'user'
+				data: 'user',
+				render: function(data, type, row) {
+					return row.is_event ? data + '<span class="badge bg-primary text-lowercase ms-2">event</span>': data
+				}
 			},
 			{
 				data: 'thumbnail',
@@ -45,6 +54,10 @@
 				}
 			},
 		],
+	});
+
+	$("#lihat").on("click", function() {
+		table.ajax.reload();
 	});
 
 	function showPhoto(src) {

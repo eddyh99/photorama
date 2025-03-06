@@ -88,6 +88,7 @@ class Branch extends BaseController
             'username' => $this->request->getVar('username'),
             'password' => sha1($this->request->getVar('password')),
             'lokasi' => $this->request->getVar('lokasi'),
+            'is_event' => $this->request->getVar('is_event') ? true : false,
             'payment_status' => $this->request->getVar('payment_status') ? true : false,
             'retake_status' => $this->request->getVar('retake_status') ? true : false,
         ];

@@ -33,16 +33,28 @@
             <div class="col-lg-12 mb-4 order-1">
                 <div class="card border-expat w-100">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="card-title fw-semibold mb-4">List Photo</h5>
-                            <form id="form" action="<?= BASE_URL ?>admin/photo/print_setting">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="auto-print" id="auto-print" <?= $auto_print ? 'checked' : '' ?> >
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        auto print
-                                    </label>
-                                </div>
-                            </form>
+                        <div class="row form-group align-items-center my-2">
+                            <label class="col-form-label col-sm-1">Cabang</label>
+                            <div class="col-sm-2">
+                                <select name="cabang" id="cabang" class="form-control">
+                                    <?php foreach ($cabang as $c) : ?>
+                                        <option value="<?= $c->nama_cabang ?>" data-is-event="<?= $c->is_event ?>"><?= $c->nama_cabang ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-1">
+                                <button class="btn btn-primary" id="lihat">Lihat</button>
+                            </div>
+                            <div class="col-sm-2">
+                                <form id="form" action="<?= BASE_URL ?>admin/photo/print_setting">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="auto-print" id="auto-print" <?= $auto_print ? 'checked' : '' ?>>
+                                        <label class="form-check-label" for="flexCheckChecked">
+                                            auto print
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                         <table id="table_list_bg" class="table table-striped" style="width:100%">
                             <thead>
@@ -81,20 +93,20 @@
 
 </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="photoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Foto</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div id="modalDataBody"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
+<!-- Modal -->
+<div class="modal fade" id="photoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Foto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modalDataBody"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

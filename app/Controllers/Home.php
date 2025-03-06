@@ -166,9 +166,10 @@ class Home extends BaseController
     public function saveRecords()
     {
         $time = time();
-        $cabang = $this->cabang->getCabang_byId($this->id_cabang)->nama_cabang ?? 'unknown';
-        $uploadDir = "assets/photobooth/" .$cabang. "-$time/";
-
+        $cabang = $this->cabang->getCabang_byId($this->id_cabang);
+        $is_event = filter_var($cabang->is_event, FILTER_VALIDATE_BOOLEAN);
+        $nama_cabang= $cabang->nama_cabang ?? 'unknown';
+        $uploadDir = "assets/photobooth/" . ($is_event ? "$nama_cabang/" : '' ) .$nama_cabang. "-$time/";
         // Buat direktori jika belum ada
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
@@ -183,7 +184,7 @@ class Home extends BaseController
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     $response = [
                         'success' => true,
-                        'folder'  => base64_encode($cabang . '-' .$time),
+                        'folder'  => base64_encode(($is_event ? "$nama_cabang/" : '') . $nama_cabang . '-' .$time),
                         'form'    => null
                     ];
                 }
@@ -196,11 +197,27 @@ class Home extends BaseController
     public function updateRecord($dir)
     {
         $uploadDir = "assets/photobooth/" . base64_decode($dir) . "/";
-        if (!is_dir($uploadDir)) return json_encode(['success' => false]);
     
-        $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "photos.jpg");
+        // Jika direktori tidak ada, kembalikan false
+        if (!is_dir($uploadDir)) {
+            return json_encode(['success' => false, 'message' => 'Folder tidak ditemukan']);
+        }
+    
+        $success = false; // Default gagal
+    
+        // Proses unggah foto jika ada
+        if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+            $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "photos.jpg") || $success;
+        }
+    
+        // Proses unggah video jika ada
+        if (isset($_FILES['video']) && $_FILES['video']['error'] === UPLOAD_ERR_OK) {
+            $success = move_uploaded_file($_FILES['video']['tmp_name'], $uploadDir . "video.mp4") || $success;
+        }
+    
         return json_encode(['success' => $success]);
     }
+    
 
     public function filter($dir) {
         $background = $this->background->backgroundByScreen('screen_filter', $this->id_cabang);
@@ -243,7 +260,7 @@ class Home extends BaseController
             'dir'           => $dir,
             'videos'        => $videos,
             'auto_print'    => $auto_print ? filter_var($auto_print, FILTER_VALIDATE_BOOLEAN) : false,
-            'qrcode'        => $qrcode->size(250)->generate(base_url("download/$dir"))
+            'qrcode'        => $qrcode->size(250)->generate(base_url("download/" . base64_encode($dir)))
         ];
 
         return view('guest/wrapper', $mdata);
@@ -280,6 +297,26 @@ class Home extends BaseController
             'content'       => 'guest/download/index',
             'files'    =>  $files,
             'folder'    =>  base64_decode($folder),
+        ];
+
+        return view('guest/wrapper', $mdata);
+    }
+
+    public function browseFiles($folder)
+    {
+        $path = FCPATH . "assets/photobooth/" .$folder;
+        
+        if (!is_dir($path)) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $files = array_diff(scandir($path), array('.', '..'));
+
+        $mdata = [
+            'title'         => 'My Files - ' . NAMETITLE,
+            'content'       => 'guest/browse/index',
+            'files'         =>  $files,
+            'event'         => $folder
         ];
 
         return view('guest/wrapper', $mdata);
