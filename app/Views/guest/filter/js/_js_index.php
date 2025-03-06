@@ -10,7 +10,7 @@
         const canvasToBlob = (canvas) => new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.7));
         const frame = new Image();
         const selectedFrame = sessionStorage.getItem("selected_frame");
-        frame.src = selectedFrame ? '<?= BASE_URL ?>assets/img/' + selectedFrame : null;
+        frame.src = selectedFrame ? '<?= BASE_URL ?>assets/img/' + decodeURIComponent(selectedFrame) : null;
 
         let img = document.getElementById("photo");
         let canvas = document.getElementById("canvas");

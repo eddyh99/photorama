@@ -50,7 +50,7 @@
 
 
         if (frame) {
-            frame.src = "<?= BASE_URL ?>assets/img/" + frame_selected;
+            frame.src = "<?= BASE_URL ?>assets/img/" + decodeURIComponent(frame_selected);
             frame.onload = async () => {
                 // Set ukuran canvas berdasarkan gambar yang sudah dimuat
                 canvas.width = frame.width;
