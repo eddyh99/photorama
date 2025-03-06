@@ -18,7 +18,7 @@
     ];
 
     const frame = sessionStorage.getItem("selected_frame") || null;
-    const frameImageSrc = '<?= BASE_URL ?>assets/img/' + frame;
+    const frameImageSrc = '<?= BASE_URL ?>assets/img/' + decodeURIComponent(frame);
     const frameImage = new Image();
     frameImage.src = frameImageSrc;
 
