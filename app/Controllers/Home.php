@@ -389,7 +389,7 @@ class Home extends BaseController
         }
     }
 
-    public function cetakPDF($img)
+    public function cetakPDF($img, $print)
     {
         $date = date('Y-m-d-His');
 
@@ -407,24 +407,29 @@ class Home extends BaseController
             $imageMime = mime_content_type($image); // Deteksi jenis MIME
             $imageSrc = "data:$imageMime;base64,$imageData";
         } else {
-            die("Gambar tidak ditemukan: $image");
+            return json_encode([
+                "status" => "false",
+            ]);
         }
-        
+
         // HTML untuk gambar
-        $html = '
-        <html>
-        <head>
-            <style>
-                body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-                @page { size: 4in 6in; margin: 0; } /* Ukuran 4R */
-                img { width: 4in; height: 6in; object-fit: contain; } 
-            </style>
-        </head>
-        <body>
-        <img src="'.$imageSrc. '" alt="Gambar 4R">
-        </body>
-        </html>
-        ';
+        // Generate HTML dengan jumlah halaman sesuai $print
+        $html = '<html><head>
+        <style>
+            body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+            @page { size: 4in 6in; margin: 0; }
+            img { width: 4in; height: 6in; object-fit: contain; } 
+        </style>
+        </head><body>';
+
+        for ($i = 0; $i < $print; $i++) {
+            $html .= '<img src="' . $imageSrc . '" alt="Gambar 4R">';
+            if ($i < $print - 1) {
+                $html .= '<div style="page-break-before: always;"></div>'; // Pisahkan halaman
+            }
+        }
+
+        $html .= '</body></html>';
         
         $dompdf->loadHtml($html);
         

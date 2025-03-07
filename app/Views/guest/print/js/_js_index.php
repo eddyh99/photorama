@@ -2,6 +2,9 @@
 <script>
     let videoBlob = null;
     const dir = btoa(<?= json_encode($dir) ?>);
+    const print = sessionStorage.getItem('print') || 1;
+    console.log(print);
+    
 
     function redirecTo() {
         save();
@@ -15,7 +18,6 @@
 
         const img = $("#photo").attr('src');
         const autoPrint = <?= json_encode($auto_print) ?>;
-        const print = <?= json_encode(session()->get('print')) ?> || 1;
         const frame_selected = sessionStorage.getItem("selected_frame") || null;
         const frame = new Image();
         const positions = [];
@@ -84,8 +86,10 @@
         }
 
         function printImage() {
+            console.log(print);
+            
             $.ajax({
-                url: "<?= BASE_URL ?>home/cetakPDF/" + dir,
+                url: "<?= BASE_URL ?>home/cetakPDF/" + dir + "/" + print,
                 type: "GET",
                 success: function(response) {
                     const mdata = JSON.parse(response)

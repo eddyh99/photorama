@@ -37,6 +37,7 @@
             if (voucher) {
                 url += `?voucher=${voucher}`;
             }
+            sessionStorage.setItem('print', print)
             window.location.href = url
         });
     });
