@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Controllers\Admin\Voucher;
 use SimpleSoftwareIO\QrCode\Generator;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class Home extends BaseController
 {
@@ -385,6 +387,75 @@ class Home extends BaseController
                 $zip->addFile($filePath, $zipFolderName . '/' . $relativePath);
             }
         }
+    }
+
+    public function cetakPDF()
+    {
+        $date = date('Y-m-d-His');
+
+        // Konfigurasi Dompdf
+        $options = new Options();
+        $options->set('defaultFont', 'NotaFonts');
+        
+        // Buat instance Dompdf
+        $dompdf = new Dompdf($options);
+        $image = FCPATH . 'assets/photobooth/Photo Uye-1741268801/photos.jpg';
+
+        // Konversi gambar ke Base64
+        if (file_exists($image)) {
+            $imageData = base64_encode(file_get_contents($image));
+            $imageMime = mime_content_type($image); // Deteksi jenis MIME
+            $imageSrc = "data:$imageMime;base64,$imageData";
+        } else {
+            die("Gambar tidak ditemukan: $image");
+        }
+        
+        // HTML untuk gambar
+        $html = '
+        <html>
+        <head>
+            <style>
+                body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+                @page { size: 4in 6in; margin: 0; } /* Ukuran 4R */
+                img { width: 4in; height: 6in; object-fit: contain; } 
+            </style>
+        </head>
+        <body>
+        <img src="'.$imageSrc. '" alt="Gambar 4R">
+        </body>
+        </html>
+        ';
+        
+        $dompdf->loadHtml($html);
+        
+        // Set ukuran kertas ke 4R (4x6 inci)
+        $dompdf->setPaper([4 * 25.4, 6 * 25.4]); // Satuan dalam mm (1 inch = 25.4 mm)
+        
+        // Render PDF
+        $dompdf->render();
+        
+        // Simpan file PDF ke dalam folder
+        $folderPath = 'assets/pdf/';
+        $fileName = "photorama-$date.pdf";
+        
+        // Pastikan folder tersedia
+        if (!is_dir($folderPath)) {
+            mkdir($folderPath, 0777, true);
+        }
+        
+        file_put_contents($folderPath . $fileName, $dompdf->output());
+
+        // Eksekusi print
+        // exec("print /D:\\\\NamaPrinter " . escapeshellarg($folderPath)); //windows
+        // exec("lp '$folderPath . $fileName' > /dev/null 2>&1 &");
+        // // exec("lp " . escapeshellarg($folderPath)); //linux
+        // unlink($folderPath . $fileName); //hapus file pdf
+
+        // Return response
+        return json_encode([
+            "status" => "success",
+            // "path" => "assets/pdf/$fileName"
+        ]);
     }
 
 }
