@@ -85,13 +85,18 @@
 
         function printImage() {
             $.ajax({
-                url: "<?= BASE_URL ?>home/cetakPDF/",
+                url: "<?= BASE_URL ?>home/cetakPDF/" + dir,
                 type: "GET",
                 success: function(response) {
                     const mdata = JSON.parse(response)
                     if (mdata.status === "success") {
-                        alert("Berhasil print PDF!");
-                        // window.open("<?= BASE_URL ?>" + mdata.path, '_blank');
+                        Swal.fire({
+                            title: 'Sukses!',
+                            text: 'PDF berhasil dicetak.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        })
+
                     } else {
                         alert("Gagal print PDF!");
                     }

@@ -389,7 +389,7 @@ class Home extends BaseController
         }
     }
 
-    public function cetakPDF()
+    public function cetakPDF($img)
     {
         $date = date('Y-m-d-His');
 
@@ -399,7 +399,7 @@ class Home extends BaseController
         
         // Buat instance Dompdf
         $dompdf = new Dompdf($options);
-        $image = FCPATH . 'assets/photobooth/Photo Uye-1741268801/photos.jpg';
+        $image = FCPATH . 'assets/photobooth/' . base64_decode($img) . '/photos.jpg';
 
         // Konversi gambar ke Base64
         if (file_exists($image)) {
