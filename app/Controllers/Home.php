@@ -401,18 +401,28 @@ class Home extends BaseController
         $dompdf = new Dompdf($options);
         $image = FCPATH . 'assets/photobooth/' . base64_decode($img) . '/photos.jpg';
 
-        // Konversi gambar ke Base64
-        if (file_exists($image)) {
-            $imageData = base64_encode(file_get_contents($image));
-            $imageMime = mime_content_type($image); // Deteksi jenis MIME
-            $imageSrc = "data:$imageMime;base64,$imageData";
-        } else {
-            return json_encode([
-                "status" => "false",
-            ]);
+        if (!file_exists($image)) {
+            return json_encode(["status" => "false"]);
         }
 
-        // HTML untuk gambar
+        list($width, $height) = getimagesize($image);
+
+        // Jika landscape, putar gambar
+        if ($width > $height) {
+            $imageResource = imagecreatefromjpeg($image);
+            $rotatedImage = imagerotate($imageResource, 90, 0);
+            $rotatedPath = FCPATH . 'assets/photobooth/temp/' . base64_decode($img) . '.jpg';
+            imagejpeg($rotatedImage, $rotatedPath, 100); // Simpan gambar baru
+            imagedestroy($imageResource);
+            imagedestroy($rotatedImage);
+            $image = $rotatedPath;
+        }
+
+        // Konversi gambar ke Base64
+        $imageData = base64_encode(file_get_contents($image));
+        $imageMime = mime_content_type($image); // Deteksi jenis MIME
+        $imageSrc = "data:$imageMime;base64,$imageData";
+    
         // Generate HTML dengan jumlah halaman sesuai $print
         $html = '<html><head>
         <style>
@@ -434,7 +444,7 @@ class Home extends BaseController
         $dompdf->loadHtml($html);
         
         // Set ukuran kertas ke 4R (4x6 inci)
-        $dompdf->setPaper([4 * 25.4, 6 * 25.4]); // Satuan dalam mm (1 inch = 25.4 mm)
+        $dompdf->setPaper([4 * 25.4, 6 * 25.4]);
         
         // Render PDF
         $dompdf->render();
@@ -451,15 +461,12 @@ class Home extends BaseController
         file_put_contents($folderPath . $fileName, $dompdf->output());
 
         // Eksekusi print
-        // exec("print /D:\\\\NamaPrinter " . escapeshellarg($folderPath)); //windows
         // exec("lp '$folderPath . $fileName' > /dev/null 2>&1 &");
-        // // exec("lp " . escapeshellarg($folderPath)); //linux
         // unlink($folderPath . $fileName); //hapus file pdf
 
         // Return response
         return json_encode([
             "status" => "success",
-            // "path" => "assets/pdf/$fileName"
         ]);
     }
 
