@@ -96,13 +96,13 @@
                     if (mdata.status === "success") {
                         Swal.fire({
                             title: 'Sukses!',
-                            text: 'PDF berhasil dicetak.',
+                            text: 'Foto berhasil dicetak.',
                             icon: 'success',
                             confirmButtonText: 'OK'
                         })
 
                     } else {
-                        alert("Gagal print PDF!");
+                        alert("Gagal print Foto!");
                     }
                 },
                 error: function() {

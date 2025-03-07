@@ -461,8 +461,13 @@ class Home extends BaseController
         file_put_contents($folderPath . $fileName, $dompdf->output());
 
         // Eksekusi print
-        // exec("lp '$folderPath . $fileName' > /dev/null 2>&1 &");
-        // unlink($folderPath . $fileName); //hapus file pdf
+        exec("lp '$folderPath . $fileName' > /dev/null 2>&1 &");
+        unlink($folderPath . $fileName); //hapus file pdf
+
+        // hapus foto yang di rotasi
+        if (file_exists($rotatedPath)) {
+            unlink($rotatedPath);
+        }
 
         // Return response
         return json_encode([
