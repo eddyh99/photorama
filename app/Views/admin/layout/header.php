@@ -40,6 +40,8 @@
         <!-- SWIPER CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
             />
+        <!-- notify -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
         <!-- Helpers -->
         <script src="<?= BASE_URL ?>assets/vendor/js/helpers.js"></script>
 

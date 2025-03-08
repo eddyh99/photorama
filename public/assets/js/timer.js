@@ -1,5 +1,14 @@
 let waktu = parseInt(localStorage.getItem("sisa_waktu")) || parseInt($('#timer').data('time')) || 1;
 let countdownElement = document.getElementById("countdown");
+const notyf = new Notyf({
+  duration: 5000,  // Notifikasi tampil selama 5 detik
+  position: {
+    x: "center",
+    y: "top"
+  },
+  ripple: true,  // Efek animasi
+  dismissible: true  // Bisa ditutup manual
+});
 
 function formatWaktu(seconds) {
   let menit = Math.floor(seconds / 60);
@@ -25,10 +34,9 @@ let interval = setInterval(() => {
 }, 1000);
 
 function alertSwal() {
-  Swal.fire({
-    title: "Peringatan!",
-    text: "Waktu akan segera berakhir",
-    icon: "warning",
-    showConfirmButton: true,
-  });
+  notyf.open({
+    type: "warning",
+    message: "⚠️ Peringatan! Waktu akan segera berakhir."
+});
+  
 }

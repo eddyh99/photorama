@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Controllers\Admin\Voucher;
 use SimpleSoftwareIO\QrCode\Generator;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class Home extends BaseController
 {
@@ -385,6 +387,92 @@ class Home extends BaseController
                 $zip->addFile($filePath, $zipFolderName . '/' . $relativePath);
             }
         }
+    }
+
+    public function cetakPDF($img, $print)
+    {
+        $date = date('Y-m-d-His');
+
+        // Konfigurasi Dompdf
+        $options = new Options();
+        $options->set('defaultFont', 'NotaFonts');
+        
+        // Buat instance Dompdf
+        $dompdf = new Dompdf($options);
+        $image = FCPATH . 'assets/photobooth/' . base64_decode($img) . '/photos.jpg';
+
+        if (!file_exists($image)) {
+            return json_encode(["status" => "false"]);
+        }
+
+        list($width, $height) = getimagesize($image);
+
+        // Jika landscape, putar gambar
+        if ($width > $height) {
+            $imageResource = imagecreatefromjpeg($image);
+            $rotatedImage = imagerotate($imageResource, 90, 0);
+            $rotatedPath = FCPATH . 'assets/photobooth/temp/' . base64_decode($img) . '.jpg';
+            imagejpeg($rotatedImage, $rotatedPath, 100); // Simpan gambar baru
+            imagedestroy($imageResource);
+            imagedestroy($rotatedImage);
+            $image = $rotatedPath;
+        }
+
+        // Konversi gambar ke Base64
+        $imageData = base64_encode(file_get_contents($image));
+        $imageMime = mime_content_type($image); // Deteksi jenis MIME
+        $imageSrc = "data:$imageMime;base64,$imageData";
+    
+        // Generate HTML dengan jumlah halaman sesuai $print
+        $html = '<html><head>
+        <style>
+            body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+            @page { size: 4in 6in; margin: 0; }
+            img { width: 4in; height: 6in; object-fit: contain; } 
+        </style>
+        </head><body>';
+
+        for ($i = 0; $i < $print; $i++) {
+            $html .= '<img src="' . $imageSrc . '" alt="Gambar 4R">';
+            if ($i < $print - 1) {
+                $html .= '<div style="page-break-before: always;"></div>'; // Pisahkan halaman
+            }
+        }
+
+        $html .= '</body></html>';
+        
+        $dompdf->loadHtml($html);
+        
+        // Set ukuran kertas ke 4R (4x6 inci)
+        $dompdf->setPaper([4 * 25.4, 6 * 25.4]);
+        
+        // Render PDF
+        $dompdf->render();
+        
+        // Simpan file PDF ke dalam folder
+        $folderPath = 'assets/pdf/';
+        $fileName = "photorama-$date.pdf";
+        
+        // Pastikan folder tersedia
+        if (!is_dir($folderPath)) {
+            mkdir($folderPath, 0777, true);
+        }
+        
+        file_put_contents($folderPath . $fileName, $dompdf->output());
+
+        // Eksekusi print
+        exec("lp '$folderPath . $fileName' > /dev/null 2>&1 &");
+        unlink($folderPath . $fileName); //hapus file pdf
+
+        // hapus foto yang di rotasi
+        if (file_exists($rotatedPath)) {
+            unlink($rotatedPath);
+        }
+
+        // Return response
+        return json_encode([
+            "status" => "success",
+        ]);
     }
 
 }

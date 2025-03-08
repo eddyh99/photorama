@@ -29,7 +29,7 @@
                     <p class="text-white">SCAN QR CODE</p>
                     <p class="text-white">OR</p>
                     <div class="d-grid gap-2">
-                        <button class="btn btn-warning">EMAIL SOFT COPY</button>
+                        <!-- <button class="btn btn-warning">EMAIL SOFT COPY</button> -->
                         <button id="print" class="btn btn-info" hidden>PRINT</button>
                         <button id="submit" href="#" class="btn btn-primary" onclick="save()" disabled>DONE</button>
                     </div>

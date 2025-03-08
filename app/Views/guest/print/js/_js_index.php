@@ -2,6 +2,9 @@
 <script>
     let videoBlob = null;
     const dir = btoa(<?= json_encode($dir) ?>);
+    const print = sessionStorage.getItem('print') || 1;
+    console.log(print);
+    
 
     function redirecTo() {
         save();
@@ -12,10 +15,9 @@
         let mediaRecorder;
         let recordedChunks = [];
         let recordingStarted = false; // Pastikan hanya merekam sekali
-        
+
         const img = $("#photo").attr('src');
         const autoPrint = <?= json_encode($auto_print) ?>;
-        const print = <?= json_encode(session()->get('print')) ?> || 1;
         const frame_selected = sessionStorage.getItem("selected_frame") || null;
         const frame = new Image();
         const positions = [];
@@ -84,39 +86,29 @@
         }
 
         function printImage() {
-            var printWindow = window.open('', '_blank', 'width=600,height=600');
+            console.log(print);
+            
+            $.ajax({
+                url: "<?= BASE_URL ?>home/cetakPDF/" + dir + "/" + print,
+                type: "GET",
+                success: function(response) {
+                    const mdata = JSON.parse(response)
+                    if (mdata.status === "success") {
+                        Swal.fire({
+                            title: 'Sukses!',
+                            text: 'Foto berhasil dicetak.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        })
 
-            if (!printWindow) {
-                alert("Pop-up terblokir! Izinkan pop-up untuk mencetak.");
-                return;
-            }
-
-            printWindow.document.write(`
-            <html>
-            <head>
-                <title>Print Image</title>
-                <style>
-                    body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-                    @page { size: 4in 6in; margin: 0; } /* Ukuran 4R */
-                    img { width: 4in; height: 6in; object-fit: contain; }
-                </style>
-            </head>
-            <body>
-        `);
-
-            for (var i = 0; i < print; i++) {
-                printWindow.document.write(`<img src="${img}" />`);
-            }
-
-            printWindow.document.write(`</body></html>`);
-            printWindow.document.close();
-
-            printWindow.focus();
-
-            setTimeout(function() {
-                printWindow.print();
-                printWindow.close();
-            }, 500);
+                    } else {
+                        alert("Gagal print Foto!");
+                    }
+                },
+                error: function() {
+                    alert("Terjadi kesalahan saat menyimpan PDF.");
+                }
+            })
         }
 
         // Cetak otomatis jika session print aktif
@@ -134,7 +126,7 @@
         function startRecording() {
             if (recordingStarted) return;
 
-            let stream = canvas.captureStream(30); 
+            let stream = canvas.captureStream(30);
             mediaRecorder = new MediaRecorder(stream, {
                 mimeType: "video/webm; codecs=vp9"
             });
@@ -170,6 +162,7 @@
         }
 
     });
+
     function save() {
         Swal.fire({
             title: "Please be patient",
@@ -182,7 +175,7 @@
         formData.append('video', videoBlob);
 
         $.ajax({
-            url: "<?= BASE_URL ?>home/updateRecord/" +dir,
+            url: "<?= BASE_URL ?>home/updateRecord/" + dir,
             type: 'POST',
             data: formData,
             processData: false,
@@ -191,7 +184,7 @@
                 const mdata = JSON.parse(response)
                 console.log(mdata);
                 if (mdata.success) {
-                    window.location.href = "<?= BASE_URL ?>finish" 
+                    window.location.href = "<?= BASE_URL ?>finish"
                 } else {
                     Swal.fire({
                         icon: 'error',

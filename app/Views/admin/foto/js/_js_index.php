@@ -61,7 +61,7 @@
 	});
 
 	function showPhoto(src) {
-		const photo = `<img src="<?= BASE_URL ?>assets/photobooth/${src}" alt="thumbnail" style="width: 100%; height: auto;">`;
+		const photo = `<img src="<?= BASE_URL ?>assets/photobooth/${decodeURIComponent(src)}" alt="thumbnail" style="width: 100%; height: auto;">`;
 		$('#modalDataBody').html(photo);
 		$("#photoModal").modal('show');
 	}

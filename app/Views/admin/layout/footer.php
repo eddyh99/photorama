@@ -50,6 +50,9 @@
         <!-- SWIPER -->
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
+        <!-- notify -->
+        <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+
         <?php
             if (@isset($extra)) {
                 echo view(@$extra);
