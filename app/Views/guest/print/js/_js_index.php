@@ -43,7 +43,7 @@
                 let url = encodeURIComponent(frame);
                 const response = await $.get(`<?= BASE_URL ?>home/get_coordinates?frame=${url}`);
                 const pos = JSON.parse(response);
-                positions.push(...pos);
+                positions.push(...pos); 
             } catch (error) {
                 alert('Failed to get coordinates from frame');
                 window.location.reload();
@@ -69,13 +69,13 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Gambar video pada koordinat yang sudah diambil
-            positions.forEach((pos, index) => {
-                if (videos[index]) {
-                    const {
+            positions.forEach((pos) => {
+                const {
                         x,
                         y,
                         width,
                         height,
+                        index,
                         rotation
                     } = pos;
 
@@ -97,11 +97,10 @@
                     tempCtx.rotate((rotation * Math.PI) / 180); // Konversi derajat ke radian
 
                     // Gambar video di tengah canvas sementara
-                    tempCtx.drawImage(videos[index], -width / 2, -height / 2, width, height);
+                    tempCtx.drawImage(videos[index -1], -width / 2, -height / 2, width, height);
 
                     // Gambar hasil rotasi ke canvas utama
                     ctx.drawImage(tempCanvas, x, y, tempCanvas.width, tempCanvas.height);
-                }
             });
 
             // Gambar frame utama
