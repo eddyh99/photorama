@@ -110,7 +110,18 @@
                     </div>
                     <div class="card-body">
                         <form action="<?= BASE_URL ?>admin/frame/store" method="POST" enctype="multipart/form-data">
-                            <div class="row row-cols-2">
+                        <div class="mb-3">
+                                    <label class="form-label" for="namabarang">Cabang</label>
+                                    <div class="input-group input-group-merge">
+                                        <select name="cabang_id" class="form-control text-center">
+                                            <option value="" selected disabled>--- Pilih Cabang ---</option>
+                                            <?php foreach($cabang as $c): ?>
+                                            <option value="<?= $c->id ?>"><?= $c->nama_cabang ?></option>
+                                            <?php endforeach ?>
+                                        </select>
+                                    </div>
+                                </div>    
+                        <div class="row row-cols-2">
                                 <div id="canvas">
                                     <img class="img-preview mw-100 mh-100">
                                 </div>

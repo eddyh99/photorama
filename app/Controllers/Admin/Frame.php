@@ -10,6 +10,7 @@ class Frame extends BaseController
     public function __construct()
     {   
         $this->frame       = model('App\Models\Mdl_frame');
+        $this->cabang       = model('App\Models\Mdl_cabang');
 	}
     public function index()
     {
@@ -25,10 +26,12 @@ class Frame extends BaseController
 
     public function add()
     {
+        $cabang = $this->cabang->getCabang_notHaving_frame();
         $mdata = [
             'title'     => 'Frame - ' . NAMETITLE,
             'content'   => 'admin/frame/create',
             'extra'     => 'admin/frame/js/_js_create',
+            'cabang'    => $cabang,
             'menuactive_fr'   => 'active open'
         ];
 
@@ -67,7 +70,8 @@ class Frame extends BaseController
         $mdata = [
             'frame' => [
                 'file'    => 'frame/' . $frameName,
-                'name' => $name
+                'name' => $name,
+                'cabang_id' => $this->request->getVar('cabang_id')
             ],
             'koordinat' => json_decode($this->request->getVar('koordinat')) ?? []
         ];

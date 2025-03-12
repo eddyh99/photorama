@@ -78,6 +78,18 @@ class Mdl_cabang extends Model
         return $this->db->query($sql)->getResult();
     }
 
+    public function getCabang_notHaving_frame() {
+        $sql = "SELECT
+                    cabang.*
+                FROM
+                    cabang
+                    LEFT JOIN frame ON frame.cabang_id = cabang.id
+                WHERE
+                    frame.cabang_id IS NULL
+                    AND role = 'user'";
+        return $this->db->query($sql)->getResult();
+    }
+
     public function getCabang_notHaving_qris() {
         $sql = "SELECT
                     cabang.*

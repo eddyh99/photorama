@@ -32,6 +32,9 @@
 				}
 			},
 			{
+				data: 'nama_cabang'
+			},
+			{
 				data: null,
 				"mRender": function(data, type, full, meta) {
 					var edit = `<a href="#">

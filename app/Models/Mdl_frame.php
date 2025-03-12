@@ -19,10 +19,12 @@ class Mdl_frame extends Model
         $sql = "SELECT
                     frame.id,
                     frame.name,
-                    frame.file
+                    frame.file,
+                    cabang.nama_cabang
                 FROM
                     frame
                     JOIN frame_koordinat fk ON fk.frame_id = frame.id
+                    INNER JOIN cabang ON cabang.id = frame.cabang_id
                 GROUP BY frame.id";
         return $this->db->query($sql)->getResult();
     }
@@ -57,6 +59,21 @@ class Mdl_frame extends Model
                 WHERE
                     frame.file = ?";
         return $this->db->query($sql, [$file])->getResult() ?? null;
+    }
+
+
+    public function getByCabang($id_cabang)
+    {
+        $sql = "SELECT
+                    frame.id,
+                    frame.name,
+                    frame.file
+                FROM
+                    frame
+                    JOIN frame_koordinat fk ON fk.frame_id = frame.id
+                WHERE frame.cabang_id = ?
+                GROUP BY frame.id";
+        return $this->db->query($sql, [$id_cabang])->getResult();
     }
 
     // public function backgroundByScreen($screen) {
