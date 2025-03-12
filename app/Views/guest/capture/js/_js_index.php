@@ -28,6 +28,7 @@
     let pictureCount = 0;
     let mediaRecorder, recordedChunks;
     const positions = [];
+    let totalPhotos = 0;
 
     function redirecTo() {
         save();
@@ -39,6 +40,7 @@
             const response = await $.get(`<?= BASE_URL ?>home/get_coordinates?frame=${url}`);
             const pos = JSON.parse(response);
             positions.push(...pos);
+            totalPhotos = Math.max(...pos.map(obj => Number(obj.index)));
         } catch (error) {
             alert('Failed to get coordinates from frame');
             window.location.reload();
@@ -121,7 +123,7 @@
     // Countdown and capture photo
     async function startPictureCountdown(idx = null) {
 
-        if (pictureCount < positions.length) {
+        if (pictureCount < totalPhotos) {
             pictureCount += 1;
 
             let countdown = 3;
@@ -192,7 +194,7 @@
                         <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected">
                         </div>`;
 
-                        if (selectedPhotos.length === positions.length) {
+                        if (selectedPhotos.length === totalPhotos) {
                             $('#select').prop('disabled', false);
                         } else {
                             $('#select').prop('disabled', true);
@@ -200,7 +202,7 @@
                     }, 'image/jpeg', 0.7);
                     mediaRecorder.stop();
                     // Prepare for the next photo
-                    if (pictureCount < positions.length) {
+                    if (pictureCount < totalPhotos) {
                         setTimeout(() => {
                             startRecording(video.srcObject); // Start a new recording
                             startPictureCountdown(); // Start the countdown for the next photo
@@ -243,22 +245,16 @@
         ctx.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
 
         let loadedImages = 0;
-        selectedPhotos.forEach((photo, index) => {
+        positions.forEach((pos) => {
             const selectedImage = new Image();
-            selectedImage.src = photo.src;
+            selectedImage.src = selectedPhotos[pos.index -1].src;
 
             selectedImage.onload = function() {
-                const {
-                    x,
-                    y,
-                    width,
-                    height
-                } = positions[index];
-                ctx.drawImage(selectedImage, x, y, width, height);
+                ctx.drawImage(selectedImage, pos.x, pos.y, pos.width, pos.height);
                 loadedImages++;
 
                 // Jika semua foto sudah dimuat, gambar frame
-                if (loadedImages === selectedPhotos.length) {
+                if (loadedImages === positions.length) {
                     const frame = new Image();
                     frame.src = frameImageSrc;
 
@@ -270,14 +266,14 @@
             };
 
             // Tambahkan tombol retake jika belum ada
-            let buttonId = "retake-btn-" + index;
+            let buttonId = "retake-btn-" + (pos.index -1);
             if ($("#" + buttonId).length === 0) {
                 let retakeButton = $("<button>")
                     .attr("id", buttonId)
-                    .text("Photo #" + (index + 1))
+                    .text("Photo #" + (pos.index))
                     .addClass("btn btn-danger")
                     .on("click", function() {
-                        retake_photo(index);
+                        retake_photo(pos.index -1);
                     });
 
                 $('#btn-retake').append(retakeButton);
@@ -379,7 +375,7 @@
             cancelButtonText: "Cancel"
         }).then(async (result) => {
             if (result.isConfirmed) {
-                pictureCount = (positions.length - 1);
+                pictureCount = (totalPhotos - 1);
                 startPictureCountdown(index);
             }
         });

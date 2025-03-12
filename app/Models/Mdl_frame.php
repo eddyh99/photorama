@@ -52,7 +52,8 @@ class Mdl_frame extends Model
                     fk.x,
                     fk.y,
                     fk.width,
-                    fk.height
+                    fk.height,
+                    fk.index
                 FROM
                     frame
                     JOIN frame_koordinat fk ON fk.frame_id = frame.id
