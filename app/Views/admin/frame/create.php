@@ -1,84 +1,89 @@
 <style>
-        #canvas {
-            position: relative;
-            width: 600px;
-            height: 400px;
-            border: 2px solid black;
-            background-size: cover;
-            padding: 0;
-            box-sizing: content-box;
-            margin: 0 auto;
-        }
+    #canvas {
+    position: relative;
+    width: 600px;
+    height: 400px;
+    border: 2px solid black;
+    background-size: cover;
+    padding: 0;
+    box-sizing: border-box; /* Changed to border-box for better sizing */
+    margin: 0 auto;
+    overflow: hidden; /* Prevent handles from overflowing */
+}
 
+.frame-area {
+    position: absolute;
+    border: 2px dashed red;
+    min-width: 50px;
+    min-height: 50px;
+    background: rgba(255, 0, 0, 0.2);
+    transform-origin: center center; /* Ensure rotation happens around the center */
+    box-sizing: border-box; /* Include border in width/height calculations */
+    user-select: none; /* Prevent text selection during drag/resize */
+}
 
-        .frame-area {
-            position: absolute;
-            border: 2px dashed red;
-            min-width: 50px;
-            min-height: 50px;
-            background: rgba(255, 0, 0, 0.2);
-        }
+.resize-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: blue;
+    z-index: 1; /* Ensure handles are above the area */
+}
 
-        .resize-handle {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: blue;
-        }
+/* Corner Handles */
+.top-left {
+    top: -5px;
+    left: -5px;
+    cursor: nwse-resize;
+}
 
-        /* Corner Handles */
-        .top-left {
-            top: -5px;
-            left: -5px;
-            cursor: nwse-resize;
-        }
+.top-right {
+    top: -5px;
+    right: -5px;
+    cursor: nesw-resize;
+}
 
-        .top-right {
-            top: -5px;
-            right: -5px;
-            cursor: nesw-resize;
-        }
+.bottom-left {
+    bottom: -5px;
+    left: -5px;
+    cursor: nesw-resize;
+}
 
-        .bottom-left {
-            bottom: -5px;
-            left: -5px;
-            cursor: nesw-resize;
-        }
+.bottom-right {
+    bottom: -5px;
+    right: -5px;
+    cursor: nwse-resize;
+}
 
-        .bottom-right {
-            bottom: -5px;
-            right: -5px;
-            cursor: nwse-resize;
-        }
+/* Side Handles */
+.top {
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: ns-resize;
+}
 
-        /* Side Handles */
-        .top {
-            top: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            cursor: ns-resize;
-        }
+.bottom {
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: ns-resize;
+}
 
-        .bottom {
-            bottom: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            cursor: ns-resize;
-        }
+.left {
+    left: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: ew-resize;
+}
 
-        .left {
-            left: -5px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: ew-resize;
-        }
+.right {
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: ew-resize;
+}
 
-        .right {
-            right: -5px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: ew-resize;
-        }
     </style>
 
 <?php if (!empty(session('failed'))): ?>

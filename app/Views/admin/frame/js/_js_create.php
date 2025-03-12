@@ -63,6 +63,7 @@
         // Make the area draggable and resizable
         makeDraggable(area);
         makeResizable(area);
+        makeRotatable(area);
 
         // Add double-click event to remove the area
         area.addEventListener("dblclick", function() {
@@ -74,12 +75,59 @@
         predefinedAreas.push(area);
     }
 
+    function makeRotatable(area) {
+        let isRotating = false;
+        let initialAngle = 0;
+        let centerX, centerY, startAngle;
+
+        // Tambahkan handle untuk rotasi
+        const rotateHandle = document.createElement("div");
+        rotateHandle.className = "rotate-handle";
+        rotateHandle.style.position = "absolute";
+        rotateHandle.style.width = "20px";
+        rotateHandle.style.height = "20px";
+        rotateHandle.style.top = "-25px";
+        rotateHandle.style.left = "50%";
+        rotateHandle.style.transform = "translateX(-50%)";
+        rotateHandle.style.cursor = "grab";
+        rotateHandle.innerHTML = '<i class="bx bx-rotate-right"></i>';
+        area.appendChild(rotateHandle);
+
+        rotateHandle.addEventListener("mousedown", function(e) {
+            e.preventDefault();
+            isRotating = true;
+            area.classList.add("no-drag");
+            const rect = area.getBoundingClientRect();
+            centerX = rect.left + rect.width / 2;
+            centerY = rect.top + rect.height / 2;
+            const dx = e.clientX - centerX;
+            const dy = e.clientY - centerY;
+            startAngle = Math.atan2(dy, dx);
+            initialAngle = parseFloat(area.dataset.angle) || 0;
+        });
+
+        document.addEventListener("mousemove", function(e) {
+            if (!isRotating) return;
+            const dx = e.clientX - centerX;
+            const dy = e.clientY - centerY;
+            const currentAngle = Math.atan2(dy, dx);
+            const rotation = (currentAngle - startAngle) * (180 / Math.PI) + initialAngle;
+            area.style.transform = `rotate(${rotation}deg)`;
+            area.dataset.angle = rotation;
+        });
+
+        document.addEventListener("mouseup", function() {
+            area.classList.remove("no-drag");
+            isRotating = false;
+        });
+    }
+
     // Make an area draggable
     function makeDraggable(area) {
         let offsetX, offsetY, isDragging = false;
 
         area.addEventListener("mousedown", function(e) {
-            if (e.target.classList.contains("resize-handle")) return;
+            if (e.target.classList.contains("resize-handle") || area.classList.contains("no-drag")) return;
             isDragging = true;
             const rect = area.getBoundingClientRect();
             offsetX = e.clientX - rect.left;
@@ -182,7 +230,8 @@
                 y: parseInt(area.style.top) * scaleY,
                 width: parseInt(area.style.width) * scaleX,
                 height: parseInt(area.style.height) * scaleY,
-                index: parseInt(area.dataset.index)
+                index: parseInt(area.dataset.index),
+                rotation: parseFloat(area.dataset.angle)
             }))
         };
         console.log("Frame Data:", frameData); // Log the data for debugging
