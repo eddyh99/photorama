@@ -72,7 +72,10 @@
                 function renderFrame() {
                     if (!video.paused && !video.ended) {
                         context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-                        context.drawImage(video, 0, 0, overlayCanvas.width, overlayCanvas.height);
+                        context.save(); // Simpan keadaan konteks
+                        context.scale(-1, 1); // Membalikkan secara horizontal
+                        context.drawImage(video, -overlayCanvas.width, 0, overlayCanvas.width, overlayCanvas.height);
+                        context.restore();
                         requestAnimationFrame(renderFrame);
                     }
                 }
@@ -162,6 +165,11 @@
 
                     const snapshotContext = snapshotCanvas.getContext('2d');
                     snapshotContext.drawImage(video, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+
+                    snapshotContext.save();
+                    snapshotContext.scale(-1, 1);
+                    snapshotContext.drawImage(video, -snapshotCanvas.width, 0, snapshotCanvas.width, snapshotCanvas.height);
+                    snapshotContext.restore();
 
                     const photo = new Image();
                     snapshotCanvas.toBlob(function(blob) {
