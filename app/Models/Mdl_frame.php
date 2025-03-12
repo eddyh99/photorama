@@ -56,6 +56,7 @@ class Mdl_frame extends Model
                     fk.y,
                     fk.width,
                     fk.height,
+                    fk.rotation,
                     fk.index
                 FROM
                     frame

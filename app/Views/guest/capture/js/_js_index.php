@@ -247,10 +247,31 @@
         let loadedImages = 0;
         positions.forEach((pos) => {
             const selectedImage = new Image();
-            selectedImage.src = selectedPhotos[pos.index -1].src;
+            selectedImage.src = selectedPhotos[pos.index - 1].src;
+            const rotation = pos.rotation || 0;
 
             selectedImage.onload = function() {
-                ctx.drawImage(selectedImage, pos.x, pos.y, pos.width, pos.height);
+                const tempCanvas = document.createElement("canvas");
+                const tempCtx = tempCanvas.getContext("2d");
+
+                // Atur ukuran canvas sementara sesuai rotasi
+                if (rotation % 180 === 90) {
+                    tempCanvas.width = pos.height;
+                    tempCanvas.height = pos.width;
+                } else {
+                    tempCanvas.width = pos.width;
+                    tempCanvas.height = pos.height;
+                }
+
+                // Pusatkan titik rotasi di tengah gambar
+                tempCtx.save();
+                tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
+                tempCtx.rotate((rotation * Math.PI) / 180); // Konversi derajat ke radian
+
+                // Gambar gambar dengan posisi yang dikoreksi
+                tempCtx.drawImage(selectedImage, -pos.width / 2, -pos.height / 2, pos.width, pos.height);
+                tempCtx.restore();
+                ctx.drawImage(tempCanvas, pos.x, pos.y, pos.width, pos.height);
                 loadedImages++;
 
                 // Jika semua foto sudah dimuat, gambar frame
@@ -266,14 +287,14 @@
             };
 
             // Tambahkan tombol retake jika belum ada
-            let buttonId = "retake-btn-" + (pos.index -1);
+            let buttonId = "retake-btn-" + (pos.index - 1);
             if ($("#" + buttonId).length === 0) {
                 let retakeButton = $("<button>")
                     .attr("id", buttonId)
                     .text("Photo #" + (pos.index))
                     .addClass("btn btn-danger")
                     .on("click", function() {
-                        retake_photo(pos.index -1);
+                        retake_photo(pos.index - 1);
                     });
 
                 $('#btn-retake').append(retakeButton);
