@@ -26,7 +26,7 @@ class Frame extends BaseController
 
     public function add()
     {
-        $cabang = $this->cabang->getCabang_notHaving_frame();
+        $cabang = $this->cabang->allCabang();
         $mdata = [
             'title'     => 'Frame - ' . NAMETITLE,
             'content'   => 'admin/frame/create',
