@@ -129,7 +129,7 @@
                                     <button class="btn btn-info d-block" id="addArea" type="button">Add Area</button>
                                     <small class="text-danger my-3">* Double-tap to select the area you want to delete.</small>
                                     <button class="btn btn-danger d-block mb-3" id="clearButton" type="button">Clear All Areas </button>
-                                    <button class="btn btn-primary d-block" id="saveButton" type="button">Save Areas</button>
+                                    <button class="btn btn-primary d-block" id="saveButton" type="button" disabled>Save Areas</button>
                                 </div>
                                 <div class="my-3">
                                     <label class="form-label" for="upload foto">Upload Foto</label>
