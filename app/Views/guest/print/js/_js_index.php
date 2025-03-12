@@ -4,7 +4,7 @@
     const dir = btoa(<?= json_encode($dir) ?>);
     const print = sessionStorage.getItem('print') || 1;
     console.log(print);
-    
+
 
     function redirecTo() {
         save();
@@ -75,11 +75,35 @@
                         x,
                         y,
                         width,
-                        height
+                        height,
+                        rotation
                     } = pos;
-                    ctx.drawImage(videos[index], x, y, width, height);
+
+                    // Buat canvas sementara untuk rotasi
+                    const tempCanvas = document.createElement("canvas");
+                    const tempCtx = tempCanvas.getContext("2d");
+
+                    // Atur ukuran canvas sementara sesuai rotasi
+                    if (rotation % 180 === 90) {
+                        tempCanvas.width = height; // Tukar width & height jika rotasi 90° atau 270°
+                        tempCanvas.height = width;
+                    } else {
+                        tempCanvas.width = width;
+                        tempCanvas.height = height;
+                    }
+
+                    // Pindahkan titik pusat ke tengah canvas sementara
+                    tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
+                    tempCtx.rotate((rotation * Math.PI) / 180); // Konversi derajat ke radian
+
+                    // Gambar video di tengah canvas sementara
+                    tempCtx.drawImage(videos[index], -width / 2, -height / 2, width, height);
+
+                    // Gambar hasil rotasi ke canvas utama
+                    ctx.drawImage(tempCanvas, x, y, tempCanvas.width, tempCanvas.height);
                 }
             });
+
             // Gambar frame utama
             ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
             startRecording();
@@ -87,7 +111,7 @@
 
         function printImage() {
             console.log(print);
-            
+
             $.ajax({
                 url: "<?= BASE_URL ?>home/cetakPDF/" + dir + "/" + print,
                 type: "GET",
