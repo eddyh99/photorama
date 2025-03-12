@@ -127,7 +127,8 @@
                                 </div>
                                 <div>
                                     <button class="btn btn-info d-block" id="addArea" type="button">Add Area</button>
-                                    <button class="btn btn-danger d-block my-3" id="clearButton" type="button">Clear All Areas</button>
+                                    <small class="text-danger my-3">* Double-tap to select the area you want to delete.</small>
+                                    <button class="btn btn-danger d-block mb-3" id="clearButton" type="button">Clear All Areas </button>
                                     <button class="btn btn-primary d-block" id="saveButton" type="button">Save Areas</button>
                                 </div>
                                 <div class="my-3">
