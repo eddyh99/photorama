@@ -37,13 +37,13 @@
 			{
 				data: null,
 				"mRender": function(data, type, full, meta) {
-					var edit = `<a href="#">
+					var edit = `<a href="<?= BASE_URL ?>admin/frame/edit/${encodeURI(btoa(data.id))}">
                                                 <i class="bx bx-edit bx-md fs-5 text-black"></i>
                                           </a>`;
 					var del = `<a href="<?= BASE_URL ?>admin/frame/destroy/${encodeURI(btoa(data.id))}" class="del-data">
                                                 <i class="bx bx-trash bx-md fs-5 text-danger"></i>
                                           </a>`;
-					return `${del}`;
+					return `${edit}${del}`;
 				}
 			},
 		],
