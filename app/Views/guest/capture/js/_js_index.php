@@ -28,6 +28,7 @@
     let pictureCount = 0;
     let mediaRecorder, recordedChunks;
     const positions = [];
+    let totalPhotos = 0;
 
     function redirecTo() {
         save();
@@ -39,6 +40,7 @@
             const response = await $.get(`<?= BASE_URL ?>home/get_coordinates?frame=${url}`);
             const pos = JSON.parse(response);
             positions.push(...pos);
+            totalPhotos = Math.max(...pos.map(obj => Number(obj.index)));
         } catch (error) {
             alert('Failed to get coordinates from frame');
             window.location.reload();
@@ -72,7 +74,10 @@
                 function renderFrame() {
                     if (!video.paused && !video.ended) {
                         context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-                        context.drawImage(video, 0, 0, overlayCanvas.width, overlayCanvas.height);
+                        context.save(); // Simpan keadaan konteks
+                        context.scale(-1, 1); // Membalikkan secara horizontal
+                        context.drawImage(video, -overlayCanvas.width, 0, overlayCanvas.width, overlayCanvas.height);
+                        context.restore();
                         requestAnimationFrame(renderFrame);
                     }
                 }
@@ -118,7 +123,7 @@
     // Countdown and capture photo
     async function startPictureCountdown(idx = null) {
 
-        if (pictureCount < positions.length) {
+        if (pictureCount < totalPhotos) {
             pictureCount += 1;
 
             let countdown = 3;
@@ -163,6 +168,11 @@
                     const snapshotContext = snapshotCanvas.getContext('2d');
                     snapshotContext.drawImage(video, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
 
+                    snapshotContext.save();
+                    snapshotContext.scale(-1, 1);
+                    snapshotContext.drawImage(video, -snapshotCanvas.width, 0, snapshotCanvas.width, snapshotCanvas.height);
+                    snapshotContext.restore();
+
                     const photo = new Image();
                     snapshotCanvas.toBlob(function(blob) {
                         let photoURL = URL.createObjectURL(blob);
@@ -184,7 +194,7 @@
                         <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected">
                         </div>`;
 
-                        if (selectedPhotos.length === positions.length) {
+                        if (selectedPhotos.length === totalPhotos) {
                             $('#select').prop('disabled', false);
                         } else {
                             $('#select').prop('disabled', true);
@@ -192,7 +202,7 @@
                     }, 'image/jpeg', 0.7);
                     mediaRecorder.stop();
                     // Prepare for the next photo
-                    if (pictureCount < positions.length) {
+                    if (pictureCount < totalPhotos) {
                         setTimeout(() => {
                             startRecording(video.srcObject); // Start a new recording
                             startPictureCountdown(); // Start the countdown for the next photo
@@ -235,22 +245,37 @@
         ctx.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
 
         let loadedImages = 0;
-        selectedPhotos.forEach((photo, index) => {
+        positions.forEach((pos) => {
             const selectedImage = new Image();
-            selectedImage.src = photo.src;
+            selectedImage.src = selectedPhotos[pos.index - 1].src;
+            const rotation = pos.rotation || 0;
 
             selectedImage.onload = function() {
-                const {
-                    x,
-                    y,
-                    width,
-                    height
-                } = positions[index];
-                ctx.drawImage(selectedImage, x, y, width, height);
+                const tempCanvas = document.createElement("canvas");
+                const tempCtx = tempCanvas.getContext("2d");
+
+                // Atur ukuran canvas sementara sesuai rotasi
+                if (rotation % 180 === 90) {
+                    tempCanvas.width = pos.height;
+                    tempCanvas.height = pos.width;
+                } else {
+                    tempCanvas.width = pos.width;
+                    tempCanvas.height = pos.height;
+                }
+
+                // Pusatkan titik rotasi di tengah gambar
+                tempCtx.save();
+                tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
+                tempCtx.rotate((rotation * Math.PI) / 180); // Konversi derajat ke radian
+
+                // Gambar gambar dengan posisi yang dikoreksi
+                tempCtx.drawImage(selectedImage, -pos.width / 2, -pos.height / 2, pos.width, pos.height);
+                tempCtx.restore();
+                ctx.drawImage(tempCanvas, pos.x, pos.y, pos.width, pos.height);
                 loadedImages++;
 
                 // Jika semua foto sudah dimuat, gambar frame
-                if (loadedImages === selectedPhotos.length) {
+                if (loadedImages === positions.length) {
                     const frame = new Image();
                     frame.src = frameImageSrc;
 
@@ -262,14 +287,14 @@
             };
 
             // Tambahkan tombol retake jika belum ada
-            let buttonId = "retake-btn-" + index;
+            let buttonId = "retake-btn-" + (pos.index - 1);
             if ($("#" + buttonId).length === 0) {
                 let retakeButton = $("<button>")
                     .attr("id", buttonId)
-                    .text("Photo #" + (index + 1))
+                    .text("Photo #" + (pos.index))
                     .addClass("btn btn-danger")
                     .on("click", function() {
-                        retake_photo(index);
+                        retake_photo(pos.index - 1);
                     });
 
                 $('#btn-retake').append(retakeButton);
@@ -371,7 +396,7 @@
             cancelButtonText: "Cancel"
         }).then(async (result) => {
             if (result.isConfirmed) {
-                pictureCount = (positions.length - 1);
+                pictureCount = (totalPhotos - 1);
                 startPictureCountdown(index);
             }
         });

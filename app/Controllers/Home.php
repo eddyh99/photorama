@@ -117,7 +117,7 @@ class Home extends BaseController
     public function frame() {
         $background = $this->background->backgroundByScreen('screen_frame', $this->id_cabang);
         $bg_container = $this->background->backgroundByScreen('container_frame', $this->id_cabang);
-        $frame = $this->frame->allFrame();
+        $frame = $this->frame->getByCabang($this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_frame', $this->id_cabang);
 
         $mdata = [
@@ -126,7 +126,7 @@ class Home extends BaseController
             'extra'         => 'guest/frame/js/_js_index',
             'background'    =>  $background ?? null,
             'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container ?? 'background/default.jpg'),
-            'frame'         =>  $frame,
+            'frame'         =>  $frame ?? [],
             'timer'         => $timer
         ];
 
@@ -461,8 +461,8 @@ class Home extends BaseController
         file_put_contents($folderPath . $fileName, $dompdf->output());
 
         // Eksekusi print
-        exec("lp '$folderPath . $fileName' > /dev/null 2>&1 &");
-        unlink($folderPath . $fileName); //hapus file pdf
+        // exec("lp '$folderPath . $fileName' > /dev/null 2>&1 &");
+        // unlink($folderPath . $fileName); //hapus file pdf
 
         // hapus foto yang di rotasi
         if (file_exists($rotatedPath)) {

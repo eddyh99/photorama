@@ -144,8 +144,8 @@ class Mdl_timer extends Model
         try {
             $timer = $this->db->table("timer");
 
-            // Insert data into 'pengguna' table
-            if (!$timer->updateBatch($mdata)) {
+            // Insert data into 'timer' table
+            if (!$timer->insertBatch($mdata)) {
                 // Handle case when insert fails (not due to exception)
                 return (object) array(
                     "code"      => 400,

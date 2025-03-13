@@ -19,10 +19,12 @@ class Mdl_frame extends Model
         $sql = "SELECT
                     frame.id,
                     frame.name,
-                    frame.file
+                    frame.file,
+                    cabang.nama_cabang
                 FROM
                     frame
                     JOIN frame_koordinat fk ON fk.frame_id = frame.id
+                    INNER JOIN cabang ON cabang.id = frame.cabang_id
                 GROUP BY frame.id";
         return $this->db->query($sql)->getResult();
     }
@@ -30,14 +32,17 @@ class Mdl_frame extends Model
     public function getById($id)
     {
         $sql = "SELECT
+                    frame.name,
                     frame.file,
                     fk.x,
                     fk.y,
                     fk.width,
-                    fk.height
+                    fk.height,
+                    cabang.nama_cabang
                 FROM
                     frame
                     JOIN frame_koordinat fk ON fk.frame_id = frame.id
+                    INNER JOIN cabang ON cabang.id = frame.cabang_id
                 WHERE
                     frame.id = ?";
         return $this->db->query($sql, [$id])->getResult() ?? null;
@@ -50,13 +55,30 @@ class Mdl_frame extends Model
                     fk.x,
                     fk.y,
                     fk.width,
-                    fk.height
+                    fk.height,
+                    fk.rotation,
+                    fk.index
                 FROM
                     frame
                     JOIN frame_koordinat fk ON fk.frame_id = frame.id
                 WHERE
                     frame.file = ?";
         return $this->db->query($sql, [$file])->getResult() ?? null;
+    }
+
+
+    public function getByCabang($id_cabang)
+    {
+        $sql = "SELECT
+                    frame.id,
+                    frame.name,
+                    frame.file
+                FROM
+                    frame
+                    JOIN frame_koordinat fk ON fk.frame_id = frame.id
+                WHERE frame.cabang_id = ?
+                GROUP BY frame.id";
+        return $this->db->query($sql, [$id_cabang])->getResult();
     }
 
     // public function backgroundByScreen($screen) {
@@ -91,7 +113,7 @@ class Mdl_frame extends Model
             $fr = $this->db->table("frame");
             $koordinat = $this->db->table("frame_koordinat");
 
-            // Insert data into 'pengguna' table
+            // Insert data into 'frame' table
             if (!$fr->insert($mdata['frame'])) {
                 // Handle case when insert fails (not due to exception)
                 $this->db->transRollback();
@@ -136,6 +158,60 @@ class Mdl_frame extends Model
         return (object) array(
             "code"      => 201,
             "message"   => "frame berhasil ditambahkan"
+        );
+    }
+
+    public function updateFrame($mdata) {
+        $id_frame = $mdata['frame']['id'];
+        try {
+            $this->db->transBegin();
+            $fr = $this->db->table("frame");
+            $koordinat = $this->db->table("frame_koordinat");
+
+            // Insert data into 'frame' table
+            if (!$fr->update($mdata['frame'], ['id' => $id_frame])) {
+                // Handle case when insert fails (not due to exception)
+                $this->db->transRollback();
+                return (object) array(
+                    "code"      => 400,
+                    "message"   => "Gagal update frame"
+                );
+            }
+            foreach ($mdata['koordinat'] as &$data) {
+                $data->frame_id = $id_frame;
+            }   
+            
+            $koordinat->where('frame_id', $id_frame)->delete();
+
+            // InsertBatch into 'koordinat'
+            if (!$koordinat->insertBatch($mdata['koordinat'])) {
+                // Rollback if 'penjualan_detail' insertion fails
+                $this->db->transRollback();
+                return (object) [
+                    "code"    => 500,
+                    "message" => "Gagal update frame"
+                ];
+            }
+    
+            $this->db->transCommit();
+
+        } catch (DatabaseException $e) {
+            // For other database-related errors, return generic server error
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        } catch (\Exception $e) {
+            // Handle any other general exceptions
+            return (object) array(
+                "code"      => 500,
+                "message"   => "Terjadi kesalahan pada server"
+            );
+        }
+
+        return (object) array(
+            "code"      => 201,
+            "message"   => "frame berhasil diupdate."
         );
     }
 }

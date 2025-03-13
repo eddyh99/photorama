@@ -80,7 +80,7 @@ CREATE TABLE `cabang` (
   `retake_status` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,9 +90,11 @@ CREATE TABLE `cabang` (
 LOCK TABLES `cabang` WRITE;
 /*!40000 ALTER TABLE `cabang` DISABLE KEYS */;
 INSERT INTO `cabang` VALUES
-(2,'Photo Uye','Jl. Cempaka Putih',0,0,'2025-02-10 09:33:23','2025-03-04 16:45:14','user','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,0),
+(2,'Photo Uye','Jl. Cempaka Putih',0,0,'2025-02-10 09:33:23','2025-03-12 07:12:09','user','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1),
 (3,'Aku Admin','Jl. Jayabana',0,0,'2025-02-10 09:33:23','2025-03-04 14:55:38','admin','f865b53623b121fd34ee5426c792e5c33af8c227','admin',0,1),
-(5,'Kodak Modern','Jl. Tegal Ampel',0,0,'2025-02-10 09:33:23','2025-03-05 04:28:50','user2','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1);
+(5,'Kodak Modern','Jl. Tegal Ampel',0,0,'2025-02-10 09:33:23','2025-03-05 04:28:50','user2','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1),
+(11,'Event Cukimay','Jl. Tegal Ampel',0,1,'2025-02-10 09:33:23','2025-03-05 04:30:40','user3','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1),
+(14,'Event Wedding','Bondowoso',0,1,'2025-03-05 06:33:52','2025-03-05 06:40:52','user4','7b21848ac9af35be0ddb2d6b9fc3851934db8420','user',0,0);
 /*!40000 ALTER TABLE `cabang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -109,8 +111,11 @@ CREATE TABLE `frame` (
   `file` varchar(255) NOT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `cabang_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_frame_cabang` (`cabang_id`),
+  CONSTRAINT `fk_frame_cabang` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,9 +125,8 @@ CREATE TABLE `frame` (
 LOCK TABLES `frame` WRITE;
 /*!40000 ALTER TABLE `frame` DISABLE KEYS */;
 INSERT INTO `frame` VALUES
-(22,'nataru','frame/nataru1738035603.png','2025-01-28 10:40:03','2025-01-28 10:40:03'),
-(32,'musix','frame/musix1738915735.png','2025-02-07 15:08:55','2025-02-07 15:08:55'),
-(33,'Frame cloud','frame/Frame cloud1740634806.png','2025-02-27 12:40:06','2025-02-27 12:40:06');
+(32,'musix1','frame/musix1738915735.png','2025-02-07 15:08:55','2025-03-12 21:22:37',2),
+(33,'Frame cloud','frame/Frame cloud1740634806.png','2025-02-27 12:40:06','2025-03-12 21:16:43',2);
 /*!40000 ALTER TABLE `frame` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -140,10 +144,12 @@ CREATE TABLE `frame_koordinat` (
   `y` double DEFAULT NULL,
   `width` double DEFAULT NULL,
   `height` double DEFAULT NULL,
+  `rotation` double DEFAULT 0,
+  `index` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `frame_id` (`frame_id`),
   CONSTRAINT `frame_koordinat_ibfk_1` FOREIGN KEY (`frame_id`) REFERENCES `frame` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,19 +159,15 @@ CREATE TABLE `frame_koordinat` (
 LOCK TABLES `frame_koordinat` WRITE;
 /*!40000 ALTER TABLE `frame_koordinat` DISABLE KEYS */;
 INSERT INTO `frame_koordinat` VALUES
-(5,22,150.29,146.57500000000002,483.075,454.02500000000003),
-(6,22,1495.7433333333333,128.70000000000002,511.70166666666665,500.5),
-(7,22,125.24166666666666,840.125,458.02666666666664,421.85),
-(8,22,1502.8999999999999,832.975,493.80999999999995,446.875),
-(15,32,15.280898876404,45.825,175.73033707865,116.09),
-(16,32,15.280898876404,184.8275,177.25842696629,114.5625),
-(17,32,13.752808988764,328.4125,178.78651685393,116.09),
-(18,32,215.4606741573,47.3525,174.20224719101,117.6175),
-(19,32,220.04494382022,187.8825,174.20224719101,116.09),
-(20,32,216.98876404494,323.83,172.67415730337,117.6175),
-(21,33,232.05,92.82,352.17,262.08),
-(22,33,237.51,371.28,335.79,242.97),
-(23,33,242.97,627.9,333.06,273);
+(41,32,9.1685393258427,25.9675,183.37078651685,143.585,0,1),
+(42,32,13.752808988764,181.7725,175.73033707865,128.31,0,1),
+(43,32,16.808988764045,323.83,171.14606741573,122.2,0,1),
+(44,32,213.93258426966,45.825,180.31460674157,120.6725,0,1),
+(45,32,212.40449438202,181.7725,178.78651685393,126.7825,0,1),
+(46,32,213.93258426966,322.3025,177.25842696629,128.31,0,1),
+(49,33,229.32,87.36,346.71,273,NULL,1),
+(50,33,237.51,622.44,338.52,273,NULL,2),
+(51,33,289.38,357.63,221.13,273,45.637830437395,1);
 /*!40000 ALTER TABLE `frame_koordinat` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -216,7 +218,7 @@ CREATE TABLE `pembayaran` (
   `cabang` varchar(100) NOT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -245,7 +247,11 @@ INSERT INTO `pembayaran` VALUES
 (139,'470134',5500.00,'2025-02-28','pending','-','2025-02-28 09:36:59'),
 (140,'649532',5500.00,'2025-02-28','paid','-','2025-02-28 09:37:34'),
 (141,'278529',5500.00,'2025-03-03','pending','-','2025-03-03 15:13:01'),
-(142,'782035',11000.00,'2025-03-04','pending','-','2025-03-04 16:38:39');
+(142,'782035',11000.00,'2025-03-04','pending','-','2025-03-04 16:38:39'),
+(143,'770119',16500.00,'2025-03-07','pending','-','2025-03-07 05:27:57'),
+(144,'110645',16500.00,'2025-03-07','pending','-','2025-03-07 05:31:14'),
+(145,'653163',16500.00,'2025-03-07','pending','-','2025-03-07 05:43:57'),
+(146,'882718',11000.00,'2025-03-07','pending','-','2025-03-07 05:45:25');
 /*!40000 ALTER TABLE `pembayaran` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -294,7 +300,7 @@ CREATE TABLE `setting` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `name_2` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -337,15 +343,15 @@ LOCK TABLES `timer` WRITE;
 /*!40000 ALTER TABLE `timer` DISABLE KEYS */;
 INSERT INTO `timer` VALUES
 (4,'screen_order',1000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
-(5,'screen_frame',1000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
+(5,'screen_frame',31,2,'2025-02-10 13:35:26','2025-03-07 03:12:58'),
 (6,'screen_payment',50,2,'2025-02-10 13:35:26','2025-02-28 09:37:24'),
 (8,'screen_select_camera',1000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
 (9,'screen_capture_photo',200,2,'2025-02-10 13:35:26','2025-03-04 16:48:43'),
 (10,'screen_filter',3000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
-(11,'screen_print',1000,2,'2025-02-10 13:35:26','2025-03-03 02:05:06'),
+(11,'screen_print',800,2,'2025-02-10 13:35:26','2025-03-07 03:58:17'),
 (12,'screen_order',20,5,'2025-02-10 15:26:15','2025-02-10 16:17:45'),
 (13,'screen_payment',20,5,'2025-02-10 15:26:15','2025-02-10 16:18:31'),
-(14,'screen_frame',2000,5,'2025-02-10 15:26:15','2025-03-04 15:33:59'),
+(14,'screen_frame',31,5,'2025-02-10 15:26:15','2025-03-07 03:12:48'),
 (15,'screen_select_camera',20,5,'2025-02-10 15:26:15','2025-02-10 16:18:31'),
 (16,'screen_capture_photo',2000,5,'2025-02-10 15:26:15','2025-03-04 15:12:08'),
 (17,'screen_filter',20,5,'2025-02-10 15:26:15','2025-02-10 16:18:31'),
@@ -395,4 +401,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-03-05 11:29:23
+-- Dump completed on 2025-03-12 23:02:17

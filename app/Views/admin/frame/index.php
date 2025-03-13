@@ -49,6 +49,7 @@
                                     <tr>
                                         <th>Nama</th>
                                         <th>Frame</th>
+                                        <th>Cabang</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

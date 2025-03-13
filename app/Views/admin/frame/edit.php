@@ -1,89 +1,84 @@
 <style>
-    #canvas {
-    position: relative;
-    width: 600px;
-    height: 400px;
-    border: 2px solid black;
-    background-size: cover;
-    padding: 0;
-    box-sizing: border-box; /* Changed to border-box for better sizing */
-    margin: 0 auto;
-    overflow: hidden; /* Prevent handles from overflowing */
-}
+        #canvas {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            border: 2px solid black;
+            background-size: cover;
+            padding: 0;
+            box-sizing: content-box;
+            margin: 0 auto;
+        }
 
-.frame-area {
-    position: absolute;
-    border: 2px dashed red;
-    min-width: 50px;
-    min-height: 50px;
-    background: rgba(255, 0, 0, 0.2);
-    transform-origin: center center; /* Ensure rotation happens around the center */
-    box-sizing: border-box; /* Include border in width/height calculations */
-    user-select: none; /* Prevent text selection during drag/resize */
-}
 
-.resize-handle {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: blue;
-    z-index: 1; /* Ensure handles are above the area */
-}
+        .frame-area {
+            position: absolute;
+            border: 2px dashed red;
+            min-width: 50px;
+            min-height: 50px;
+            background: rgba(255, 0, 0, 0.2);
+        }
 
-/* Corner Handles */
-.top-left {
-    top: -5px;
-    left: -5px;
-    cursor: nwse-resize;
-}
+        .resize-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: blue;
+        }
 
-.top-right {
-    top: -5px;
-    right: -5px;
-    cursor: nesw-resize;
-}
+        /* Corner Handles */
+        .top-left {
+            top: -5px;
+            left: -5px;
+            cursor: nwse-resize;
+        }
 
-.bottom-left {
-    bottom: -5px;
-    left: -5px;
-    cursor: nesw-resize;
-}
+        .top-right {
+            top: -5px;
+            right: -5px;
+            cursor: nesw-resize;
+        }
 
-.bottom-right {
-    bottom: -5px;
-    right: -5px;
-    cursor: nwse-resize;
-}
+        .bottom-left {
+            bottom: -5px;
+            left: -5px;
+            cursor: nesw-resize;
+        }
 
-/* Side Handles */
-.top {
-    top: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    cursor: ns-resize;
-}
+        .bottom-right {
+            bottom: -5px;
+            right: -5px;
+            cursor: nwse-resize;
+        }
 
-.bottom {
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    cursor: ns-resize;
-}
+        /* Side Handles */
+        .top {
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: ns-resize;
+        }
 
-.left {
-    left: -5px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: ew-resize;
-}
+        .bottom {
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: ns-resize;
+        }
 
-.right {
-    right: -5px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: ew-resize;
-}
+        .left {
+            left: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: ew-resize;
+        }
 
+        .right {
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: ew-resize;
+        }
     </style>
 
 <?php if (!empty(session('failed'))): ?>
@@ -114,21 +109,20 @@
                         <h5 class="mb-1">Tambah Frame</h5>
                     </div>
                     <div class="card-body">
-                        <form action="<?= BASE_URL ?>admin/frame/store" method="POST" enctype="multipart/form-data">
+                        
+                    <form action="<?= BASE_URL ?>admin/frame/update/<?= $id_frame ?>" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="old_frame" value="<?= $frame->file ?>">
                         <div class="mb-3">
                                     <label class="form-label" for="namabarang">Cabang</label>
                                     <div class="input-group input-group-merge">
                                         <select name="cabang_id" class="form-control text-center">
-                                            <option value="" selected disabled>--- Pilih Cabang ---</option>
-                                            <?php foreach($cabang as $c): ?>
-                                            <option value="<?= $c->id ?>"><?= $c->nama_cabang ?></option>
-                                            <?php endforeach ?>
+                                            <option  selected disabled><?= $frame->nama_cabang ?></option>
                                         </select>
                                     </div>
                                 </div>    
                         <div class="row row-cols-2">
-                                <div id="canvas">
-                                    <img class="img-preview mw-100 mh-100">
+                                <div id="canvas" style="width: auto;">
+                                    <img class="img-preview mw-100 mh-100" src="<?= BASE_URL ?>assets/img/<?= $frame->file  ?>" alt="img-frame">
                                 </div>
                                 <div>
                                     <button class="btn btn-info d-block" id="addArea" type="button">Add Area</button>
@@ -155,6 +149,7 @@
                                             type="text"
                                             class="form-control"
                                             id="name"
+                                            value="<?= $frame->name ?>"
                                             name="name"/>
                                     </div>
                                 </div>
