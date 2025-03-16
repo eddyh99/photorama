@@ -43,6 +43,7 @@
                             <label class="form-label text-uppercase text-black fs-3" for="upload foto">Voucher Code</label>
                             <div class="input-group input-group-merge mb-2">
                                 <input
+                                    autocomplete="off"
                                     type="text"
                                     class="form-control text-center"
                                     id="voc"

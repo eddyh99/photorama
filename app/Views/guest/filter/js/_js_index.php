@@ -1,4 +1,3 @@
-<script src="<?= BASE_URL ?>assets/js/payment-check.js"></script>
 <script>
     const dir = btoa(<?= json_encode($dir) ?>);
 

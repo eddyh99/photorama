@@ -30,27 +30,27 @@
             </div>
             <!-- Bagian kanan (PREVIEW FRAME) -->
             <div class="col-4 d-flex flex-column min-vh-0">
-                <div class="bg-warning mb-4 flex-grow-1 mt-2 rounded"
-                     style="max-height: 80vh; overflow: hidden;">
-                     <div class="d-flex flex-column align-items-center justify-content-center h-100 gap-4">
-                    <h2 class="fw-bold text-white">SELECT FILTER</h2>
-                    <div class="d-flex flex-wrap justify-content-center gap-3">
-                        <button id="normal" class="btn btn-info fw-bold btn-circle">NORMAL</button>
-                        <button id="grayscale" class="btn btn-info fw-bold btn-circle">GRAYSCALE</button>
-                        <button id="sephia" class="btn btn-info fw-bold btn-circle">SEPIA</button>
-                        <button id="polaroid" class="btn btn-info fw-bold btn-circle">POLAROID</button>
-                        <button id="bnw-glam" class="btn btn-info fw-bold btn-circle">BNW GLAM</button>
-                        <button id="gotham" class="btn btn-info fw-bold btn-circle">GOTHAM</button>
-                        <button id="brannan" class="btn btn-info fw-bold btn-circle">BRANNAN</button>
-                        <button id="xpro" class="btn btn-info fw-bold btn-circle">X-II PRO</button>
+                <div class="bg-warning mb-4 flex-grow-1 mt-2 rounded" style="max-height: 80vh; overflow: hidden;">
+                    <div class="d-flex flex-column align-items-center justify-content-center h-100 gap-4">
+                        <h2 class="fw-bold text-white">SELECT FILTER</h2>
+                        <!-- Updated Layout: 2 columns, 4 rows -->
+                        <div class="d-grid gap-3" style="grid-template-columns: repeat(2, 1fr);">
+                            <button id="normal" class="btn btn-info fw-bold btn-circle btn-lg">NORMAL</button>
+                            <button id="grayscale" class="btn btn-info fw-bold btn-circle btn-lg">GRAYSCALE</button>
+                            <button id="sephia" class="btn btn-info fw-bold btn-circle btn-lg">SEPIA</button>
+                            <button id="polaroid" class="btn btn-info fw-bold btn-circle btn-lg">POLAROID</button>
+                            <button id="bnw-glam" class="btn btn-info fw-bold btn-circle btn-lg">BNW GLAM</button>
+                            <button id="gotham" class="btn btn-info fw-bold btn-circle btn-lg">GOTHAM</button>
+                            <button id="brannan" class="btn btn-info fw-bold btn-circle btn-lg">BRANNAN</button>
+                            <button id="xpro" class="btn btn-info fw-bold btn-circle btn-lg">X-II PRO</button>
+                        </div>
                     </div>
-                </div>
-
                 </div>
                 <div class="d-grid">
                     <button id="next" class="btn btn-primary fs-3">NEXT</button>
                 </div>
             </div>
+            
         </div>
     </div>
 </div>

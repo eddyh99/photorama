@@ -1,7 +1,7 @@
 <div class="container-fluid vh-100 d-flex flex-column" id="content-bg">
     <div class="row flex-grow-1 text-black">
         <!-- Bagian kiri (SELECT FRAME) -->
-        <div class="col-md-8 d-flex flex-column p-3">
+        <div id="videoarea" class="col-md-8 d-flex flex-column p-3">
             <div class="video-container" style="background-color: black;">
                 <span class="text-center text-white">Camera Loading...</span>
                 <video id="webcam" autoplay playsinline muted></video>
@@ -11,16 +11,16 @@
         </div>
 
         <!-- Bagian kanan (PREVIEW FRAME) -->
-        <div class="col-md-4 d-flex flex-column p-3">
+        <div id="previewkanan" class="col-md-4 d-flex flex-column p-3">
             <div class="bg-warning overflow-auto" style="height: 85vh">
                 <div class="row row-cols-2 mx-2 my-2" id="photos"></div>
-                <canvas id="frame" class="w-100 p-2" hidden></canvas>
+                <canvas id="frame" class="w-100 p-2" style="max-height: 72vh;" hidden></canvas>
                 <div id="btn-action" class="row d-flex justify-content-center text-center w-100 d-none">
-                    <div class="col-12 mb-2">
-                        <button onclick="change_frame()" class="btn btn-info">
-                            <i class="bx bx-border-all fs-4"></i> Change Frame
-                        </button>
-                    </div>
+                    <!--<div class="col-12 mb-2">-->
+                    <!--    <button onclick="change_frame()" class="btn btn-info">-->
+                    <!--        <i class="bx bx-border-all fs-4"></i> Change Frame-->
+                    <!--    </button>-->
+                    <!--</div>-->
                     <div class="col-12 <?= $retake ? '': 'd-none' ?>">
                         <span class="d-block mb-2" style="color: white;">Retake:</span>
                         <div id="btn-retake" class="d-flex flex-wrap justify-content-center gap-2 mb-3" style="overflow-x: hidden;">

@@ -14,6 +14,16 @@
     const predefinedAreas = []; // Store predefined areas
     let selectedArea = null; // Track the currently selected area
 
+    $("#canvasbackground").change(function () {
+        let selectedValue = $(this).val();
+        
+        if (selectedValue === "light") {
+            $("#canvas").css("background-color", "white");
+        } else if (selectedValue === "dark") {
+            $("#canvas").css("background-color", "black");
+        }
+    });
+    
     // Add a new area
     document.getElementById("addArea").addEventListener("click", function() {
         createArea(50, 50, 100, 100);

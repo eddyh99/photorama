@@ -87,6 +87,12 @@
                                         <input class="form-control" name="screen_finish" type="number" step="any"/>
                                     </div>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="username">Countdown</label>
+                                    <div class="input-group input-group-merge">
+                                        <input class="form-control" name="countdown" type="number" step="any"/>
+                                    </div>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </form>

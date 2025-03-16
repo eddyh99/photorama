@@ -1,4 +1,3 @@
-<script src="<?= BASE_URL ?>assets/js/payment-check.js"></script>
 <script>
     const camera = sessionStorage.getItem('camera') || null;
     const selectedPhotos = [];
@@ -33,6 +32,7 @@
     function redirecTo() {
         save();
     }
+    
 
     async function getCoordinates(frame) {
         try {
@@ -122,6 +122,9 @@
 
     // Countdown and capture photo
     async function startPictureCountdown(idx = null) {
+        $("#previewkanan").addClass("d-none");
+        $("#videoarea").removeClass("col-md-8");
+        $("#videoarea").addClass("col-md-12");
 
         if (pictureCount < totalPhotos) {
             pictureCount += 1;
@@ -196,6 +199,10 @@
 
                         if (selectedPhotos.length === totalPhotos) {
                             $('#select').prop('disabled', false);
+                            $("#previewkanan").removeClass("d-none");
+                            $("#videoarea").removeClass("col-md-12");
+                            $("#videoarea").addClass("col-md-8");
+                            $("#select").click();
                         } else {
                             $('#select').prop('disabled', true);
                         }
@@ -214,6 +221,10 @@
     }
 
     $(function() {
+        $("#previewkanan").addClass("d-none");
+        $("#videoarea").removeClass("col-md-8");
+        $("#videoarea").addClass("col-md-12");
+
         Swal.fire({
             title: "Are you ready?",
             text: "Click OK to start",
@@ -291,7 +302,7 @@
             if ($("#" + buttonId).length === 0) {
                 let retakeButton = $("<button>")
                     .attr("id", buttonId)
-                    .text("Photo #" + (pos.index))
+                    .text("Photo " + (pos.index))
                     .addClass("btn btn-danger")
                     .on("click", function() {
                         retake_photo(pos.index - 1);

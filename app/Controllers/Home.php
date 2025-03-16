@@ -297,8 +297,8 @@ class Home extends BaseController
             'title'         => 'My Files - ' . NAMETITLE,
             'extra'         => 'guest/download/js/_js_index',
             'content'       => 'guest/download/index',
-            'files'    =>  $files,
-            'folder'    =>  base64_decode($folder),
+            'files'         =>  $files,
+            'folder'        =>  base64_decode($folder),
         ];
 
         return view('guest/wrapper', $mdata);

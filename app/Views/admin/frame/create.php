@@ -118,7 +118,7 @@
                         <div class="mb-3">
                                     <label class="form-label" for="namabarang">Cabang</label>
                                     <div class="input-group input-group-merge">
-                                        <select name="cabang_id" class="form-control text-center">
+                                        <select name="cabang_id" class="form-control text-center" required>
                                             <option value="" selected disabled>--- Pilih Cabang ---</option>
                                             <?php foreach($cabang as $c): ?>
                                             <option value="<?= $c->id ?>"><?= $c->nama_cabang ?></option>
@@ -134,10 +134,21 @@
                                     <button class="btn btn-info d-block" id="addArea" type="button">Add Area</button>
                                     <small class="text-danger my-3">* Double-tap to select the area you want to delete.</small>
                                     <button class="btn btn-danger d-block mb-3" id="clearButton" type="button">Clear All Areas </button>
-                                    <button class="btn btn-primary d-block" id="saveButton" type="button" disabled>Save Areas</button>
+                                    <button class="btn btn-primary d-block mb-3" id="saveButton" type="button" disabled>Save Areas</button>
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <label for="canvasbackground" class="form-label">Canvas Background</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <select id="canvasbackground" class="form-select">
+                                                <option value="light">Light</option>
+                                                <option value="dark">Dark</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="my-3">
-                                    <label class="form-label" for="upload foto">Upload Foto</label>
+                                    <label class="form-label" for="upload foto">Upload Frame</label>
                                     <div class="input-group input-group-merge">
                                         <input
                                             type="file"
@@ -155,7 +166,7 @@
                                             type="text"
                                             class="form-control"
                                             id="name"
-                                            name="name"/>
+                                            name="name" required/>
                                     </div>
                                 </div>
                                 <input type="hidden" id="koordinat" name="koordinat">
