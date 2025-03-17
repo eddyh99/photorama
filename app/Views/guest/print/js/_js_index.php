@@ -181,7 +181,7 @@
                 mediaRecorder.stop();
                 $('#submit').removeAttr('disabled');
                 console.log("Perekaman selesai.");
-            }, 4000);
+            }, 5000);
         }
 
     });
