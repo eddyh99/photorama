@@ -102,6 +102,17 @@ class Mdl_cabang extends Model
         return $this->db->query($sql)->getResult();
     }
 
+    public function getCabang_notHaving_camera(){
+        $sql = "SELECT
+                    cabang.*
+                FROM
+                    cabang
+                    LEFT JOIN camera ON camera.cabang_id = cabang.id
+                WHERE
+                    camera.cabang_id IS NULL
+                    AND role = 'user'";
+        return $this->db->query($sql)->getResult();
+    }
 
     public function deleteById($id)
     {
