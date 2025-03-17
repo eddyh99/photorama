@@ -90,28 +90,29 @@
         );
 
         $(function() {
-            $(".frame").click(function () {
-        let img = $(this).find("img");
-        let previewImg = $("#preview-frame");
-        let previewCanvas = $("#preview-canvas")[0];
-        let previewCtx = previewCanvas.getContext("2d");
+            $(".frame").click(function() {
+                let img = $(this).find("img");
+                let previewImg = $("#preview-frame");
+                let previewCanvas = $("#preview-canvas")[0];
+                let previewCtx = previewCanvas.getContext("2d");
 
-        // Setel gambar preview
-        let newSrc = img.attr("src");
-        previewImg.attr("src", newSrc);
+                // Setel gambar preview
+                let newSrc = img.attr("src");
+                previewImg.attr("src", newSrc);
+                selectedFrame = img.attr('data-frame');
 
-        // Tunggu sampai gambar preview selesai dimuat
-        previewImg.on("load", function () {
-            // Sesuaikan ukuran canvas dengan gambar
-            previewCanvas.width = previewImg.width();
-            previewCanvas.height = previewImg.height();
+                // Tunggu sampai gambar preview selesai dimuat
+                previewImg.on("load", function() {
+                    // Sesuaikan ukuran canvas dengan gambar
+                    previewCanvas.width = previewImg.width();
+                    previewCanvas.height = previewImg.height();
 
-            // Gambar ulang posisi kotak pada canvas preview
-            drawPosition(previewCtx, img, previewCanvas);
-        });
+                    // Gambar ulang posisi kotak pada canvas preview
+                    drawPosition(previewCtx, img, previewCanvas);
+                });
 
-        console.log("Selected frame:", img.attr("data-frame"));
-    });
+                console.log("Selected frame:", img.attr("data-frame"));
+            });
 
 
             $('#start').click(function(e) {
