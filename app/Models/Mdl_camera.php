@@ -46,8 +46,8 @@ class Mdl_camera extends Model
                 FROM
                     camera
                     INNER JOIN cabang ON cabang.id = camera.cabang_id
-                WHERE harga.cabang_id = ?";
-        return $this->db->query($sql, [$cabang_id])->getResult();
+                WHERE camera.cabang_id = ?";
+        return $this->db->query($sql, [$cabang_id])->getRow();
     }
 
 

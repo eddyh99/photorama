@@ -4,7 +4,7 @@
     let video2 = document.getElementById("camera2");
     let devices = [];
     const frame = sessionStorage.getItem('selected_frame');
-    console.log(frame);
+    const cameraRotation = <?= json_encode($camera_rotation); ?>;
 
 
     if (!frame || frame === "undefined") {
@@ -21,9 +21,9 @@
     window.onload = async function() {
         devices = await getCameraDevices();
         if (devices.length > 0) {
-            captureCamera(video1, devices[0].deviceId);
+            captureCamera(video1, devices[0].deviceId, cameraRotation.camera1 || 0);
             if (devices.length > 1) {
-                captureCamera(video2, devices[1].deviceId);
+                captureCamera(video2, devices[1].deviceId, cameraRotation.camera2 || 0);
             } else {
                 setBlackScreen(video2);
             }
@@ -46,7 +46,7 @@
         }
     }
 
-    function captureCamera(video, deviceId) {
+    function captureCamera(video, deviceId, rotate) {
         navigator.mediaDevices.getUserMedia({
             video: {
                 deviceId: {
@@ -55,6 +55,7 @@
             }
         }).then(stream => {
             video.srcObject = stream;
+            video.style.transform = `rotate(${rotate}deg)`; 
         }).catch(error => {
             console.error('Gagal mengakses kamera:', error);
             setBlackScreen(video);
@@ -78,7 +79,11 @@
         } else {
             if (devices.length >= index) {
                 let selectedDeviceId = devices[index - 1].deviceId;
-                sessionStorage.setItem("camera", selectedDeviceId);
+                const camera = {
+                    id: 'camera' + index,
+                    device: selectedDeviceId
+                }
+                sessionStorage.setItem("camera", JSON.stringify(camera));
                 window.location.href = '<?= BASE_URL ?>capture';
             } else {
                 alert('Camera is not ready!');

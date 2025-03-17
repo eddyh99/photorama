@@ -22,6 +22,7 @@ class Home extends BaseController
         $this->setting       = model('App\Models\Mdl_settings');
         $this->timer       = model('App\Models\Mdl_timer');
         $this->pembayaran       = model('App\Models\Mdl_pembayaran');
+        $this->camera       = model('App\Models\Mdl_camera');
 	}
 
     public function testing() {
@@ -163,13 +164,15 @@ class Home extends BaseController
     public function camera() {
         $background = $this->background->backgroundByScreen('screen_select_camera', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_select_camera', $this->id_cabang);
+        $camera_rotation = $this->camera->getBy_cabang($this->id_cabang);
 
         $mdata = [
             'title'         => 'Camera - ' . NAMETITLE,
             'content'       => 'guest/camera/index',
             'extra'         => 'guest/camera/js/_js_index',
             'background'    =>  $background ?? null,
-            'timer'         => $timer
+            'timer'         => $timer,
+            'camera_rotation' => $camera_rotation ?? []
         ];
 
         return view('guest/wrapper', $mdata);
@@ -180,6 +183,7 @@ class Home extends BaseController
         $timer = $this->timer->get_byCabang_andScreen('screen_capture_photo', $this->id_cabang);
         $countdown = $this->timer->get_byCabang_andScreen('countdown', $this->id_cabang);
         $is_retake = $this->cabang->get_status('retake_status', $this->id_cabang)->message;
+        $camera_rotation = $this->camera->getBy_cabang($this->id_cabang);
 
         $mdata = [
             'title'         => 'Take Photo - ' . NAMETITLE,
@@ -188,7 +192,8 @@ class Home extends BaseController
             'background'    =>  $background ?? null,
             'retake'        => filter_var($is_retake, FILTER_VALIDATE_BOOLEAN),
             'timer'         => $timer,
-            'countdown'     => $countdown
+            'countdown'     => $countdown,
+            'camera_rotation' => $camera_rotation ?? []
         ];
 
         return view('guest/wrapper', $mdata);
