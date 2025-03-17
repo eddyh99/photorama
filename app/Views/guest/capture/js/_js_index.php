@@ -33,7 +33,7 @@
     function redirecTo() {
         save();
     }
-    
+
 
     async function getCoordinates(frame) {
         try {
@@ -314,8 +314,13 @@
     });
 
 
-    $('#select-filter').on('click', function() {
-        save();
+    $('#select-filter').on('click', function(e) {
+        if (!navigator.onLine) {
+            e.preventDefault(); // Mencegah navigasi jika offline
+            alert('No internet connection. Please check your network and try again.');
+        } else {
+            save();
+        }
     });
 
     function save() {
