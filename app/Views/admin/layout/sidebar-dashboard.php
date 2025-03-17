@@ -43,6 +43,12 @@
                     <div data-i18n="Account Settings" class="text-center">Price</div>
                 </a>
             </li>
+            <li class="menu-item <?= @$menuactive_camera ?>">
+                <a href="<?= BASE_URL ?>admin/camera" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-camera"></i>
+                    <div data-i18n="Account Settings" class="text-center">Camera</div>
+                </a>
+            </li>
             <li class="menu-item <?= @$menuactive_voc ?>">
                 <a href="<?= BASE_URL ?>admin/voucher" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-purchase-tag-alt"></i>
