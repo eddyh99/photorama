@@ -19,6 +19,7 @@ function formatWaktu(seconds) {
 countdownElement.textContent = formatWaktu(waktu);
 
 let interval = setInterval(() => {
+  if (!navigator.onLine) return; // Jika offline, hentikan sementara
   waktu--;
   countdownElement.textContent = formatWaktu(waktu);
 
@@ -37,6 +38,11 @@ function alertSwal() {
   notyf.open({
     type: "warning",
     message: "⚠️ Peringatan! Waktu akan segera berakhir."
+});
+
+// Lanjutkan timer saat kembali online
+window.addEventListener("online", function() {
+  interval = setInterval(updateTimer, 1000); // Jalankan kembali timer
 });
   
 }
