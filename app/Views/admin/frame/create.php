@@ -134,8 +134,9 @@
                                     <button class="btn btn-info d-block" id="addArea" type="button">Add Area</button>
                                     <small class="text-danger my-3">* Double-tap to select the area you want to delete.</small>
                                     <button class="btn btn-danger d-block mb-3" id="clearButton" type="button">Clear All Areas </button>
-                                    <button class="btn btn-primary d-block mb-3" id="saveButton" type="button" disabled>Save Areas</button>
-                                    <div class="row align-items-center">
+                                    <button class="btn btn-warning d-block" id="duplicateArea" type="button">Duplicate Last Area</button>
+                                    <small class="text-danger my-3">* Shift+Click the area you want to Duplicate.</small>
+                                    <div class="row align-items-center  mb-3">
                                         <div class="col-auto">
                                             <label for="canvasbackground" class="form-label">Canvas Background</label>
                                         </div>
@@ -146,6 +147,7 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <button class="btn btn-primary d-block mt-4" id="saveButton" type="button" disabled>Save Areas</button>
                                 </div>
                                 <div class="my-3">
                                     <label class="form-label" for="upload foto">Upload Frame</label>

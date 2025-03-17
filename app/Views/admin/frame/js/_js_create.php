@@ -264,4 +264,36 @@
             imgPreview.dataset.originalHeight = imgPreview.naturalHeight;
         };
     }
+    
+    document.getElementById("duplicateArea").addEventListener("click", function() {
+        if (predefinedAreas.length === 0) {
+            alert("No area to duplicate!");
+            return;
+        }
+    
+        const lastArea = predefinedAreas[predefinedAreas.length - 1]; // Get the last created area
+        const rect = lastArea.getBoundingClientRect();
+        
+        // Create a new area slightly offset from the last one
+        createArea(rect.left - canvas.getBoundingClientRect().left + 20, 
+                   rect.top - canvas.getBoundingClientRect().top + 20, 
+                   rect.width, 
+                   rect.height);
+    });
+    
+    // Shift + Drag Duplication
+    document.addEventListener("mousedown", function(e) {
+        if (e.shiftKey && e.target.classList.contains("frame-area")) {
+            e.preventDefault();
+            const originalArea = e.target;
+            const rect = originalArea.getBoundingClientRect();
+            
+            // Create a duplicate where the original is
+            createArea(rect.left - canvas.getBoundingClientRect().left + 20, 
+                       rect.top - canvas.getBoundingClientRect().top + 20, 
+                       rect.width, 
+                       rect.height);
+        }
+    });
+
 </script>

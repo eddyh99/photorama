@@ -11,12 +11,16 @@
     <!-- Daftar File -->
     <div class="list-group rounded-4 overflow-hidden border">
         <?php foreach ($files as $file): ?>
+        <?php 
+            $thumbnail_path = base_url("assets/photobooth/" . $event . '/' . $file . "/photos-1.jpg"); 
+        ?>
             <a href="<?= base_url('download/' . base64_encode($event . '/' . $file)) ?>" 
                class="list-group-item list-group-item-action d-flex align-items-center justify-content-between py-3 px-4 border-0 file-item"
                target="_self">
                 <div class="d-flex align-items-center">
                     <i class="bi bi-file-earmark-text fs-5 me-3 text-secondary"></i>
                     <span class="fw-medium text-dark"><?= esc($file) ?></span>
+                    <img src="<?= $thumbnail_path ?>" alt="Thumbnail" class="ms-3" width="50" height="50" onerror="this.style.display='none'">
                 </div>
                 <span class="badge bg-primary rounded-pill px-3 py-2">⬇ Download</span>
             </a>

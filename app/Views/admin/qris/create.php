@@ -38,13 +38,13 @@
                                             id="file"
                                             name="background"
                                             accept=".png"
-                                            onchange="previewImage(this)" />
+                                            onchange="previewImage(this)"  required />
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="namabarang">Cabang</label>
                                     <div class="input-group input-group-merge">
-                                        <select name="cabang_id" class="form-control text-center">
+                                        <select name="cabang_id" class="form-control text-center"  required>
                                             <option value="" selected disabled>--- Pilih Cabang ---</option>
                                             <?php foreach($cabang as $c): ?>
                                             <option value="<?= $c->id ?>"><?= $c->nama_cabang ?></option>
