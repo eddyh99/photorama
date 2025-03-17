@@ -27,7 +27,7 @@ echo '<style>
 }
 </style>
     <div id="offlineOverlay" class="offline-overlay">
-        <p>No internet connection. Please check your network.</p>
+        <p>Terjadi gangguan koneksi internet, silahkan tunggu!</p>
     </div>
 <script src="' . BASE_URL . 'assets/js/connectivity-check.js"></script>
 ';
