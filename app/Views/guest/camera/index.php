@@ -1,3 +1,8 @@
+<style>
+    video {
+        transform: scaleX(-1);
+    }
+</style>
 <div class="h-100 w-100" id="content-bg">
     <div class="mx-5 py-5 h-100">
         <h2 class="text-center">SELECT YOUR CAMERA</h2>

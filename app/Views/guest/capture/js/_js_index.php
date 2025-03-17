@@ -129,7 +129,7 @@
         if (pictureCount < totalPhotos) {
             pictureCount += 1;
 
-            let countdown = 3;
+            let countdown = <?= json_encode($countdown) ?> ?? 4;
 
             // Show the countdown overlay and set the initial value
             countdownOverlay.style.display = 'flex';
@@ -229,16 +229,15 @@
             title: "Are you ready?",
             text: "Click OK to start",
             icon: "question",
-            showCancelButton: true,
-            confirmButtonText: "OK",
-            cancelButtonText: "Cancel"
+            showCancelButton: false,
+            confirmButtonText: "OK"
         }).then(async (result) => {
             if (result.isConfirmed) {
                 await getCoordinates(frame);
 
                 startWebcam(); // Memulai kamera hanya jika pengguna menekan OK
             } else {
-                window.location.href = "<?= BASE_URL ?>"; // Arahkan ke home jika Cancel
+                return;
             }
         });
     });
