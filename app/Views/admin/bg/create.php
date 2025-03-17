@@ -31,7 +31,7 @@
                         <div class="mb-3">
                                     <label class="form-label" for="namabarang">Cabang</label>
                                     <div class="input-group input-group-merge">
-                                        <select name="cabang_id" class="form-control text-center">
+                                        <select name="cabang_id" class="form-control text-center" required>
                                             <option value="" selected disabled>--- Pilih Cabang ---</option>
                                             <?php foreach($cabang as $c): ?>
                                             <option value="<?= $c->id ?>"><?= $c->nama_cabang ?></option>
@@ -49,7 +49,7 @@
                                             id="file"
                                             name="screen_start"
                                             accept=".png"
-                                            onchange="previewImage(this)" />
+                                            onchange="previewImage(this)" required />
                                     </div>
                                 </div>
                             <div class="mb-3">
@@ -61,7 +61,7 @@
                                             id="file"
                                             name="screen_order"
                                             accept=".png"
-                                            onchange="previewImage(this)" />
+                                            onchange="previewImage(this)" required />
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -73,7 +73,7 @@
                                             id="file"
                                             name="screen_payment"
                                             accept=".png"
-                                            onchange="previewImage(this)" />
+                                            onchange="previewImage(this)" required />
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -85,7 +85,7 @@
                                             id="file"
                                             name="screen_frame"
                                             accept=".png"
-                                            onchange="previewImage(this)" />
+                                            onchange="previewImage(this)" required />
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -97,7 +97,7 @@
                                             id="file"
                                             name="screen_select_camera"
                                             accept=".png"
-                                            onchange="previewImage(this)" />
+                                            onchange="previewImage(this)" required />
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -109,7 +109,7 @@
                                             id="file"
                                             name="screen_capture_photo"
                                             accept=".png"
-                                            onchange="previewImage(this)" />
+                                            onchange="previewImage(this)" required />
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -121,7 +121,7 @@
                                             id="file"
                                             name="screen_filter"
                                             accept=".png"
-                                            onchange="previewImage(this)" />
+                                            onchange="previewImage(this)" required />
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -133,7 +133,7 @@
                                             id="file"
                                             name="screen_print"
                                             accept=".png"
-                                            onchange="previewImage(this)" />
+                                            onchange="previewImage(this)" required />
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -145,7 +145,7 @@
                                             id="file"
                                             name="screen_finish"
                                             accept=".png"
-                                            onchange="previewImage(this)" />
+                                            onchange="previewImage(this)" required />
                                     </div>
                                 </div>
 

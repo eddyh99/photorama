@@ -1,3 +1,4 @@
+<script src="<?= BASE_URL ?>assets/js/payment-check.js"></script>
 <script>
     const camera = sessionStorage.getItem('camera') || null;
     const selectedPhotos = [];

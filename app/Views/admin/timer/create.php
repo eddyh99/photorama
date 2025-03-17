@@ -30,7 +30,7 @@
                         <div class="mb-3">
                                     <label class="form-label" for="namabarang">Cabang</label>
                                     <div class="input-group input-group-merge">
-                                        <select name="cabang_id" class="form-control text-center">
+                                        <select name="cabang_id" class="form-control text-center"  required>
                                             <option value="" selected disabled>--- Pilih Cabang ---</option>
                                             <?php foreach($cabang as $c): ?>
                                             <option value="<?= $c->id ?>"><?= $c->nama_cabang ?></option>
@@ -42,55 +42,55 @@
                             <div class="mb-3">
                                     <label class="form-label" for="namabarang">Screen order</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="screen_order" type="number" step="any"/>
+                                        <input class="form-control" name="screen_order" type="number" step="any"  required/>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="username">Screen Payment</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="screen_payment" type="number" step="any"/>
+                                        <input class="form-control" name="screen_payment" type="number" step="any"  required/>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="namabarang">Screen Frame</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="screen_frame" type="number" step="any"/>
+                                        <input class="form-control" name="screen_frame" type="number" step="any"  required/>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="username">Screen Select Camera</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="screen_select_camera" type="number" step="any"/>
+                                        <input class="form-control" name="screen_select_camera" type="number" step="any"  required/>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="namabarang">Screen Capture Photo</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="screen_capture_photo" type="number" step="any"/>
+                                        <input class="form-control" name="screen_capture_photo" type="number" step="any"  required/>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="username">Screen Filter</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="screen_filter" type="number" step="any"/>
+                                        <input class="form-control" name="screen_filter" type="number" step="any" required/>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="username">Screen Print</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="screen_print" type="number" step="any"/>
+                                        <input class="form-control" name="screen_print" type="number" step="any" required/>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="username">Screen Finish</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="screen_finish" type="number" step="any"/>
+                                        <input class="form-control" name="screen_finish" type="number" step="any" required/>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="username">Countdown</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="countdown" type="number" step="any"/>
+                                        <input class="form-control" name="countdown" type="number" step="any" required/>
                                     </div>
                                 </div>
                             </div>
