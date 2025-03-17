@@ -8,8 +8,10 @@
                     <div class="row row-cols-4 mx-2 g-3 my-3">
                         <?php foreach ($frame as $fr): ?>
                             <div class="col">
-                                <button class="btn p-0 m-0 border-0 frame" style="width: 100%;">
-                                    <img src="<?= BASE_URL ?>assets/img/<?= $fr->file ?>" data-frame="<?=rawurlencode($fr->file) ?>" alt="Frame" id="<?= $fr->id ?>" style="width: 100%; height: 100%; object-fit: contain;">
+                                <button class="btn p-0 m-0 border-0 frame position-relative" style="width: 100%;">
+                                    <img src="<?= BASE_URL ?>assets/img/<?= $fr->file ?>" data-frame="<?= rawurlencode($fr->file) ?>" alt="Frame" id="<?= $fr->id ?>" style="width: 100%; height: 100%; object-fit: contain;" data-coordinates='<?= json_encode($fr->coordinates) ?>'>
+                                    <canvas class="position-absolute top-0 start-0 w-100 h-100" 
+                                    id="canvas-<?= $fr->id ?>"></canvas>
                                 </button>
                             </div>
                         <?php endforeach; ?>

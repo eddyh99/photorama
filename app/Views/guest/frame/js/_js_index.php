@@ -1,6 +1,7 @@
 <script src="<?= BASE_URL ?>assets/js/payment-check.js"></script>
 <script>
     let selectedFrame;
+
     function redirecTo() {
         sessionStorage.setItem("selected_frame", selectedFrame);
         window.location.href = '<?= BASE_URL ?>camera';
@@ -8,6 +9,42 @@
     // custom background
     $(function() {
         let id;
+
+        $(".frame img").each(function() {
+            let img = $(this);
+            let canvas = img.siblings("canvas")[0];
+            let ctx = canvas.getContext("2d");
+
+            function setCanvasSize() {
+                // Tunggu sebentar agar ukuran gambar stabil
+                setTimeout(() => {
+                    canvas.width = img.width();
+                    canvas.height = img.height();
+                    drawPosition(ctx, img, canvas);
+                }, 50); // Delay kecil agar ukuran img sudah final
+            }
+
+            if (img[0].complete) {
+                setCanvasSize();
+            } else {
+                img.on("load", setCanvasSize);
+            }
+        });
+
+        function drawPosition(ctx, img, canvas) {
+            let coordinates = JSON.parse(img.attr("data-coordinates") || "[]");
+            ctx.fillStyle = "red"; // Warna angka
+            ctx.font = "bold 20px Arial";
+
+            coordinates.forEach(coord => {
+                let scaleX = canvas.width / img[0].naturalWidth;
+                let scaleY = canvas.height / img[0].naturalHeight;
+
+                let x = parseFloat(coord.x) * scaleX;
+                let y = parseFloat(coord.y) * scaleY;
+                ctx.fillText(coord.index, x, y);
+            });
+        }
 
         $('.frame').hover(
             function() {

@@ -118,7 +118,34 @@ class Home extends BaseController
         $background = $this->background->backgroundByScreen('screen_frame', $this->id_cabang);
         $bg_container = $this->background->backgroundByScreen('container_frame', $this->id_cabang);
         $frame = $this->frame->getByCabang($this->id_cabang);
+        $frames = [];
+        if(!empty($frame)) {
+            foreach ($frame as $row) {
+                $frameId = $row->id;
+    
+                // Jika frame belum ada di array, tambahkan data frame
+                if (!isset($frames[$frameId])) {
+                    $frames[$frameId] = (object) [
+                        'id' => $row->id,
+                        'name' => $row->name,
+                        'file' => $row->file,
+                        'coordinates' => [] // Array kosong untuk koordinat
+                    ];
+                }
+    
+                // Tambahkan koordinat ke dalam array frame yang sesuai
+                $frames[$frameId]->coordinates[] = (object) [
+                    'x' => $row->x,
+                    'y' => $row->y,
+                    'width' => $row->width,
+                    'height' => $row->height,
+                    'rotation' => $row->rotation,
+                    'index' => $row->index
+                ];
+            }
+        }
         $timer = $this->timer->get_byCabang_andScreen('screen_frame', $this->id_cabang);
+
 
         $mdata = [
             'title'         => 'Beranda - ' . NAMETITLE,
@@ -126,7 +153,7 @@ class Home extends BaseController
             'extra'         => 'guest/frame/js/_js_index',
             'background'    =>  $background ?? null,
             'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container ?? 'background/default.jpg'),
-            'frame'         =>  $frame ?? [],
+            'frame'         =>  $frames,
             'timer'         => $timer
         ];
 

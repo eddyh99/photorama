@@ -72,12 +72,18 @@ class Mdl_frame extends Model
         $sql = "SELECT
                     frame.id,
                     frame.name,
-                    frame.file
+                    frame.file,
+                    fk.x,
+                    fk.y,
+                    fk.width,
+                    fk.height,
+                    fk.rotation,
+                    fk.index
                 FROM
                     frame
                     JOIN frame_koordinat fk ON fk.frame_id = frame.id
                 WHERE frame.cabang_id = ?
-                GROUP BY frame.id";
+                ORDER BY frame.id";
         return $this->db->query($sql, [$id_cabang])->getResult();
     }
 
