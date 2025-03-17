@@ -90,12 +90,29 @@
         );
 
         $(function() {
-            $('.frame').click(function() {
-                $('#preview-frame').attr('src', $(this).find('img').attr('src'));
-                selectedFrame = $(this).find('img').attr('data-frame');
-                console.log(selectedFrame);
-                id = btoa($(this).find('img').attr('id'));
-            });
+            $(".frame").click(function () {
+        let img = $(this).find("img");
+        let previewImg = $("#preview-frame");
+        let previewCanvas = $("#preview-canvas")[0];
+        let previewCtx = previewCanvas.getContext("2d");
+
+        // Setel gambar preview
+        let newSrc = img.attr("src");
+        previewImg.attr("src", newSrc);
+
+        // Tunggu sampai gambar preview selesai dimuat
+        previewImg.on("load", function () {
+            // Sesuaikan ukuran canvas dengan gambar
+            previewCanvas.width = previewImg.width();
+            previewCanvas.height = previewImg.height();
+
+            // Gambar ulang posisi kotak pada canvas preview
+            drawPosition(previewCtx, img, previewCanvas);
+        });
+
+        console.log("Selected frame:", img.attr("data-frame"));
+    });
+
 
             $('#start').click(function(e) {
                 if (!navigator.onLine) {

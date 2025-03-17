@@ -24,6 +24,7 @@
                 <div class="mt-auto fs-3 fw-bold">PREVIEW FRAME</div>
                 <div class="bg-warning mb-4 flex-grow-1 mt-2 d-flex align-items-center justify-content-center" style="height: 500px;">
                     <img class="px-5 py-5" id="preview-frame" style="max-width: 100%; max-height: 100%; object-fit: contain; object-position: center;">
+                    <canvas id="preview-canvas" class="position-absolute"></canvas>
                 </div>
                 <div class="d-grid">
                     <button id="start" class="btn btn-danger fs-3">START PHOTO</button>
