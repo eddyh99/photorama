@@ -71,9 +71,14 @@
                 id = btoa($(this).find('img').attr('id'));
             });
 
-            $('#start').click(function() {
-                sessionStorage.setItem("selected_frame", selectedFrame);
-                window.location.href = "<?= BASE_URL ?>camera";
+            $('#start').click(function(e) {
+                if (!navigator.onLine) {
+                    e.preventDefault(); // Mencegah navigasi jika offline
+                    alert('No internet connection. Please check your network and try again.');
+                } else {
+                    sessionStorage.setItem("selected_frame", selectedFrame);
+                    window.location.href = "<?= BASE_URL ?>camera";
+                }
             })
         });
     });

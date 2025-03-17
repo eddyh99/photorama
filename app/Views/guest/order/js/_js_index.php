@@ -5,11 +5,11 @@
     // custom background
     $(function() {
         setTimeout(() => {
-			$("#failedtoast").toast('show')
-		}, 0)
+            $("#failedtoast").toast('show')
+        }, 0)
 
         let count = 1;
-        let price = <?= json_encode($price) ?> || 0; 
+        let price = <?= json_encode($price) ?> || 0;
         const IDR = new Intl.NumberFormat('id-ID');
 
         // Fungsi untuk menambah
@@ -28,17 +28,22 @@
             }
         });
 
-        $("#next").on('click', () => {
-            let price = $("#price").text();
-            let print = $("#count").text();
-            const voucher = $("#voc").val();
-            let priceFormatted = parseInt(price.replace(/\./g, ''))
-            let url = "<?= BASE_URL ?>payment/" + encodeURIComponent(btoa(priceFormatted)) + '/' +print;
-            if (voucher) {
-                url += `?voucher=${voucher}`;
+        $("#next").on('click', (e) => {
+            if (!navigator.onLine) {
+                e.preventDefault(); // Mencegah navigasi jika offline
+                alert('No internet connection. Please check your network and try again.');
+            } else {
+                let price = $("#price").text();
+                let print = $("#count").text();
+                const voucher = $("#voc").val();
+                let priceFormatted = parseInt(price.replace(/\./g, ''))
+                let url = "<?= BASE_URL ?>payment/" + encodeURIComponent(btoa(priceFormatted)) + '/' + print;
+                if (voucher) {
+                    url += `?voucher=${voucher}`;
+                }
+                sessionStorage.setItem('print', print)
+                window.location.href = url
             }
-            sessionStorage.setItem('print', print)
-            window.location.href = url
         });
     });
 </script>

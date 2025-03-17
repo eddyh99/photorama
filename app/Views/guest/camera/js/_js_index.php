@@ -5,7 +5,7 @@
     let devices = [];
     const frame = sessionStorage.getItem('selected_frame');
     console.log(frame);
-    
+
 
     if (!frame || frame === "undefined") {
         alert('No frame selected. Redirecting to frame selection...');
@@ -72,13 +72,18 @@
     }
 
     function setCamera(index) {
-        if (devices.length >= index) {
-            let selectedDeviceId = devices[index - 1].deviceId;
-            sessionStorage.setItem("camera", selectedDeviceId);
-            window.location.href = '<?= BASE_URL ?>capture';
+        if (!navigator.onLine) {
+            alert('No internet connection. Please check your network and try again.');
+            return;
         } else {
-            alert('Camera is not ready!');
+            if (devices.length >= index) {
+                let selectedDeviceId = devices[index - 1].deviceId;
+                sessionStorage.setItem("camera", selectedDeviceId);
+                window.location.href = '<?= BASE_URL ?>capture';
+            } else {
+                alert('Camera is not ready!');
 
+            }
         }
 
     }
