@@ -35,6 +35,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <a href="<?= BASE_URL?>admin/background/add" class="btn btn-primary">Tambah Background</a>
+                                    <a href="<?= BASE_URL ?>admin/price/image" class="btn btn-warning">Background Harga</a>
                                 </div>
                             </div>
                         </div>

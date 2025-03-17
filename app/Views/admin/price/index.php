@@ -36,7 +36,6 @@
                             <div class="card-body d-flex justify-content-between align-items-center">
                                <div>
                                <a href="<?= BASE_URL ?>admin/price/add" class="btn btn-primary">Tambah</a>
-                               <a href="<?= BASE_URL ?>admin/price/image" class="btn btn-warning">Custom Image</a>
                                </div>
                                 <!-- <div class="form-check form-switch">
                                 <form id="form">

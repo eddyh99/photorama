@@ -55,7 +55,7 @@ class Home extends BaseController
             'extra'         => 'guest/order/js/_js_index',
             'background'    =>  $background ?? null,
             'price'         => $price,
-            'image'         => BASE_URL . 'assets/img/' . ($image_order ?? 'order/img-default.png'),
+            'image'         => BASE_URL . 'assets/img/' . ($image_order ?? 'order/bg-default.jpg'),
             'timer'         => $timer
         ];
 

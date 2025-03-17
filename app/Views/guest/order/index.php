@@ -1,4 +1,4 @@
-<?php if(!empty(session('failed'))): ?>
+<?php if (!empty(session('failed'))): ?>
     <div id="failedtoast" class="bs-toast toast toast-placement-ex m-3 fade bg-danger top-0 end-0" role="alert" aria-live="assertive" aria-atomic="true" data-delay="1000">
         <div class="toast-header">
             <i class="bx bx-x me-2"></i>
@@ -6,24 +6,22 @@
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">
-            <?= session('failed')?>
+            <?= session('failed') ?>
         </div>
     </div>
-<?php endif;?>
+<?php endif; ?>
 
 
 <div class="h-100 w-100" id="content-bg">
     <div class="d-flex justify-content-center align-items-center h-100">
-        <div class="container text-black">
-            <div class="row">
+        <div class="container text-black h-100">
+            <div class="row h-100">
                 <div class="col">
                     <!-- 1 of 3 -->
                 </div>
-                <div class="col-6">
-                    <div class="card" style="background-color: white;">
-                        <div class="card-body text-center">
-                            <h2 class="card-title text-uppercase fw-bold">How Many Prints <br>Do You Wants?</h2>
-                            <img class="d-block mx-auto" width="300" src="<?= $image ?>" alt="Order">
+                <div class="col-6 d-flex justify-content-center align-items-center">
+                    <div class="card h-75 w-100" style="background-image: url('<?= $image ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+                        <div class="card-body text-center d-flex flex-column justify-content-end">
                             <div>
                                 <div class="d-flex justify-content-center align-items-center mb-3">
                                     <!-- Button kurang -->
@@ -37,6 +35,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col">
                     <div class="d-flex flex-column justify-content-center align-items-center h-100">
                         <div class="text-center">
@@ -47,7 +46,7 @@
                                     type="text"
                                     class="form-control text-center"
                                     id="voc"
-                                    name="voc" placeholder="(opsional)"/>
+                                    name="voc" placeholder="(opsional)" />
                             </div>
                         </div>
                         <button id="next" class="btn btn-danger text-white fs-5 mt-3 text-center">NEXT</button>

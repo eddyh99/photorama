@@ -160,7 +160,7 @@ class Price extends BaseController
         $rules = $this->validate([
             'img_order' => [
                 'label' => 'Image Order',
-                'rules' => 'uploaded[img_order]|is_image[img_order]|mime_in[img_order,image/png]'
+                'rules' => 'uploaded[img_order]|is_image[img_order]|mime_in[img_order,image/jpeg,image/png]'
             ]
         ]);
 
@@ -180,7 +180,7 @@ class Price extends BaseController
 
         if ($result->code == 201) {
             session()->setFlashdata('success', $result->message);
-            return redirect()->to(BASE_URL . "admin/price");
+            return redirect()->to(BASE_URL . "admin/background");
         }else{
             session()->setFlashdata('failed', $result->message);
             return redirect()->to(BASE_URL . "admin/price/image")->withInput();

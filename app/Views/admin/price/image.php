@@ -19,7 +19,7 @@
             <div class="col-lg-12 mb-4 order-1">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <a href="<?= BASE_URL ?>admin/price" class="me-2">
+                        <a href="<?= BASE_URL ?>admin/background" class="me-2">
                             <i class="bx bx-chevron-left fs-2"></i>
                             Back
                         </a>
