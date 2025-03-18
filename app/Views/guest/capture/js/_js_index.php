@@ -1,6 +1,6 @@
 <script src="<?= BASE_URL ?>assets/js/payment-check.js"></script>
 <script>
-    const camera = sessionStorage.getItem('camera') || null;
+    const camera = JSON.parse(sessionStorage.getItem("camera")) || null;
     const selectedPhotos = [];
     const video = document.getElementById('webcam');
     const overlayCanvas = document.getElementById('overlay');
@@ -9,6 +9,7 @@
     const recordedVideoContainer = document.getElementById('recordedVideoContainer');
     const frameCanvas = document.getElementById('frame');
     const cameraSound = new Audio('<?= BASE_URL ?>assets/audio/camera-13695.mp3');
+    const cameraRotation = <?= json_encode($camera_rotation); ?>;
     const listAudio = [
         "get-ready.mp3",
         "smile.mp3",
@@ -33,7 +34,7 @@
     function redirecTo() {
         save();
     }
-    
+
 
     async function getCoordinates(frame) {
         try {
@@ -59,12 +60,13 @@
                         ideal: 768
                     },
                     deviceId: {
-                        exact: camera
+                        exact: camera.device
                     }
                 },
                 audio: false
             });
             video.srcObject = stream;
+            video.style.transform = `rotate(${cameraRotation[camera.id]}deg)`; 
 
             // Overlay frame on video in real-time
             const context = overlayCanvas.getContext('2d');
@@ -77,6 +79,7 @@
                         context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
                         context.save(); // Simpan keadaan konteks
                         context.scale(-1, 1); // Membalikkan secara horizontal
+                        context.rotate((cameraRotation[camera.id] * Math.PI) / 180);
                         context.drawImage(video, -overlayCanvas.width, 0, overlayCanvas.width, overlayCanvas.height);
                         context.restore();
                         requestAnimationFrame(renderFrame);
@@ -314,8 +317,13 @@
     });
 
 
-    $('#select-filter').on('click', function() {
-        save();
+    $('#select-filter').on('click', function(e) {
+        if (!navigator.onLine) {
+            e.preventDefault(); // Mencegah navigasi jika offline
+            alert('No internet connection. Please check your network and try again.');
+        } else {
+            save();
+        }
     });
 
     function save() {

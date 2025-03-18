@@ -43,7 +43,7 @@
                 let url = encodeURIComponent(frame);
                 const response = await $.get(`<?= BASE_URL ?>home/get_coordinates?frame=${url}`);
                 const pos = JSON.parse(response);
-                positions.push(...pos); 
+                positions.push(...pos);
             } catch (error) {
                 alert('Failed to get coordinates from frame');
                 window.location.reload();
@@ -71,36 +71,36 @@
             // Gambar video pada koordinat yang sudah diambil
             positions.forEach((pos) => {
                 const {
-                        x,
-                        y,
-                        width,
-                        height,
-                        index,
-                        rotation
-                    } = pos;
+                    x,
+                    y,
+                    width,
+                    height,
+                    index,
+                    rotation
+                } = pos;
 
-                    // Buat canvas sementara untuk rotasi
-                    const tempCanvas = document.createElement("canvas");
-                    const tempCtx = tempCanvas.getContext("2d");
+                // Buat canvas sementara untuk rotasi
+                const tempCanvas = document.createElement("canvas");
+                const tempCtx = tempCanvas.getContext("2d");
 
-                    // Atur ukuran canvas sementara sesuai rotasi
-                    if (rotation % 180 === 90) {
-                        tempCanvas.width = height; // Tukar width & height jika rotasi 90° atau 270°
-                        tempCanvas.height = width;
-                    } else {
-                        tempCanvas.width = width;
-                        tempCanvas.height = height;
-                    }
+                // Atur ukuran canvas sementara sesuai rotasi
+                if (rotation % 180 === 90) {
+                    tempCanvas.width = height; // Tukar width & height jika rotasi 90° atau 270°
+                    tempCanvas.height = width;
+                } else {
+                    tempCanvas.width = width;
+                    tempCanvas.height = height;
+                }
 
-                    // Pindahkan titik pusat ke tengah canvas sementara
-                    tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
-                    tempCtx.rotate((rotation * Math.PI) / 180); // Konversi derajat ke radian
+                // Pindahkan titik pusat ke tengah canvas sementara
+                tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
+                tempCtx.rotate((rotation * Math.PI) / 180); // Konversi derajat ke radian
 
-                    // Gambar video di tengah canvas sementara
-                    tempCtx.drawImage(videos[index -1], -width / 2, -height / 2, width, height);
+                // Gambar video di tengah canvas sementara
+                tempCtx.drawImage(videos[index - 1], -width / 2, -height / 2, width, height);
 
-                    // Gambar hasil rotasi ke canvas utama
-                    ctx.drawImage(tempCanvas, x, y, tempCanvas.width, tempCanvas.height);
+                // Gambar hasil rotasi ke canvas utama
+                ctx.drawImage(tempCanvas, x, y, tempCanvas.width, tempCanvas.height);
             });
 
             // Gambar frame utama
@@ -181,50 +181,55 @@
                 mediaRecorder.stop();
                 $('#submit').removeAttr('disabled');
                 console.log("Perekaman selesai.");
-            }, 4000);
+            }, 5000);
         }
 
     });
 
-    function save() {
-        Swal.fire({
-            title: "Please be patient",
-            text: "finishing..",
-            didOpen: () => {
-                Swal.showLoading();
-            },
-        });
-        const formData = new FormData();
-        formData.append('video', videoBlob);
+    function save(e) {
+        if (!navigator.onLine) {
+            e.preventDefault(); // Mencegah navigasi jika offline
+            alert('No internet connection. Please check your network and try again.');
+        } else {
+            Swal.fire({
+                title: "Please be patient",
+                text: "finishing..",
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
+            const formData = new FormData();
+            formData.append('video', videoBlob);
 
-        $.ajax({
-            url: "<?= BASE_URL ?>home/updateRecord/" + dir,
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                const mdata = JSON.parse(response)
-                console.log(mdata);
-                if (mdata.success) {
-                    window.location.href = "<?= BASE_URL ?>finish"
-                } else {
+            $.ajax({
+                url: "<?= BASE_URL ?>home/updateRecord/" + dir,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    const mdata = JSON.parse(response)
+                    console.log(mdata);
+                    if (mdata.success) {
+                        window.location.href = "<?= BASE_URL ?>finish"
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: 'Harap coba lagi.',
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal',
-                        text: 'Harap coba lagi.',
+                        text: 'Kesalahan pada server.',
                     });
+                    console.error('Error saving videos:', error);
                 }
-            },
-            error: function(xhr, status, error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal',
-                    text: 'Kesalahan pada server.',
-                });
-                console.error('Error saving videos:', error);
-            }
-        });
+            });
 
+        }
     }
 </script>

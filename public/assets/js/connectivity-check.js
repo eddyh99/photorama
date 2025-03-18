@@ -13,11 +13,11 @@ updateOverlayState();
 
 // Listen for network status changes
 window.addEventListener("offline", function() {
-    alert("Network connection lost. Please check your internet.");
+    alert("Terjadi gangguan koneksi internet, silahkan tunggu!");
     updateOverlayState();
 });
 
 window.addEventListener("online", function() {
-    alert("Back online! You can continue browsing.");
+    alert("Kembali online! silahkan melanjutkan.");
     updateOverlayState();
 });

@@ -2,7 +2,7 @@
     const dir = btoa(<?= json_encode($dir) ?>);
 
     function redirecTo() {
-        window.location.href = '<?= BASE_URL ?>print/' +dir;
+        window.location.href = '<?= BASE_URL ?>print/' + dir;
     }
 
     $(function() {
@@ -219,25 +219,30 @@
 
 
 
-        $("#next").on('click', async function() {
-            Swal.fire({
-                title: "Menerapkan filter",
-                text: "Loading..",
-                didOpen: () => {
-                    Swal.showLoading();
-                },
-            });
-            const result = await updatePhoto();
-            Swal.close();
-            if (result) {
-                window.location.href = "<?= BASE_URL ?>print/" + dir;
+        $("#next").on('click', async function(e) {
+            if (!navigator.onLine) {
+                e.preventDefault(); // Mencegah navigasi jika offline
+                alert('No internet connection. Please check your network and try again.');
             } else {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal',
-                    text: 'Terjadi kesalahan.',
+                    title: "Menerapkan filter",
+                    text: "Loading..",
+                    didOpen: () => {
+                        Swal.showLoading();
+                    },
                 });
+                const result = await updatePhoto();
+                Swal.close();
+                if (result) {
+                    window.location.href = "<?= BASE_URL ?>print/" + dir;
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Terjadi kesalahan.',
+                    });
 
+                }
             }
         });
 
