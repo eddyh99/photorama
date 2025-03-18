@@ -73,25 +73,11 @@
 
             video.addEventListener('play', () => {
                 const frame = positions[pictureCount - 1] || positions[0];
-                const aspectRatio = frame.width / frame.height;
-
-                // Ukuran asli video
-                const videoWidth = video.videoWidth;
-                const videoHeight = video.videoHeight;
-
-                // Tentukan ukuran target berdasarkan rasio
-                let targetWidth = videoWidth;
-                let targetHeight = targetWidth / aspectRatio;
-
-                // Jika tinggi lebih besar dari tinggi asli video, sesuaikan berdasarkan tinggi
-                if (targetHeight > videoHeight) {
-                    targetHeight = videoHeight;
-                    targetWidth = targetHeight * aspectRatio;
-                }
+                const { targetWidth, targetHeight, x, y } = getAspectRatio();
 
                 // Ukuran canvas sesuai video asli agar ada area hitam di sekitarnya
-                overlayCanvas.width = videoWidth;
-                overlayCanvas.height = videoHeight;
+                overlayCanvas.width = video.videoWidth;
+                overlayCanvas.height = video.videoHeight;
 
                 const context = overlayCanvas.getContext('2d');
 
@@ -101,12 +87,8 @@
                         context.fillStyle = "black";
                         context.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
-                        // Hitung posisi tengah agar video tidak gepeng
-                        const x = (videoWidth - targetWidth) / 2;
-                        const y = (videoHeight - targetHeight) / 2;
-
                         context.save();
-                        context.translate(videoWidth / 2, videoHeight / 2); // Pusatkan rotasi
+                        context.translate(video.videoWidth / 2, video.videoHeight / 2); // Pusatkan rotasi
                         context.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
                         context.scale(-1, 1); // Flip horizontal (opsional)
 
@@ -159,7 +141,6 @@
     }
 
     // Countdown and capture photo
-    // Countdown and capture photo
     async function startPictureCountdown(idx = null) {
         $("#previewkanan").addClass("d-none");
         $("#videoarea").removeClass("col-md-8");
@@ -196,22 +177,7 @@
                 } else {
                     clearInterval(countdownInterval);
                     await flash();
-
-                    const frame = positions[pictureCount - 1] || positions[0];
-                    const aspectRatio = frame.width / frame.height;
-
-                    // Ukuran asli video
-                    const videoWidth = video.videoWidth;
-                    const videoHeight = video.videoHeight;
-
-                    let targetWidth = videoWidth;
-                    let targetHeight = targetWidth / aspectRatio;
-
-                    // Jika tinggi lebih besar dari tinggi video asli, sesuaikan berdasarkan tinggi
-                    if (targetHeight > videoHeight) {
-                        targetHeight = videoHeight;
-                        targetWidth = targetHeight * aspectRatio;
-                    }
+                    const { targetWidth, targetHeight, x, y } = getAspectRatio();
 
                     // Buat canvas sesuai dengan ukuran yang ingin diambil
                     const snapshotCanvas = document.createElement('canvas');
@@ -219,10 +185,6 @@
                     snapshotCanvas.height = targetHeight;
 
                     const snapshotContext = snapshotCanvas.getContext('2d');
-
-                    // Ambil posisi tengah agar cropping tidak mengambil area hitam
-                    const x = (videoWidth - targetWidth) / 2;
-                    const y = (videoHeight - targetHeight) / 2;
 
                     // Flip horizontal (mirror)
                     snapshotContext.save();
