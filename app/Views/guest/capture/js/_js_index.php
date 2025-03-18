@@ -71,23 +71,54 @@
             video.srcObject = stream;
             video.style.transform = `rotate(${cameraRotation[camera.id]}deg)`;
 
-            // Overlay frame on video in real-time
-            const context = overlayCanvas.getContext('2d');
-            overlayCanvas.width = video.videoWidth || 1080;
-            overlayCanvas.height = video.videoHeight || 768;
-
             video.addEventListener('play', () => {
+                const frame = positions[pictureCount - 1] || positions[0];
+                const aspectRatio = frame.width / frame.height;
+
+                // Ukuran asli video
+                const videoWidth = video.videoWidth;
+                const videoHeight = video.videoHeight;
+
+                // Tentukan ukuran target berdasarkan rasio
+                let targetWidth = videoWidth;
+                let targetHeight = targetWidth / aspectRatio;
+
+                // Jika tinggi lebih besar dari tinggi asli video, sesuaikan berdasarkan tinggi
+                if (targetHeight > videoHeight) {
+                    targetHeight = videoHeight;
+                    targetWidth = targetHeight * aspectRatio;
+                }
+
+                // Ukuran canvas sesuai video asli agar ada area hitam di sekitarnya
+                overlayCanvas.width = videoWidth;
+                overlayCanvas.height = videoHeight;
+
+                const context = overlayCanvas.getContext('2d');
+
                 function renderFrame() {
                     if (!video.paused && !video.ended) {
-                        context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-                        context.save(); // Simpan keadaan konteks
-                        context.scale(-1, 1); // Membalikkan secara horizontal
-                        context.rotate((cameraRotation[camera.id] * Math.PI) / 180);
-                        context.drawImage(video, -overlayCanvas.width, 0, overlayCanvas.width, overlayCanvas.height);
+                        // Bersihkan dan isi dengan hitam
+                        context.fillStyle = "black";
+                        context.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+
+                        // Hitung posisi tengah agar video tidak gepeng
+                        const x = (videoWidth - targetWidth) / 2;
+                        const y = (videoHeight - targetHeight) / 2;
+
+                        context.save();
+                        context.translate(videoWidth / 2, videoHeight / 2); // Pusatkan rotasi
+                        context.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
+                        context.scale(-1, 1); // Flip horizontal (opsional)
+
+                        // Gambar video dengan ukuran sesuai aspect ratio
+                        context.drawImage(video, x, y, targetWidth, targetHeight, -targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight);
+
                         context.restore();
+
                         requestAnimationFrame(renderFrame);
                     }
                 }
+
                 renderFrame();
                 startRecording(stream);
                 startPictureCountdown();

@@ -58,13 +58,7 @@
             e.preventDefault(); // Mencegah navigasi jika offline
             alert('No internet connection. Please check your network and try again.');
         } else {
-            Swal.fire({
-                title: "Please be patient",
-                text: "finishing..",
-                didOpen: () => {
-                    Swal.showLoading();
-                },
-            });
+            window.location.href = '<?= BASE_URL ?>finish';
         }
     }
 </script>

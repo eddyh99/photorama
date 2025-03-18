@@ -37,7 +37,7 @@
                     <div class="d-grid gap-2">
                         <!-- <button class="btn btn-warning">EMAIL SOFT COPY</button> -->
                         <button id="print" class="btn btn-info">PRINT</button>
-                        <button id="submit" href="#" class="btn btn-primary" onclick="save(event)" disabled>DONE</button>
+                        <button id="submit" href="#" class="btn btn-primary" onclick="save(event)">DONE</button>
                     </div>
                 </div>
             </div>
