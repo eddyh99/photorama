@@ -248,8 +248,9 @@
                     mediaRecorder.stop();
                     // Prepare for the next photo
                     if (pictureCount < totalPhotos) {
-                        setTimeout(() => {
+                        setTimeout( async() => {
                             startRecording(video.srcObject); // Start a new recording
+                            await startWebcam();
                             startPictureCountdown(); // Start the countdown for the next photo
                         }, 2000);
                     }
