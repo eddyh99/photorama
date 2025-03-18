@@ -8,6 +8,7 @@
     const photosContainer = document.getElementById('photos');
     const recordedVideoContainer = document.getElementById('recordedVideoContainer');
     const frameCanvas = document.getElementById('frame');
+    const frameVideoCanvas = document.getElementById('frame-video');
     const cameraSound = new Audio('<?= BASE_URL ?>assets/audio/camera-13695.mp3');
     const cameraRotation = <?= json_encode($camera_rotation); ?>;
     const listAudio = [
@@ -66,7 +67,7 @@
                 audio: false
             });
             video.srcObject = stream;
-            video.style.transform = `rotate(${cameraRotation[camera.id]}deg)`; 
+            video.style.transform = `rotate(${cameraRotation[camera.id]}deg)`;
 
             // Overlay frame on video in real-time
             const context = overlayCanvas.getContext('2d');
@@ -254,14 +255,26 @@
         $('#select-filter').removeAttr('hidden');
 
         const ctx = frameCanvas.getContext('2d');
+        const ctxVideo = frameVideoCanvas.getContext("2d");
         frameCanvas.width = frameImage.width;
         frameCanvas.height = frameImage.height;
+        frameVideoCanvas.width = frameImage.width;
+        frameVideoCanvas.height = frameImage.height
         ctx.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
+        ctx.clearRect(0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
 
         let loadedImages = 0;
+        let loadedVideos = 0;
         positions.forEach((pos) => {
             const selectedImage = new Image();
+            const selectedVideo = document.createElement("video");
             selectedImage.src = selectedPhotos[pos.index - 1].src;
+            selectedVideo.src = URL.createObjectURL(capturedVideos[pos.index - 1]);
+            selectedVideo.autoplay = true;
+            selectedVideo.muted = true;
+            selectedVideo.playsInline = true;
+            selectedVideo.loop = true;
+
             const rotation = pos.rotation || 0;
 
             selectedImage.onload = function() {
@@ -299,6 +312,40 @@
                     };
                 }
             };
+
+            selectedVideo.addEventListener("loadeddata", function() {
+                selectedVideo.play();
+                const frameVideo = new Image();
+                frameVideo.src = frameImageSrc;
+
+                function drawVideoFrame() {
+                    const tempVideoCanvas = document.createElement("canvas");
+                    const tempVideoCtx = tempVideoCanvas.getContext("2d");
+
+                    if (rotation % 180 === 90) {
+                        tempVideoCanvas.width = pos.height;
+                        tempVideoCanvas.height = pos.width;
+                    } else {
+                        tempVideoCanvas.width = pos.width;
+                        tempVideoCanvas.height = pos.height;
+                    }
+
+                    tempVideoCtx.save();
+                    tempVideoCtx.translate(tempVideoCanvas.width / 2, tempVideoCanvas.height / 2);
+                    tempVideoCtx.rotate((rotation * Math.PI) / 180);
+                    tempVideoCtx.drawImage(selectedVideo, -pos.width / 2, -pos.height / 2, pos.width, pos.height);
+                    tempVideoCtx.restore();
+
+                    ctxVideo.drawImage(tempVideoCanvas, pos.x, pos.y, pos.width, pos.height);
+                    ctxVideo.drawImage(frameVideo, 0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
+                    requestAnimationFrame(drawVideoFrame);
+
+                }
+
+                drawVideoFrame();
+                loadedVideos++;
+
+            });
 
             // Tambahkan tombol retake jika belum ada
             let buttonId = "retake-btn-" + (pos.index - 1);

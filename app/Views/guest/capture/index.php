@@ -15,6 +15,7 @@
             <div class="bg-warning overflow-auto" style="height: 85vh">
                 <div class="row row-cols-2 mx-2 my-2" id="photos"></div>
                 <canvas id="frame" class="w-100 p-2" style="max-height: 72vh;" hidden></canvas>
+                <canvas id="frame-video" class="w-100 p-2" style="max-height: 72vh;"></canvas>
                 <div id="btn-action" class="row d-flex justify-content-center text-center w-100 d-none">
                     <!--<div class="col-12 mb-2">-->
                     <!--    <button onclick="change_frame()" class="btn btn-info">-->
