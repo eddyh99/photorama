@@ -159,6 +159,7 @@
     }
 
     // Countdown and capture photo
+    // Countdown and capture photo
     async function startPictureCountdown(idx = null) {
         $("#previewkanan").addClass("d-none");
         $("#videoarea").removeClass("col-md-8");
@@ -179,12 +180,10 @@
 
             // Coba mainkan audio dengan error handling
             let playPromise = audio.play();
-
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     console.log("Audio is playing successfully!");
                 }).catch(error => {
-                    // bug chrome
                     console.warn("Audio play was prevented:", error);
                 });
             }
@@ -198,42 +197,60 @@
                     clearInterval(countdownInterval);
                     await flash();
 
-                    // Hide the countdown overlay
-                    // countdownOverlay.style.display = 'none';
+                    const frame = positions[pictureCount - 1] || positions[0];
+                    const aspectRatio = frame.width / frame.height;
 
-                    // Capture photo
+                    // Ukuran asli video
+                    const videoWidth = video.videoWidth;
+                    const videoHeight = video.videoHeight;
+
+                    let targetWidth = videoWidth;
+                    let targetHeight = targetWidth / aspectRatio;
+
+                    // Jika tinggi lebih besar dari tinggi video asli, sesuaikan berdasarkan tinggi
+                    if (targetHeight > videoHeight) {
+                        targetHeight = videoHeight;
+                        targetWidth = targetHeight * aspectRatio;
+                    }
+
+                    // Buat canvas sesuai dengan ukuran yang ingin diambil
                     const snapshotCanvas = document.createElement('canvas');
-                    snapshotCanvas.width = video.videoWidth || 1080;
-                    snapshotCanvas.height = video.videoHeight || 768;
+                    snapshotCanvas.width = targetWidth;
+                    snapshotCanvas.height = targetHeight;
 
                     const snapshotContext = snapshotCanvas.getContext('2d');
-                    snapshotContext.drawImage(video, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
 
+                    // Ambil posisi tengah agar cropping tidak mengambil area hitam
+                    const x = (videoWidth - targetWidth) / 2;
+                    const y = (videoHeight - targetHeight) / 2;
+
+                    // Flip horizontal (mirror)
                     snapshotContext.save();
+                    snapshotContext.translate(targetWidth, 0);
                     snapshotContext.scale(-1, 1);
-                    snapshotContext.drawImage(video, -snapshotCanvas.width, 0, snapshotCanvas.width, snapshotCanvas.height);
+
+                    // Gambar hanya area yang terlihat
+                    snapshotContext.drawImage(video, x, y, targetWidth, targetHeight, 0, 0, targetWidth, targetHeight);
                     snapshotContext.restore();
 
-                    const photo = new Image();
                     snapshotCanvas.toBlob(function(blob) {
                         let photoURL = URL.createObjectURL(blob);
+                        const photo = new Image();
                         photo.src = photoURL;
 
                         if (idx !== null && idx !== undefined) {
-
-                            capturedPhotos[idx] = blob
+                            capturedPhotos[idx] = blob;
                             selectedPhotos[idx] = photo;
                             $('#select').click();
-
                         } else {
                             selectedPhotos.push(photo);
                             capturedPhotos.push(blob);
                         }
 
                         photosContainer.innerHTML += `
-                        <div class="col px-2">
+                    <div class="col px-2">
                         <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected">
-                        </div>`;
+                    </div>`;
 
                         if (selectedPhotos.length === totalPhotos) {
                             $('#select').prop('disabled', false);
@@ -245,19 +262,48 @@
                             $('#select').prop('disabled', true);
                         }
                     }, 'image/jpeg', 0.7);
+
                     mediaRecorder.stop();
+
                     // Prepare for the next photo
                     if (pictureCount < totalPhotos) {
-                        setTimeout( async() => {
-                            startRecording(video.srcObject); // Start a new recording
+                        setTimeout(async () => {
+                            startRecording(video.srcObject);
                             await startWebcam();
-                            startPictureCountdown(); // Start the countdown for the next photo
+                            startPictureCountdown();
                         }, 2000);
                     }
                 }
             }, 1000);
         }
     }
+
+    function getAspectRatio() {
+        const frame = positions[pictureCount - 1] || positions[0];
+        const aspectRatio = frame.width / frame.height;
+
+        // Ukuran asli video
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
+
+        // Tentukan ukuran target berdasarkan aspect ratio
+        let targetWidth = videoWidth;
+        let targetHeight = targetWidth / aspectRatio;
+
+        // Jika tinggi lebih besar dari tinggi video asli, sesuaikan berdasarkan tinggi
+        if (targetHeight > videoHeight) {
+            targetHeight = videoHeight;
+            targetWidth = targetHeight * aspectRatio;
+        }
+
+        return {
+            targetWidth,
+            targetHeight,
+            x: (videoWidth - targetWidth) / 2,
+            y: (videoHeight - targetHeight) / 2
+        };
+    }
+
 
     $(function() {
         $("#previewkanan").addClass("d-none");
