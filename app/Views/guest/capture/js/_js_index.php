@@ -8,6 +8,7 @@
     const photosContainer = document.getElementById('photos');
     const recordedVideoContainer = document.getElementById('recordedVideoContainer');
     const frameCanvas = document.getElementById('frame');
+    const frameVideoCanvas = document.getElementById('frame-video');
     const cameraSound = new Audio('<?= BASE_URL ?>assets/audio/camera-13695.mp3');
     const cameraRotation = <?= json_encode($camera_rotation); ?>;
     const listAudio = [
@@ -26,6 +27,8 @@
     const capturedPhotos = [];
     const capturedVideos = [];
     let blobResultImage;
+    let videoBlob;
+    let recordingStarted = false;
     let pictureCount = 0;
     let mediaRecorder, recordedChunks;
     const positions = [];
@@ -66,25 +69,56 @@
                 audio: false
             });
             video.srcObject = stream;
-            video.style.transform = `rotate(${cameraRotation[camera.id]}deg)`; 
-
-            // Overlay frame on video in real-time
-            const context = overlayCanvas.getContext('2d');
-            overlayCanvas.width = video.videoWidth || 1080;
-            overlayCanvas.height = video.videoHeight || 768;
+            video.style.transform = `rotate(${cameraRotation[camera.id]}deg)`;
 
             video.addEventListener('play', () => {
+                const frame = positions[pictureCount - 1] || positions[0];
+                const aspectRatio = frame.width / frame.height;
+
+                // Ukuran asli video
+                const videoWidth = video.videoWidth;
+                const videoHeight = video.videoHeight;
+
+                // Tentukan ukuran target berdasarkan rasio
+                let targetWidth = videoWidth;
+                let targetHeight = targetWidth / aspectRatio;
+
+                // Jika tinggi lebih besar dari tinggi asli video, sesuaikan berdasarkan tinggi
+                if (targetHeight > videoHeight) {
+                    targetHeight = videoHeight;
+                    targetWidth = targetHeight * aspectRatio;
+                }
+
+                // Ukuran canvas sesuai video asli agar ada area hitam di sekitarnya
+                overlayCanvas.width = videoWidth;
+                overlayCanvas.height = videoHeight;
+
+                const context = overlayCanvas.getContext('2d');
+
                 function renderFrame() {
                     if (!video.paused && !video.ended) {
-                        context.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-                        context.save(); // Simpan keadaan konteks
-                        context.scale(-1, 1); // Membalikkan secara horizontal
-                        context.rotate((cameraRotation[camera.id] * Math.PI) / 180);
-                        context.drawImage(video, -overlayCanvas.width, 0, overlayCanvas.width, overlayCanvas.height);
+                        // Bersihkan dan isi dengan hitam
+                        context.fillStyle = "black";
+                        context.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+
+                        // Hitung posisi tengah agar video tidak gepeng
+                        const x = (videoWidth - targetWidth) / 2;
+                        const y = (videoHeight - targetHeight) / 2;
+
+                        context.save();
+                        context.translate(videoWidth / 2, videoHeight / 2); // Pusatkan rotasi
+                        context.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
+                        context.scale(-1, 1); // Flip horizontal (opsional)
+
+                        // Gambar video dengan ukuran sesuai aspect ratio
+                        context.drawImage(video, x, y, targetWidth, targetHeight, -targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight);
+
                         context.restore();
+
                         requestAnimationFrame(renderFrame);
                     }
                 }
+
                 renderFrame();
                 startRecording(stream);
                 startPictureCountdown();
@@ -254,14 +288,26 @@
         $('#select-filter').removeAttr('hidden');
 
         const ctx = frameCanvas.getContext('2d');
+        const ctxVideo = frameVideoCanvas.getContext("2d");
         frameCanvas.width = frameImage.width;
         frameCanvas.height = frameImage.height;
+        frameVideoCanvas.width = frameImage.width;
+        frameVideoCanvas.height = frameImage.height
         ctx.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
+        ctx.clearRect(0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
 
         let loadedImages = 0;
+        let loadedVideos = 0;
         positions.forEach((pos) => {
             const selectedImage = new Image();
+            const selectedVideo = document.createElement("video");
             selectedImage.src = selectedPhotos[pos.index - 1].src;
+            selectedVideo.src = URL.createObjectURL(capturedVideos[pos.index - 1]);
+            selectedVideo.autoplay = true;
+            selectedVideo.muted = true;
+            selectedVideo.playsInline = true;
+            selectedVideo.loop = true;
+
             const rotation = pos.rotation || 0;
 
             selectedImage.onload = function() {
@@ -300,6 +346,41 @@
                 }
             };
 
+            selectedVideo.addEventListener("loadeddata", function() {
+                selectedVideo.play();
+                const frameVideo = new Image();
+                frameVideo.src = frameImageSrc;
+
+                function drawVideoFrame() {
+                    const tempVideoCanvas = document.createElement("canvas");
+                    const tempVideoCtx = tempVideoCanvas.getContext("2d");
+
+                    if (rotation % 180 === 90) {
+                        tempVideoCanvas.width = pos.height;
+                        tempVideoCanvas.height = pos.width;
+                    } else {
+                        tempVideoCanvas.width = pos.width;
+                        tempVideoCanvas.height = pos.height;
+                    }
+
+                    tempVideoCtx.save();
+                    tempVideoCtx.translate(tempVideoCanvas.width / 2, tempVideoCanvas.height / 2);
+                    tempVideoCtx.rotate((rotation * Math.PI) / 180);
+                    tempVideoCtx.drawImage(selectedVideo, -pos.width / 2, -pos.height / 2, pos.width, pos.height);
+                    tempVideoCtx.restore();
+
+                    ctxVideo.drawImage(tempVideoCanvas, pos.x, pos.y, pos.width, pos.height);
+                    ctxVideo.drawImage(frameVideo, 0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
+                    requestAnimationFrame(drawVideoFrame);
+
+                }
+
+                drawVideoFrame();
+                loadedVideos++;
+                setTimeout(startVideoRecord, 1000);
+
+            });
+
             // Tambahkan tombol retake jika belum ada
             let buttonId = "retake-btn-" + (pos.index - 1);
             if ($("#" + buttonId).length === 0) {
@@ -315,6 +396,45 @@
             }
         });
     });
+
+    function startVideoRecord() {
+        if (recordingStarted) return;
+
+        let stream = frameVideoCanvas.captureStream(30);
+        mediaRecorder = new MediaRecorder(stream, {
+            mimeType: "video/webm; codecs=vp9"
+        });
+
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                recordedChunks = [];
+                recordedChunks.push(event.data);
+            }
+        };
+
+        mediaRecorder.onstop = async () => {
+            const webmBlob = new Blob(recordedChunks, {
+                type: "video/webm"
+            });
+            console.log("WebM video saved as Blob:", webmBlob);
+
+            // Simpan hasil dalam variabel global
+            videoBlob = webmBlob;
+
+            recordedChunks = [];
+        };
+
+        mediaRecorder.start();
+        recordingStarted = true;
+        console.log("Perekaman dimulai...");
+
+        // Hentikan rekaman setelah 3 detik
+        setTimeout(() => {
+            mediaRecorder.stop();
+            $('#select-filter').text('Select Filter');
+            $('#select-filter').removeAttr('disabled');
+        }, 4000);
+    }
 
 
     $('#select-filter').on('click', function(e) {
@@ -337,14 +457,11 @@
         const formData = new FormData();
         formData.append('photos', blobResultImage);
 
-        // fix->retake
-        capturedVideos.forEach((blob, index) => {
-            formData.append('video-' + (index + 1), blob);
-        });
-
         capturedPhotos.forEach((blob, index) => {
             formData.append('photos-' + (index + 1), blob);
         });
+
+        formData.append('video', videoBlob);
 
         console.log("Isi FormData:");
         for (let [key, value] of formData.entries()) {

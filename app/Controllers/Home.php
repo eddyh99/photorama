@@ -426,6 +426,7 @@ class Home extends BaseController
     public function cetakPDF($img, $print)
     {
         $date = date('Y-m-d-His');
+        $rotatedPath = null;
 
         // Konfigurasi Dompdf
         $options = new Options();

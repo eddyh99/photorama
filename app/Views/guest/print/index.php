@@ -12,8 +12,14 @@
                                     alt="Photo Booth 1">
                             </div>
                             <div class="col-md-6 text-center">
-                                <canvas id="frame-video" class="img-fluid mt-4" style="max-height: 75vh; object-fit: contain;"></canvas>
+                                <video
+                                    src="<?= BASE_URL ?>assets/photobooth/<?= $dir ?>/video.mp4"
+                                    class="img-fluid mt-4"
+                                    style="max-height: 75vh; object-fit: contain;"
+                                    autoplay loop muted>
+                                </video>
                             </div>
+
                         </div>
                         <p class="text-white text-center mt-3 fs-3">- THANK YOU -</p>
                     </div>
@@ -30,8 +36,8 @@
                     <p class="text-white">OR</p>
                     <div class="d-grid gap-2">
                         <!-- <button class="btn btn-warning">EMAIL SOFT COPY</button> -->
-                        <button id="print" class="btn btn-info" hidden>PRINT</button>
-                        <button id="submit" href="#" class="btn btn-primary" onclick="save(event)" disabled>DONE</button>
+                        <button id="print" class="btn btn-info">PRINT</button>
+                        <button id="submit" href="#" class="btn btn-primary" onclick="save(event)">DONE</button>
                     </div>
                 </div>
             </div>
