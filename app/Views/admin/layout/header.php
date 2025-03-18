@@ -10,7 +10,7 @@
         <meta name="description" content="" />
 
         <!-- Favicon -->
-        <link rel="icon" type="image/x-icon" href="<?= BASE_URL ?>assets/img/logo.png" />
+        <!-- <link rel="icon" type="image/x-icon" href="assets/img/logo.png" /> -->
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />

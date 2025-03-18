@@ -27,6 +27,8 @@
     const capturedPhotos = [];
     const capturedVideos = [];
     let blobResultImage;
+    let videoBlob;
+    let recordingStarted = false;
     let pictureCount = 0;
     let mediaRecorder, recordedChunks;
     const positions = [];
@@ -344,6 +346,7 @@
 
                 drawVideoFrame();
                 loadedVideos++;
+                setTimeout(startVideoRecord, 1000);
 
             });
 
@@ -362,6 +365,45 @@
             }
         });
     });
+
+    function startVideoRecord() {
+        if (recordingStarted) return;
+
+        let stream = frameVideoCanvas.captureStream(30);
+        mediaRecorder = new MediaRecorder(stream, {
+            mimeType: "video/webm; codecs=vp9"
+        });
+
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                recordedChunks = [];
+                recordedChunks.push(event.data);
+            }
+        };
+
+        mediaRecorder.onstop = async () => {
+            const webmBlob = new Blob(recordedChunks, {
+                type: "video/webm"
+            });
+            console.log("WebM video saved as Blob:", webmBlob);
+
+            // Simpan hasil dalam variabel global
+            videoBlob = webmBlob;
+
+            recordedChunks = [];
+        };
+
+        mediaRecorder.start();
+        recordingStarted = true;
+        console.log("Perekaman dimulai...");
+
+        // Hentikan rekaman setelah 3 detik
+        setTimeout(() => {
+            mediaRecorder.stop();
+            $('#select-filter').text('Select Filter');
+            $('#select-filter').removeAttr('disabled');
+        }, 4000);
+    }
 
 
     $('#select-filter').on('click', function(e) {
@@ -384,14 +426,11 @@
         const formData = new FormData();
         formData.append('photos', blobResultImage);
 
-        // fix->retake
-        capturedVideos.forEach((blob, index) => {
-            formData.append('video-' + (index + 1), blob);
-        });
-
         capturedPhotos.forEach((blob, index) => {
             formData.append('photos-' + (index + 1), blob);
         });
+
+        formData.append('video', videoBlob);
 
         console.log("Isi FormData:");
         for (let [key, value] of formData.entries()) {

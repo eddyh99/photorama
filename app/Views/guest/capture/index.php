@@ -15,7 +15,7 @@
             <div class="bg-warning overflow-auto" style="height: 85vh">
                 <div class="row row-cols-2 mx-2 my-2" id="photos"></div>
                 <canvas id="frame" class="w-100 p-2" style="max-height: 72vh;" hidden></canvas>
-                <canvas id="frame-video" class="w-100 p-2" style="max-height: 72vh;"></canvas>
+                <canvas id="frame-video" class="w-100 p-2" style="max-height: 72vh;" hidden></canvas>
                 <div id="btn-action" class="row d-flex justify-content-center text-center w-100 d-none">
                     <!--<div class="col-12 mb-2">-->
                     <!--    <button onclick="change_frame()" class="btn btn-info">-->
@@ -35,7 +35,7 @@
             </div>
             <div class="mt-4">
                 <button id="select" class="btn btn-danger w-100 fs-4 py-2" disabled>SELECT</button>
-                <button id="select-filter" class="btn btn-primary w-100 fs-4 py-2" hidden>SELECT FILTER</button>
+                <button id="select-filter" class="btn btn-primary w-100 fs-4 py-2" disabled>Menyiapkan...</button>
             </div>
         </div>
     </div>
