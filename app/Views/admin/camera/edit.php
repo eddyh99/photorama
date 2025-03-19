@@ -26,12 +26,12 @@
                         <h5 class="mb-1">Tambah Backgorund</h5>
                     </div>
                     <div class="card-body">
-                        <form action="<?= BASE_URL ?>admin/price/update/<?= $camera->id ?>" method="POST">
+                        <form action="<?= BASE_URL ?>admin/camera/update/<?= $camera->id ?>" method="POST">
                             <div class="row">
                             <div class="mb-3">
                                 <label class="form-label" for="cabang_id">Cabang</label>
                                 <div class="input-group input-group-merge">
-                                    <select name="cabang_id" class="form-control text-center" required>
+                                    <select name="cabang_id" class="form-control text-center">
                                         <option value="" selected disabled><?= $camera->nama_cabang ?></option>
                                     </select>
                                 </div>

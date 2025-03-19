@@ -109,46 +109,31 @@ class Camera extends BaseController
         }
     }
 
-    public function update() {
-        $validation = Services::validation(); // Ambil instance validasi
-        $postData = $this->request->getPost();
-        $mdata = [];
+    public function update($id) {
+        $rules = $this->validate([
+            'camera1' => 'required|integer',
+            'camera2' => 'required|integer',
+        ]);
 
-        // validasi cabang
-        if (!isset($postData['cabang_id'])) {
-            session()->setFlashdata('failed', 'Cabang ID harus diisi!');
-            return redirect()->to(base_url("admin/camera/set"))->withInput();
+        // Checking Validation
+        if (!$rules){
+            session()->setFlashdata('failed', $this->validation->listErrors());
+            return redirect()->to(BASE_URL . "admin/qris/add")->withInput();
         }
 
-        $cabangId = $postData['cabang_id'];
-        unset($postData['cabang_id']); //hapus cabang_id
+        $mdata = [
+            'camera1'    => $this->request->getVar('camera1'),
+            'camera2' =>  $this->request->getVar('camera2')
+        ];
 
-        // Loop semua input selain cabang_id untuk menyusun array data
-        foreach ($postData as $field => $value) {
-            $validation->setRule($field, ucfirst(str_replace('_', ' ', $field)), 'required');
-
-            // Setiap screen menjadi array sendiri dengan cabang_id
-            $mdata[] = [
-                "display" => (string) $field,
-                "time"    => $value,
-                "cabang_id" => (string) $cabangId
-            ];
-        }
-
-        // Jalankan validasi
-        if (!$validation->withRequest($this->request)->run()) {
-            session()->setFlashdata('failed', $validation->listErrors());
-            return redirect()->to(base_url("admin/camera/set"))->withInput();
-        }
-
-        $result = $this->camera->updatecamera($mdata);
+        $result = $this->camera->updateCamera($mdata, $id);
 
         if ($result->code == 201) {
             session()->setFlashdata('success', $result->message);
             return redirect()->to(BASE_URL . "admin/camera");
         }else{
             session()->setFlashdata('failed', $result->message);
-            return redirect()->to(BASE_URL . "admin/camera/set")->withInput();
+            return redirect()->to(BASE_URL . "admin/camera/edit/" .$id)->withInput();
         }
     }
 }
