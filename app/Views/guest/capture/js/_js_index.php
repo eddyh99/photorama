@@ -120,68 +120,67 @@
     }
 
     function startRecording(stream, targetWidth, targetHeight, x, y) {
-    recordedChunks = []; // Reset recorded chunks for new recording
+        recordedChunks = []; // Reset recorded chunks for new recording
 
-    // Buat canvas rekaman sesuai ukuran aspect ratio
-    const recordingCanvas = document.createElement('canvas');
-    recordingCanvas.width = targetWidth;
-    recordingCanvas.height = targetHeight;
-    const recordingContext = recordingCanvas.getContext('2d');
+        // Buat canvas rekaman sesuai ukuran aspect ratio
+        const recordingCanvas = document.createElement('canvas');
+        recordingCanvas.width = targetWidth;
+        recordingCanvas.height = targetHeight;
+        const recordingContext = recordingCanvas.getContext('2d');
 
-    // Ambil video dari stream asli
-    const videoTrack = stream.getVideoTracks()[0];
-    const videoElement = document.createElement('video');
-    videoElement.srcObject = new MediaStream([videoTrack]);
-    videoElement.play();
+        // Ambil video dari stream asli
+        const videoTrack = stream.getVideoTracks()[0];
+        const videoElement = document.createElement('video');
+        videoElement.srcObject = new MediaStream([videoTrack]);
+        videoElement.play();
 
-    function drawFrame() {
-        if (videoTrack.readyState === "live") {
-            recordingContext.clearRect(0, 0, recordingCanvas.width, recordingCanvas.height);
+        function drawFrame() {
+            if (videoTrack.readyState === "live") {
+                recordingContext.clearRect(0, 0, recordingCanvas.width, recordingCanvas.height);
 
-            // Crop video sesuai aspect ratio
-            recordingContext.drawImage(
-                videoElement,
-                x, y, targetWidth, targetHeight, // Area yang diambil dari video
-                0, 0, targetWidth, targetHeight  // Tempatkan ke recordingCanvas
-            );
+                // Crop video sesuai aspect ratio
+                recordingContext.drawImage(
+                    videoElement,
+                    x, y, targetWidth, targetHeight, // Area yang diambil dari video
+                    0, 0, targetWidth, targetHeight // Tempatkan ke recordingCanvas
+                );
 
-            requestAnimationFrame(drawFrame);
+                requestAnimationFrame(drawFrame);
+            }
         }
+
+        drawFrame();
+
+        // Ambil stream dari recordingCanvas untuk MediaRecorder
+        const recordedStream = recordingCanvas.captureStream();
+
+        mediaRecorder = new MediaRecorder(recordedStream);
+
+        mediaRecorder.ondataavailable = event => {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, {
+                type: 'video/mp4'
+            });
+
+            capturedVideos.push(blob);
+
+            const recordedVideo = document.createElement('video');
+            recordedVideo.src = URL.createObjectURL(blob);
+            recordedVideo.controls = true;
+            recordedVideoContainer.appendChild(recordedVideo);
+        };
+
+        mediaRecorder.start();
     }
-
-    drawFrame();
-
-    // Ambil stream dari recordingCanvas untuk MediaRecorder
-    const recordedStream = recordingCanvas.captureStream();
-
-    mediaRecorder = new MediaRecorder(recordedStream);
-
-    mediaRecorder.ondataavailable = event => {
-        if (event.data.size > 0) {
-            recordedChunks.push(event.data);
-        }
-    };
-
-    mediaRecorder.onstop = () => {
-        const blob = new Blob(recordedChunks, { type: 'video/mp4' });
-
-        capturedVideos.push(blob);
-
-        const recordedVideo = document.createElement('video');
-        recordedVideo.src = URL.createObjectURL(blob);
-        recordedVideo.controls = true;
-        recordedVideoContainer.appendChild(recordedVideo);
-    };
-
-    mediaRecorder.start();
-}
 
 
     // Countdown and capture photo
     async function startPictureCountdown(idx = null) {
-        $("#previewkanan").addClass("d-none");
-        $("#videoarea").removeClass("col-md-8");
-        $("#videoarea").addClass("col-md-12");
 
         if (pictureCount < totalPhotos) {
             pictureCount += 1;
@@ -269,8 +268,8 @@
                         if (selectedPhotos.length === totalPhotos) {
                             $('#select').prop('disabled', false);
                             $("#previewkanan").removeClass("d-none");
-                            $("#videoarea").removeClass("col-md-12");
-                            $("#videoarea").addClass("col-md-8");
+                            $("#videoarea").removeClass("col-lg-12");
+                            $("#videoarea").addClass("col-lg-8");
                             $("#select").click();
                         } else {
                             $('#select').prop('disabled', true);
@@ -409,7 +408,7 @@
             };
 
             selectedVideo.addEventListener("loadeddata", function() {
-                if(recordingStarted) return;
+                if (recordingStarted) return;
                 selectedVideo.play();
                 const frameVideo = new Image();
                 frameVideo.src = frameImageSrc;
