@@ -64,6 +64,13 @@
         border-radius: 10px;
     }
 
+    .video-container span {
+        position: absolute;
+        z-index: 2;
+        /* Pastikan di atas video */
+        font-size: 1.5rem;
+    }
+
     video {
         width: auto;
         height: auto;
