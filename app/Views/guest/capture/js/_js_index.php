@@ -154,6 +154,10 @@
         if (pictureCount < totalPhotos) {
             pictureCount += 1;
             if (idx !== null && idx !== undefined) {
+                if (video.srcObject) {
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                    video.srcObject = null;
+                }
                 await startWebcam(idx + 1);
             }
 
@@ -192,7 +196,7 @@
                         x,
                         y
                     } = idx !== null && idx !== undefined ?
-                        getAspectRatio(idx +1) :
+                        getAspectRatio(idx + 1) :
                         getAspectRatio();
 
                     // Buat canvas sesuai dengan ukuran yang ingin diambil
@@ -219,7 +223,6 @@
                         if (idx !== null && idx !== undefined) {
                             capturedPhotos[idx] = blob;
                             selectedPhotos[idx] = photo;
-                            mediaRecorder.stop();
                             $('#select').click();
                         } else {
                             selectedPhotos.push(photo);
@@ -374,6 +377,7 @@
             };
 
             selectedVideo.addEventListener("loadeddata", function() {
+                if(recordingStarted) return;
                 selectedVideo.play();
                 const frameVideo = new Image();
                 frameVideo.src = frameImageSrc;
