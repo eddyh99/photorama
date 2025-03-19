@@ -52,7 +52,7 @@
         }
     }
     // Access the webcam
-    async function startWebcam() {
+    async function startWebcam(idx = null) {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
@@ -73,7 +73,12 @@
 
             video.addEventListener('play', () => {
                 const frame = positions[pictureCount - 1] || positions[0];
-                const { targetWidth, targetHeight, x, y } = getAspectRatio();
+                const {
+                    targetWidth,
+                    targetHeight,
+                    x,
+                    y
+                } = getAspectRatio(idx);
 
                 // Ukuran canvas sesuai video asli agar ada area hitam di sekitarnya
                 overlayCanvas.width = video.videoWidth;
@@ -148,6 +153,9 @@
 
         if (pictureCount < totalPhotos) {
             pictureCount += 1;
+            if (idx !== null && idx !== undefined) {
+                await startWebcam(idx + 1);
+            }
 
             let countdown = <?= json_encode($countdown) ?> ?? 4;
 
@@ -177,7 +185,15 @@
                 } else {
                     clearInterval(countdownInterval);
                     await flash();
-                    const { targetWidth, targetHeight, x, y } = getAspectRatio();
+
+                    const {
+                        targetWidth,
+                        targetHeight,
+                        x,
+                        y
+                    } = idx !== null && idx !== undefined ?
+                        getAspectRatio(idx +1) :
+                        getAspectRatio();
 
                     // Buat canvas sesuai dengan ukuran yang ingin diambil
                     const snapshotCanvas = document.createElement('canvas');
@@ -203,6 +219,7 @@
                         if (idx !== null && idx !== undefined) {
                             capturedPhotos[idx] = blob;
                             selectedPhotos[idx] = photo;
+                            mediaRecorder.stop();
                             $('#select').click();
                         } else {
                             selectedPhotos.push(photo);
@@ -240,8 +257,9 @@
         }
     }
 
-    function getAspectRatio() {
-        const frame = positions[pictureCount - 1] || positions[0];
+    function getAspectRatio(idx) {
+
+        const frame = idx ? positions[idx - 1] : positions[pictureCount - 1] || positions[0];
         const aspectRatio = frame.width / frame.height;
 
         // Ukuran asli video
