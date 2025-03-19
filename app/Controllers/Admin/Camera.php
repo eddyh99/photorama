@@ -40,14 +40,12 @@ class Camera extends BaseController
 
     public function edit($id_cabang)
     {
-        $cabang = $this->cabang->allCabang();
-        $camera = $this->camera->getBy_cabang(base64_decode($id_cabang));
+        $camera = $this->camera->getBy_Id(base64_decode($id_cabang));
         $mdata = [
             'title'     => 'Cabang - ' . NAMETITLE,
             'content'   => 'admin/camera/edit',
             'extra'     => 'admin/camera/js/_js_create',
             'menuactive_bg'   => 'active open',
-            'cabang'    => $cabang,
             'camera'    => $camera
         ];
 
@@ -60,7 +58,7 @@ class Camera extends BaseController
     }
 
     public function destroy($id) {
-        $result = $this->timer->deleteById(base64_decode($id));
+        $result = $this->camera->deleteById(base64_decode($id));
         if (@$result->code!=201){
             session()->setFlashdata('failed', $result->message);
 	    } else {

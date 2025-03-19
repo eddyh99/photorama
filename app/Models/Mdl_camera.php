@@ -31,10 +31,15 @@ class Mdl_camera extends Model
     public function getBy_Id($id)
     {
         $sql = "SELECT
-                    *
+                    camera.id,
+                    camera.camera1,
+                    camera.camera2,
+                    cabang.nama_cabang
                 FROM
                     camera
-                WHERE id = ?";
+                    INNER JOIN cabang ON cabang.id = camera.cabang_id
+                WHERE
+                    camera.id = ?";
         return $this->db->query($sql, [$id])->getRow();
     }
 
