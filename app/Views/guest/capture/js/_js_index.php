@@ -52,7 +52,7 @@
         }
     }
     // Access the webcam
-    async function startWebcam() {
+    async function startWebcam(idx = null) {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
@@ -73,25 +73,16 @@
 
             video.addEventListener('play', () => {
                 const frame = positions[pictureCount - 1] || positions[0];
-                const aspectRatio = frame.width / frame.height;
-
-                // Ukuran asli video
-                const videoWidth = video.videoWidth;
-                const videoHeight = video.videoHeight;
-
-                // Tentukan ukuran target berdasarkan rasio
-                let targetWidth = videoWidth;
-                let targetHeight = targetWidth / aspectRatio;
-
-                // Jika tinggi lebih besar dari tinggi asli video, sesuaikan berdasarkan tinggi
-                if (targetHeight > videoHeight) {
-                    targetHeight = videoHeight;
-                    targetWidth = targetHeight * aspectRatio;
-                }
+                const {
+                    targetWidth,
+                    targetHeight,
+                    x,
+                    y
+                } = getAspectRatio(idx);
 
                 // Ukuran canvas sesuai video asli agar ada area hitam di sekitarnya
-                overlayCanvas.width = videoWidth;
-                overlayCanvas.height = videoHeight;
+                overlayCanvas.width = video.videoWidth;
+                overlayCanvas.height = video.videoHeight;
 
                 const context = overlayCanvas.getContext('2d');
 
@@ -101,12 +92,8 @@
                         context.fillStyle = "black";
                         context.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
-                        // Hitung posisi tengah agar video tidak gepeng
-                        const x = (videoWidth - targetWidth) / 2;
-                        const y = (videoHeight - targetHeight) / 2;
-
                         context.save();
-                        context.translate(videoWidth / 2, videoHeight / 2); // Pusatkan rotasi
+                        context.translate(video.videoWidth / 2, video.videoHeight / 2); // Pusatkan rotasi
                         context.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
                         context.scale(-1, 1); // Flip horizontal (opsional)
 
@@ -120,7 +107,7 @@
                 }
 
                 renderFrame();
-                startRecording(stream);
+                startRecording(stream, targetWidth, targetHeight, x, y);
                 startPictureCountdown();
             });
 
@@ -132,9 +119,42 @@
         }
     }
 
-    function startRecording(stream) {
+    function startRecording(stream, targetWidth, targetHeight, x, y) {
         recordedChunks = []; // Reset recorded chunks for new recording
-        mediaRecorder = new MediaRecorder(stream);
+
+        // Buat canvas rekaman sesuai ukuran aspect ratio
+        const recordingCanvas = document.createElement('canvas');
+        recordingCanvas.width = targetWidth;
+        recordingCanvas.height = targetHeight;
+        const recordingContext = recordingCanvas.getContext('2d');
+
+        // Ambil video dari stream asli
+        const videoTrack = stream.getVideoTracks()[0];
+        const videoElement = document.createElement('video');
+        videoElement.srcObject = new MediaStream([videoTrack]);
+        videoElement.play();
+
+        function drawFrame() {
+            if (videoTrack.readyState === "live") {
+                recordingContext.clearRect(0, 0, recordingCanvas.width, recordingCanvas.height);
+
+                // Crop video sesuai aspect ratio
+                recordingContext.drawImage(
+                    videoElement,
+                    x, y, targetWidth, targetHeight, // Area yang diambil dari video
+                    0, 0, targetWidth, targetHeight // Tempatkan ke recordingCanvas
+                );
+
+                requestAnimationFrame(drawFrame);
+            }
+        }
+
+        drawFrame();
+
+        // Ambil stream dari recordingCanvas untuk MediaRecorder
+        const recordedStream = recordingCanvas.captureStream();
+
+        mediaRecorder = new MediaRecorder(recordedStream);
 
         mediaRecorder.ondataavailable = event => {
             if (event.data.size > 0) {
@@ -158,14 +178,19 @@
         mediaRecorder.start();
     }
 
+
     // Countdown and capture photo
     async function startPictureCountdown(idx = null) {
-        $("#previewkanan").addClass("d-none");
-        $("#videoarea").removeClass("col-md-8");
-        $("#videoarea").addClass("col-md-12");
 
         if (pictureCount < totalPhotos) {
             pictureCount += 1;
+            if (idx !== null && idx !== undefined) {
+                if (video.srcObject) {
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                    video.srcObject = null;
+                }
+                await startWebcam(idx + 1);
+            }
 
             let countdown = <?= json_encode($countdown) ?> ?? 4;
 
@@ -179,12 +204,10 @@
 
             // Coba mainkan audio dengan error handling
             let playPromise = audio.play();
-
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     console.log("Audio is playing successfully!");
                 }).catch(error => {
-                    // bug chrome
                     console.warn("Audio play was prevented:", error);
                 });
             }
@@ -198,65 +221,103 @@
                     clearInterval(countdownInterval);
                     await flash();
 
-                    // Hide the countdown overlay
-                    // countdownOverlay.style.display = 'none';
+                    const {
+                        targetWidth,
+                        targetHeight,
+                        x,
+                        y
+                    } = idx !== null && idx !== undefined ?
+                        getAspectRatio(idx + 1) :
+                        getAspectRatio();
 
-                    // Capture photo
+                    // Buat canvas sesuai dengan ukuran yang ingin diambil
                     const snapshotCanvas = document.createElement('canvas');
-                    snapshotCanvas.width = video.videoWidth || 1080;
-                    snapshotCanvas.height = video.videoHeight || 768;
+                    snapshotCanvas.width = targetWidth;
+                    snapshotCanvas.height = targetHeight;
 
                     const snapshotContext = snapshotCanvas.getContext('2d');
-                    snapshotContext.drawImage(video, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
 
+                    // Flip horizontal (mirror)
                     snapshotContext.save();
+                    snapshotContext.translate(targetWidth, 0);
                     snapshotContext.scale(-1, 1);
-                    snapshotContext.drawImage(video, -snapshotCanvas.width, 0, snapshotCanvas.width, snapshotCanvas.height);
+
+                    // Gambar hanya area yang terlihat
+                    snapshotContext.drawImage(video, x, y, targetWidth, targetHeight, 0, 0, targetWidth, targetHeight);
                     snapshotContext.restore();
 
-                    const photo = new Image();
                     snapshotCanvas.toBlob(function(blob) {
                         let photoURL = URL.createObjectURL(blob);
+                        const photo = new Image();
                         photo.src = photoURL;
 
                         if (idx !== null && idx !== undefined) {
-
-                            capturedPhotos[idx] = blob
+                            capturedPhotos[idx] = blob;
                             selectedPhotos[idx] = photo;
                             $('#select').click();
-
                         } else {
                             selectedPhotos.push(photo);
                             capturedPhotos.push(blob);
                         }
 
                         photosContainer.innerHTML += `
-                        <div class="col px-2">
+                    <div class="col px-2">
                         <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected">
-                        </div>`;
+                    </div>`;
 
                         if (selectedPhotos.length === totalPhotos) {
                             $('#select').prop('disabled', false);
                             $("#previewkanan").removeClass("d-none");
-                            $("#videoarea").removeClass("col-md-12");
-                            $("#videoarea").addClass("col-md-8");
+                            $("#videoarea").removeClass("col-lg-12");
+                            $("#videoarea").addClass("col-lg-8");
                             $("#select").click();
                         } else {
                             $('#select').prop('disabled', true);
                         }
                     }, 'image/jpeg', 0.7);
+
                     mediaRecorder.stop();
+
                     // Prepare for the next photo
                     if (pictureCount < totalPhotos) {
-                        setTimeout(() => {
-                            startRecording(video.srcObject); // Start a new recording
-                            startPictureCountdown(); // Start the countdown for the next photo
+                        setTimeout(async () => {
+                            startRecording(video.srcObject);
+                            await startWebcam();
+                            startPictureCountdown();
                         }, 2000);
                     }
                 }
             }, 1000);
         }
     }
+
+    function getAspectRatio(idx) {
+
+        const frame = idx ? positions[idx - 1] : positions[pictureCount - 1] || positions[0];
+        const aspectRatio = frame.width / frame.height;
+
+        // Ukuran asli video
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
+
+        // Tentukan ukuran target berdasarkan aspect ratio
+        let targetWidth = videoWidth;
+        let targetHeight = targetWidth / aspectRatio;
+
+        // Jika tinggi lebih besar dari tinggi video asli, sesuaikan berdasarkan tinggi
+        if (targetHeight > videoHeight) {
+            targetHeight = videoHeight;
+            targetWidth = targetHeight * aspectRatio;
+        }
+
+        return {
+            targetWidth,
+            targetHeight,
+            x: (videoWidth - targetWidth) / 2,
+            y: (videoHeight - targetHeight) / 2
+        };
+    }
+
 
     $(function() {
         $("#previewkanan").addClass("d-none");
@@ -347,6 +408,7 @@
             };
 
             selectedVideo.addEventListener("loadeddata", function() {
+                if (recordingStarted) return;
                 selectedVideo.play();
                 const frameVideo = new Image();
                 frameVideo.src = frameImageSrc;

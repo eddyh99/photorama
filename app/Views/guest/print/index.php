@@ -2,7 +2,7 @@
     <div class="mx-5 py-5 h-100">
         <div class="row text-black h-100">
             <!-- Bagian kiri (SELECT FRAME) -->
-            <div class="col-8 d-flex flex-column justify-content-center h-100">
+            <div class="col-lg-8 col-md-12 d-flex flex-column justify-content-center">
                 <div class="mt-2 d-flex justify-content-center align-items-center h-100" style="background-image: url(<?= $bg_container ?>); ">
                     <div class="container">
                         <div class="row justify-content-center">
@@ -27,7 +27,7 @@
 
             </div>
             <!-- Bagian kanan (PREVIEW FRAME) -->
-            <div class="col-4 d-flex flex-column h-100">
+            <div class="col-lg-4 col-md-12 d-flex flex-column">
                 <div class="mb-4 flex-grow-1 mt-2 rounded d-flex flex-column align-items-center justify-content-center">
                     <div class="bg-white p-4 mb-2">
                         <?= $qrcode ?>

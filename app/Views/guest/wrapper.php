@@ -25,6 +25,18 @@ echo '<style>
     text-align: center;
     font-weight: bold;
 }
+
+    @media (min-width: 768px) { /* md breakpoint */
+    .h-md-50 {
+        height: 50%;
+    }
+}
+
+@media (min-width: 992px) { /* lg breakpoint */
+    .h-lg-100 {
+        height: 100%;
+    }
+}
 </style>
     <div id="offlineOverlay" class="offline-overlay">
         <p>Terjadi gangguan koneksi internet, silahkan tunggu!</p>

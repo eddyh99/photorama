@@ -19,32 +19,45 @@
             <div class="col-lg-12 mb-4 order-1">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <a href="<?= BASE_URL ?>admin/price" class="me-2">
+                        <a href="<?= BASE_URL ?>admin/camera" class="me-2">
                             <i class="bx bx-chevron-left fs-2"></i>
                             Back
                         </a>
                         <h5 class="mb-1">Tambah Backgorund</h5>
                     </div>
                     <div class="card-body">
-                        <form action="<?= BASE_URL ?>admin/price/update/<?= $price->id ?>" method="POST">
-                            <div class="row row-cols-2">
+                        <form action="<?= BASE_URL ?>admin/camera/update/<?= $camera->id ?>" method="POST">
+                            <div class="row">
                             <div class="mb-3">
-                                    <label class="form-label" for="username">Harga</label>
-                                    <div class="input-group input-group-merge">
-                                        <input class="form-control" name="harga" type="number" value="<?= $price->harga ?? '' ?>"/>
-                                    </div>
+                                <label class="form-label" for="cabang_id">Cabang</label>
+                                <div class="input-group input-group-merge">
+                                    <select name="cabang_id" class="form-control text-center">
+                                        <option value="" selected disabled><?= $camera->nama_cabang ?></option>
+                                    </select>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label" for="namabarang">Cabang</label>
-                                    <div class="input-group input-group-merge">
-                                        <select name="cabang_id" class="form-control text-center">
-                                            <option value="" selected disabled>--- Pilih Cabang ---</option>
-                                            <?php foreach($cabang as $c): ?>
-                                            <option value="<?= $c->id ?>" <?= $c->id == $price->cabang_id ? 'selected' : '' ?>><?= $c->nama_cabang ?></option>
-                                            <?php endforeach ?>
-                                        </select>
-                                    </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="camera1">Camera 1 Position</label>
+                                <div class="input-group input-group-merge">
+                                    <select id="camera1" name="camera1" class="form-select" required>
+                                        <option value="0" <?= $camera->camera1 == 0 ? 'selected' : '' ?>>0°</option>
+                                        <option value="90" <?= $camera->camera1 == 90 ? 'selected' : '' ?>>90°</option>
+                                        <option value="180" <?= $camera->camera1 == 180 ? 'selected' : '' ?>>180°</option>
+                                        <option value="270" <?= $camera->camera1 == 270 ? 'selected' : '' ?>>270°</option>
+                                    </select>
                                 </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="camera2">Camera 2 Position</label>
+                                <div class="input-group input-group-merge">
+                                    <select id="camera2" name="camera2" class="form-select" required>
+                                    <option value="0" <?= $camera->camera2 == 0 ? 'selected' : '' ?>>0°</option>
+                                        <option value="90" <?= $camera->camera2 == 90 ? 'selected' : '' ?>>90°</option>
+                                        <option value="180" <?= $camera->camera2 == 180 ? 'selected' : '' ?>>180°</option>
+                                        <option value="270" <?= $camera->camera2 == 270 ? 'selected' : '' ?>>270°</option>
+                                    </select>
+                                </div>
+                            </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </form>
