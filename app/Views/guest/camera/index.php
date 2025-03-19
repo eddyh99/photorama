@@ -5,7 +5,7 @@
 </style>
 <div class="h-100 w-100" id="content-bg">
     <div class="mx-5 py-5 h-100">
-        <h2 class="text-center">SELECT YOUR CAMERA</h2>
+        <h3 class="text-center mt-4">SELECT YOUR CAMERA</h3>
         <div class="row text-black h-75 g-4">
             <!-- Bagian kiri  -->
             <div class="col-lg-6 col-md-12">

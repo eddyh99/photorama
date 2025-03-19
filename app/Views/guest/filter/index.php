@@ -18,7 +18,7 @@
     <div class="mx-5 my-3 flex-grow-1">
         <div class="row text-black h-100">
             <!-- Bagian kiri (SELECT FRAME) -->
-            <div class="col-8 d-flex flex-column min-vh-0">
+            <div class="col-lg-8 col-md-12 d-flex flex-column">
                 <div class="flex-grow-1 mt-2 d-flex justify-content-center align-items-center" 
                      style="background-image: url(<?= $bg_container ?>); max-height: 90vh; overflow: hidden;">
                     <img id="photo" class="img-fluid d-none" 
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <!-- Bagian kanan (PREVIEW FRAME) -->
-            <div class="col-4 d-flex flex-column min-vh-0">
+            <div class="col-lg-4 col-md-12 d-flex flex-column">
                 <div class="bg-warning mb-4 flex-grow-1 mt-2 rounded" style="max-height: 80vh; overflow: hidden;">
                     <div class="d-flex flex-column align-items-center justify-content-center h-100 gap-4">
                         <h2 class="fw-bold text-white">SELECT FILTER</h2>

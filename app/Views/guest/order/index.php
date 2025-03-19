@@ -16,10 +16,10 @@
     <div class="d-flex justify-content-center align-items-center h-100">
         <div class="container text-black h-100">
             <div class="row h-100">
-                <div class="col">
+                <div class="col d-none d-lg-block">
                     <!-- 1 of 3 -->
                 </div>
-                <div class="col-6 d-flex justify-content-center align-items-center">
+                <div class="col-lg-6 col-md-8 d-flex justify-content-center align-items-center">
                     <div class="card h-75 w-100" style="background-image: url('<?= $image ?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
                         <div class="card-body text-center d-flex flex-column justify-content-end">
                             <div>
