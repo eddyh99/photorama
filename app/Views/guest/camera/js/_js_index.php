@@ -21,9 +21,9 @@
     window.onload = async function() {
         devices = await getCameraDevices();
         if (devices.length > 0) {
-            captureCamera(video1, devices[0].deviceId, cameraRotation.camera1 || 0);
+            captureCamera(video1, devices[0].deviceId);
             if (devices.length > 1) {
-                captureCamera(video2, devices[1].deviceId, cameraRotation.camera2 || 0);
+                captureCamera(video2, devices[1].deviceId);
             } else {
                 setBlackScreen(video2);
             }
@@ -46,7 +46,7 @@
         }
     }
 
-    function captureCamera(video, deviceId, rotate) {
+    function captureCamera(video, deviceId) {
         navigator.mediaDevices.getUserMedia({
             video: {
                 deviceId: {
@@ -55,7 +55,7 @@
             }
         }).then(stream => {
             video.srcObject = stream;
-            video.style.transform = `rotate(${rotate}deg)`; 
+            // video.style.transform = `rotate(${rotate}deg)`; 
         }).catch(error => {
             console.error('Gagal mengakses kamera:', error);
             setBlackScreen(video);
