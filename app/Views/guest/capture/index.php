@@ -4,7 +4,7 @@
         <div id="videoarea" class="col-lg-12 col-md-12 d-flex flex-column p-3">
             <div class="video-container d-flex justify-content-center align-items-center" style="background-color: black;">
                 <span class="text-center text-white">Camera Loading...</span>
-                <video id="webcam" autoplay playsinline muted style="max-width: 100%; height: auto;"></video>
+                <video class="invisible" id="webcam" autoplay playsinline muted style="max-width: 100%; height: auto;"></video>
                 <canvas id="overlay"></canvas>
                 <div id="countdown-camera" class="countdown-overlay"></div>
             </div>
