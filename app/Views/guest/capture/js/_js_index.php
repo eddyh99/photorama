@@ -69,7 +69,6 @@
                 audio: false
             });
             video.srcObject = stream;
-            video.style.transform = `rotate(${cameraRotation[camera.id]}deg)`;
 
             video.addEventListener('play', () => {
                 const frame = positions[pictureCount - 1] || positions[0];
@@ -94,7 +93,7 @@
 
                         context.save();
                         context.translate(video.videoWidth / 2, video.videoHeight / 2); // Pusatkan rotasi
-                        context.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
+                        // context.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
                         context.scale(-1, 1); // Flip horizontal (opsional)
 
                         // Gambar video dengan ukuran sesuai aspect ratio
@@ -320,6 +319,8 @@
 
 
     $(function() {
+        overlayCanvas.style.transform = `rotate(${cameraRotation[camera.id]}deg)`;
+        overlayCanvas.style.transformOrigin = 'center';
         $("#previewkanan").addClass("d-none");
         $("#videoarea").removeClass("col-md-8");
         $("#videoarea").addClass("col-md-12");
