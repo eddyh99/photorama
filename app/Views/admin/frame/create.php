@@ -118,8 +118,7 @@
                         <div class="mb-3">
                                     <label class="form-label" for="namabarang">Cabang</label>
                                     <div class="input-group input-group-merge">
-                                        <select name="cabang_id" class="form-control text-center" required>
-                                            <option value="" selected disabled>--- Pilih Cabang ---</option>
+                                        <select name="cabang_id[]" class="text-center form-control cabangselect2" multiple='multiple' required>
                                             <?php foreach($cabang as $c): ?>
                                             <option value="<?= $c->id ?>"><?= $c->nama_cabang ?></option>
                                             <?php endforeach ?>

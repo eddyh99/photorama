@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use PhpParser\Node\Expr\FuncCall;
 
 class Frame extends BaseController
 {
@@ -56,6 +57,10 @@ class Frame extends BaseController
 
     public function store() {
         $rules = $this->validate([
+            'cabang_id' => [
+                'label' => 'Cabang',
+                'rules' => 'required|is_array'
+            ],
             'file' => [
                 'label' => 'Frame',
                 'rules' => 'uploaded[file]|is_image[file]|mime_in[file,image/png]'
@@ -83,24 +88,27 @@ class Frame extends BaseController
             $fileFrame->move('assets/img/frame', $frameName);
         }
 
-        $mdata = [
-            'frame' => [
-                'file'    => 'frame/' . $frameName,
-                'name' => $name,
-                'cabang_id' => $this->request->getVar('cabang_id')
-            ],
-            'koordinat' => json_decode($this->request->getVar('koordinat')) ?? []
-        ];
+        $cabang = $this->request->getVar('cabang_id');
 
-        $result = $this->frame->insertFrame($mdata);
+        foreach ($cabang as $cab) {
+            $mdata = [
+                'frame' => [
+                    'file'      => 'frame/' . $frameName,
+                    'name'      => $name,
+                    'cabang_id' => $cab
+                ],
+                'koordinat' => json_decode($this->request->getVar('koordinat')) ?? []
+            ];
 
-        if ($result->code == 201) {
-            session()->setFlashdata('success', $result->message);
-            return redirect()->to(BASE_URL . "admin/frame");
-        }else{
-            session()->setFlashdata('failed', $result->message);
-            return redirect()->to(BASE_URL . "admin/frame/add")->withInput();
+            $result = $this->frame->insertFrame($mdata);
+            if ($result->code != 201) {
+                session()->setFlashdata('failed', 'Gagal menyimpan frame');
+                return redirect()->to(BASE_URL . "admin/frame/add");
+            }
         }
+
+        session()->setFlashdata('success', "Berhasil menyimpan frame");
+        return redirect()->to(BASE_URL . "admin/frame");
     }
 
     public function update($id) {
