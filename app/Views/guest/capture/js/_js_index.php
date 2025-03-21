@@ -51,7 +51,7 @@
             window.location.reload();
         }
     }
-    // Access the webcam
+
     async function startWebcam(idx = null) {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
@@ -94,7 +94,7 @@
                         context.save();
                         context.translate(video.videoWidth / 2, video.videoHeight / 2); // Pusatkan rotasi
                         // context.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
-                        context.scale(-1, 1); // Flip horizontal (opsional)
+                        // context.scale(-1, 1); // Flip horizontal (opsional)
 
                         // Gambar video dengan ukuran sesuai aspect ratio
                         context.drawImage(video, x, y, targetWidth, targetHeight, -targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight);
@@ -108,6 +108,73 @@
                 renderFrame();
                 startRecording(stream, targetWidth, targetHeight, x, y);
                 startPictureCountdown();
+            });
+
+        } catch (error) {
+            console.error('Error accessing webcam: ', error);
+            if (confirm('No camera selected. Do you want to go back?')) {
+                window.location.href = "<?= BASE_URL ?>camera"
+            }
+        }
+    }
+
+    // Access the webcam
+    async function startWebcam2(idx = null) {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: {
+                        ideal: 1080
+                    },
+                    height: {
+                        ideal: 768
+                    },
+                    deviceId: {
+                        exact: camera.device
+                    }
+                },
+                audio: false
+            });
+            video.srcObject = stream;
+
+            video.addEventListener('play', () => {
+                const frame = positions[pictureCount - 1] || positions[0];
+                const {
+                    targetWidth,
+                    targetHeight,
+                    x,
+                    y
+                } = getAspectRatio(idx);
+
+                // Ukuran canvas sesuai video asli agar ada area hitam di sekitarnya
+                overlayCanvas.width = video.videoWidth;
+                overlayCanvas.height = video.videoHeight;
+
+                const context = overlayCanvas.getContext('2d');
+
+                function renderFrame() {
+                    if (!video.paused && !video.ended) {
+                        // Bersihkan dan isi dengan hitam
+                        context.fillStyle = "black";
+                        context.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+
+                        context.save();
+                        context.translate(video.videoWidth / 2, video.videoHeight / 2); // Pusatkan rotasi
+                        // context.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
+                        // context.scale(-1, 1); // Flip horizontal (opsional)
+
+                        // Gambar video dengan ukuran sesuai aspect ratio
+                        context.drawImage(video, x, y, targetWidth, targetHeight, -targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight);
+
+                        context.restore();
+
+                        requestAnimationFrame(renderFrame);
+                    }
+                }
+
+                renderFrame();
+                startRecording(stream, targetWidth, targetHeight, x, y);
+                // startPictureCountdown();
             });
 
         } catch (error) {
@@ -280,9 +347,7 @@
                     // Prepare for the next photo
                     if (pictureCount < totalPhotos) {
                         setTimeout(async () => {
-                            startRecording(video.srcObject);
-                            await startWebcam();
-                            startPictureCountdown();
+                            await startWebcam2();
                         }, 2000);
                     }
                 }
@@ -334,7 +399,6 @@
         }).then(async (result) => {
             if (result.isConfirmed) {
                 await getCoordinates(frame);
-
                 startWebcam(); // Memulai kamera hanya jika pengguna menekan OK
             } else {
                 return;
@@ -440,7 +504,9 @@
 
                 drawVideoFrame();
                 loadedVideos++;
-                setTimeout(startVideoRecord, 1000);
+                if (loadedVideos === positions.length) {
+                    setTimeout(startVideoRecord, 1000);
+                }
 
             });
 
