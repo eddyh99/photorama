@@ -498,15 +498,15 @@
 
                     ctxVideo.drawImage(tempVideoCanvas, pos.x, pos.y, pos.width, pos.height);
                     ctxVideo.drawImage(frameVideo, 0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
-                    // requestAnimationFrame(drawVideoFrame);
+                    requestAnimationFrame(drawVideoFrame);
 
                 }
 
-                // drawVideoFrame();
-                // loadedVideos++;
-                // if (loadedVideos === positions.length) {
-                //     setTimeout(startVideoRecord, 1000);
-                // }
+                drawVideoFrame();
+                loadedVideos++;
+                if (loadedVideos === positions.length) {
+                    setTimeout(startVideoRecord, 1000);
+                }
 
             });
 
