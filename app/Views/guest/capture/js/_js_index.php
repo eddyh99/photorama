@@ -472,41 +472,43 @@
                 }
             };
 
-            // selectedVideo.addEventListener("loadeddata", function() {
-            //     if (recordingStarted) return;
-            //     selectedVideo.play();
-            //     const frameVideo = new Image();
-            //     frameVideo.src = frameImageSrc;
+            selectedVideo.addEventListener("loadeddata", function() {
+                if (recordingStarted) return;
+                selectedVideo.play();
+                const frameVideo = new Image();
+                frameVideo.src = frameImageSrc;
 
-            //     function drawVideoFrame() {
-            //         const tempVideoCanvas = document.createElement("canvas");
-            //         const tempVideoCtx = tempVideoCanvas.getContext("2d");
+                function drawVideoFrame() {
+                    const tempVideoCanvas = document.createElement("canvas");
+                    const tempVideoCtx = tempVideoCanvas.getContext("2d");
 
-            //         if (rotation % 180 === 90) {
-            //             tempVideoCanvas.width = pos.height;
-            //             tempVideoCanvas.height = pos.width;
-            //         } else {
-            //             tempVideoCanvas.width = pos.width;
-            //             tempVideoCanvas.height = pos.height;
-            //         }
+                    if (rotation % 180 === 90) {
+                        tempVideoCanvas.width = pos.height;
+                        tempVideoCanvas.height = pos.width;
+                    } else {
+                        tempVideoCanvas.width = pos.width;
+                        tempVideoCanvas.height = pos.height;
+                    }
 
-            //         tempVideoCtx.save();
-            //         tempVideoCtx.translate(tempVideoCanvas.width / 2, tempVideoCanvas.height / 2);
-            //         tempVideoCtx.rotate((rotation * Math.PI) / 180);
-            //         tempVideoCtx.drawImage(selectedVideo, -pos.width / 2, -pos.height / 2, pos.width, pos.height);
-            //         tempVideoCtx.restore();
+                    tempVideoCtx.save();
+                    tempVideoCtx.translate(tempVideoCanvas.width / 2, tempVideoCanvas.height / 2);
+                    tempVideoCtx.rotate((rotation * Math.PI) / 180);
+                    tempVideoCtx.drawImage(selectedVideo, -pos.width / 2, -pos.height / 2, pos.width, pos.height);
+                    tempVideoCtx.restore();
 
-            //         ctxVideo.drawImage(tempVideoCanvas, pos.x, pos.y, pos.width, pos.height);
-            //         ctxVideo.drawImage(frameVideo, 0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
-            //         requestAnimationFrame(drawVideoFrame);
+                    ctxVideo.drawImage(tempVideoCanvas, pos.x, pos.y, pos.width, pos.height);
+                    ctxVideo.drawImage(frameVideo, 0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
+                    // requestAnimationFrame(drawVideoFrame);
 
-            //     }
+                }
 
-            //     drawVideoFrame();
-            //     loadedVideos++;
-            //     setTimeout(startVideoRecord, 1000);
+                // drawVideoFrame();
+                // loadedVideos++;
+                // if (loadedVideos === positions.length) {
+                //     setTimeout(startVideoRecord, 1000);
+                // }
 
-            // });
+            });
 
             // Tambahkan tombol retake jika belum ada
             let buttonId = "retake-btn-" + (pos.index - 1);
