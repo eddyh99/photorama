@@ -94,7 +94,7 @@
                         context.save();
                         context.translate(video.videoWidth / 2, video.videoHeight / 2); // Pusatkan rotasi
                         // context.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
-                        context.scale(-1, 1); // Flip horizontal (opsional)
+                        // context.scale(-1, 1); // Flip horizontal (opsional)
 
                         // Gambar video dengan ukuran sesuai aspect ratio
                         context.drawImage(video, x, y, targetWidth, targetHeight, -targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight);
