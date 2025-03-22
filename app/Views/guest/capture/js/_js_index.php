@@ -187,173 +187,222 @@
 
     function startRecording(stream, targetWidth, targetHeight, x, y) {
         recordedChunks = []; // Reset recorded chunks for new recording
-
+    
         // Buat canvas rekaman sesuai ukuran aspect ratio
         const recordingCanvas = document.createElement('canvas');
         recordingCanvas.width = targetWidth;
         recordingCanvas.height = targetHeight;
         const recordingContext = recordingCanvas.getContext('2d');
-
+    
         // Ambil video dari stream asli
         const videoTrack = stream.getVideoTracks()[0];
         const videoElement = document.createElement('video');
         videoElement.srcObject = new MediaStream([videoTrack]);
         videoElement.play();
-
+    
         function drawFrame() {
             if (videoTrack.readyState === "live") {
                 recordingContext.clearRect(0, 0, recordingCanvas.width, recordingCanvas.height);
-
+    
                 // Crop video sesuai aspect ratio
+                recordingContext.save();
+                recordingContext.translate(recordingCanvas.width / 2, recordingCanvas.height / 2);
+                recordingContext.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
                 recordingContext.drawImage(
                     videoElement,
                     x, y, targetWidth, targetHeight, // Area yang diambil dari video
-                    0, 0, targetWidth, targetHeight // Tempatkan ke recordingCanvas
+                    -targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight // Tempatkan ke recordingCanvas
                 );
-
+                recordingContext.restore();
+    
                 requestAnimationFrame(drawFrame);
             }
         }
-
+    
         drawFrame();
-
+    
         // Ambil stream dari recordingCanvas untuk MediaRecorder
         const recordedStream = recordingCanvas.captureStream();
-
+    
         mediaRecorder = new MediaRecorder(recordedStream);
-
+    
         mediaRecorder.ondataavailable = event => {
             if (event.data.size > 0) {
                 recordedChunks.push(event.data);
             }
         };
-
+    
         mediaRecorder.onstop = () => {
             const blob = new Blob(recordedChunks, {
                 type: 'video/mp4'
             });
-
+    
             capturedVideos.push(blob);
-
+    
             const recordedVideo = document.createElement('video');
             recordedVideo.src = URL.createObjectURL(blob);
             recordedVideo.controls = true;
             recordedVideoContainer.appendChild(recordedVideo);
         };
-
+    
         mediaRecorder.start();
     }
 
 
     // Countdown and capture photo
-    async function startPictureCountdown(idx = null) {
+async function startPictureCountdown(idx = null) {
+    if (pictureCount < totalPhotos) {
+        pictureCount += 1;
 
-        if (pictureCount < totalPhotos) {
-            pictureCount += 1;
-            if (idx !== null && idx !== undefined) {
-                if (video.srcObject) {
-                    video.srcObject.getTracks().forEach(track => track.stop());
-                    video.srcObject = null;
-                }
-                await startWebcam(idx + 1);
+        if (idx != null) {
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
             }
-
-            let countdown = <?= json_encode($countdown) ?> ?? 4;
-
-            // Show the countdown overlay and set the initial value
-            countdownOverlay.style.display = 'flex';
-            countdownOverlay.textContent = countdown;
-
-            // Pilih audio secara acak dari daftar
-            let randomIndex = Math.floor(Math.random() * listAudio.length);
-            let audio = new Audio('<?= BASE_URL ?>assets/audio/' + listAudio[randomIndex]);
-
-            // Coba mainkan audio dengan error handling
-            let playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    console.log("Audio is playing successfully!");
-                }).catch(error => {
-                    console.warn("Audio play was prevented:", error);
-                });
-            }
-
-            const countdownInterval = setInterval(async () => {
-                countdown -= 1;
-
-                if (countdown > 0) {
-                    countdownOverlay.textContent = countdown;
-                } else {
-                    clearInterval(countdownInterval);
-                    await flash();
-
-                    const {
-                        targetWidth,
-                        targetHeight,
-                        x,
-                        y
-                    } = idx !== null && idx !== undefined ?
-                        getAspectRatio(idx + 1) :
-                        getAspectRatio();
-
-                    // Buat canvas sesuai dengan ukuran yang ingin diambil
-                    const snapshotCanvas = document.createElement('canvas');
-                    snapshotCanvas.width = targetWidth;
-                    snapshotCanvas.height = targetHeight;
-
-                    const snapshotContext = snapshotCanvas.getContext('2d');
-
-                    // Flip horizontal (mirror)
-                    snapshotContext.save();
-                    snapshotContext.translate(targetWidth, 0);
-                    snapshotContext.scale(-1, 1);
-
-                    // Gambar hanya area yang terlihat
-                    snapshotContext.drawImage(video, x, y, targetWidth, targetHeight, 0, 0, targetWidth, targetHeight);
-                    snapshotContext.restore();
-
-                    snapshotCanvas.toBlob(function(blob) {
-                        let photoURL = URL.createObjectURL(blob);
-                        const photo = new Image();
-                        photo.src = photoURL;
-
-                        if (idx !== null && idx !== undefined) {
-                            capturedPhotos[idx] = blob;
-                            selectedPhotos[idx] = photo;
-                            $('#select').click();
-                        } else {
-                            selectedPhotos.push(photo);
-                            capturedPhotos.push(blob);
-                        }
-
-                        photosContainer.innerHTML += `
-                    <div class="col px-2">
-                        <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected">
-                    </div>`;
-
-                        if (selectedPhotos.length === totalPhotos) {
-                            $('#select').prop('disabled', false);
-                            $("#previewkanan").removeClass("d-none");
-                            $("#videoarea").removeClass("col-lg-12");
-                            $("#videoarea").addClass("col-lg-8");
-                            $("#select").click();
-                        } else {
-                            $('#select').prop('disabled', true);
-                        }
-                    }, 'image/jpeg', 0.7);
-
-                    mediaRecorder.stop();
-
-                    // Prepare for the next photo
-                    if (pictureCount < totalPhotos) {
-                        setTimeout(async () => {
-                            await startWebcam2();
-                        }, 2000);
-                    }
-                }
-            }, 1000);
+            await startWebcam(idx + 1);
         }
+
+        const countdownValue = <?= json_encode($countdown ?? 4) ?>;
+
+        countdownOverlay.style.display = 'flex';
+        countdownOverlay.textContent = countdownValue;
+
+        const audio = new Audio('<?= BASE_URL ?>assets/audio/' + listAudio[Math.floor(Math.random() * listAudio.length)]);
+        audio.play().catch(err => console.warn("Audio play was prevented:", err));
+
+        let countdown = countdownValue;
+
+        // Start recording
+        if (mediaRecorder && mediaRecorder.state === 'inactive') {
+            mediaRecorder.start();
+        }
+
+        const countdownInterval = setInterval(async () => {
+            countdown -= 1;
+
+            if (countdown > 0) {
+                countdownOverlay.textContent = countdown;
+            } else {
+                clearInterval(countdownInterval);
+                await flash();
+
+                const { targetWidth, targetHeight, x, y } = idx != null ? getAspectRatio(idx + 1) : getAspectRatio();
+
+                const snapshotCanvas = document.createElement('canvas');
+                snapshotCanvas.width = targetWidth;
+                snapshotCanvas.height = targetHeight;
+                const snapshotContext = snapshotCanvas.getContext('2d');
+
+                // Direct draw without flipping
+                snapshotContext.drawImage(video, x, y, targetWidth, targetHeight, 0, 0, targetWidth, targetHeight);
+
+                const rotation = cameraRotation[camera.id] || 0;
+                console.log('Rotation for camera', camera.id, 'is', rotation);
+
+                const rotatedCanvas = document.createElement('canvas');
+                const rotatedContext = rotatedCanvas.getContext('2d');
+
+                if (rotation === 90 || rotation === 270) {
+                    rotatedCanvas.width = targetHeight;
+                    rotatedCanvas.height = targetWidth;
+                } else {
+                    rotatedCanvas.width = targetWidth;
+                    rotatedCanvas.height = targetHeight;
+                }
+
+                rotatedContext.save();
+                rotatedContext.translate(rotatedCanvas.width / 2, rotatedCanvas.height / 2);
+                rotatedContext.rotate((rotation * Math.PI) / 180);
+                rotatedContext.drawImage(
+                    snapshotCanvas,
+                    -snapshotCanvas.width / 2,
+                    -snapshotCanvas.height / 2
+                );
+                rotatedContext.restore();
+
+                rotatedCanvas.toBlob(function(blob) {
+                    const photoURL = URL.createObjectURL(blob);
+                    const photo = new Image();
+                    photo.src = photoURL;
+
+                    if (idx != null) {
+                        capturedPhotos[idx] = blob;
+                        selectedPhotos[idx] = photo;
+                        $('#select').click();
+                    } else {
+                        selectedPhotos.push(photo);
+                        capturedPhotos.push(blob);
+                    }
+
+                    photosContainer.innerHTML += `
+                        <div class="col px-2">
+                            <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected">
+                        </div>`;
+
+                    if (selectedPhotos.length === totalPhotos) {
+                        $('#select').prop('disabled', false);
+                        $("#previewkanan").removeClass("d-none");
+                        $("#videoarea").removeClass("col-lg-12").addClass("col-lg-8");
+                        $('#select').click();
+                    } else {
+                        $('#select').prop('disabled', true);
+                    }
+                }, 'image/jpeg', 0.7);
+
+                // Stop recording
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                }
+
+                if (pictureCount < totalPhotos) {
+                    setTimeout(async () => {
+                        await startWebcam2();
+                    }, 2000);
+                }
+            }
+        }, 1000);
     }
+}
+
+    function startVideoRecord() {
+        if (recordingStarted) return;
+
+        let stream = frameVideoCanvas.captureStream(30);
+        mediaRecorder = new MediaRecorder(stream, {
+            mimeType: "video/webm; codecs=vp9"
+        });
+
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                recordedChunks = [];
+                recordedChunks.push(event.data);
+            }
+        };
+
+        mediaRecorder.onstop = async () => {
+            const webmBlob = new Blob(recordedChunks, {
+                type: "video/webm"
+            });
+            console.log("WebM video saved as Blob:", webmBlob);
+
+            // Simpan hasil dalam variabel global
+            videoBlob = webmBlob;
+
+            recordedChunks = [];
+        };
+
+        mediaRecorder.start();
+        recordingStarted = true;
+        console.log("Perekaman dimulai...");
+
+        // Hentikan rekaman setelah 3 detik
+        setTimeout(() => {
+            mediaRecorder.stop();
+            $('#select-filter').text('Select Filter');
+            $('#select-filter').removeAttr('disabled');
+        }, 8000);
+    }
+
 
     function getAspectRatio(idx) {
 
@@ -526,44 +575,6 @@
         });
     });
 
-    function startVideoRecord() {
-        if (recordingStarted) return;
-
-        let stream = frameVideoCanvas.captureStream(30);
-        mediaRecorder = new MediaRecorder(stream, {
-            mimeType: "video/webm; codecs=vp9"
-        });
-
-        mediaRecorder.ondataavailable = (event) => {
-            if (event.data.size > 0) {
-                recordedChunks = [];
-                recordedChunks.push(event.data);
-            }
-        };
-
-        mediaRecorder.onstop = async () => {
-            const webmBlob = new Blob(recordedChunks, {
-                type: "video/webm"
-            });
-            console.log("WebM video saved as Blob:", webmBlob);
-
-            // Simpan hasil dalam variabel global
-            videoBlob = webmBlob;
-
-            recordedChunks = [];
-        };
-
-        mediaRecorder.start();
-        recordingStarted = true;
-        console.log("Perekaman dimulai...");
-
-        // Hentikan rekaman setelah 3 detik
-        setTimeout(() => {
-            mediaRecorder.stop();
-            $('#select-filter').text('Select Filter');
-            $('#select-filter').removeAttr('disabled');
-        }, 4000);
-    }
 
 
     $('#select-filter').on('click', function(e) {
