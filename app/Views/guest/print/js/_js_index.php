@@ -12,7 +12,8 @@
         const img = $("#photo").attr('src');
         let print = sessionStorage.getItem('print') || 1;
         const btnPrint = <?= json_encode($print) ?>;
-        const printer = <?= json_encode($printer) ?>
+        const printer = <?= json_encode($printer) ?>;
+        console.log(printer);
 
         function printImage() {
             console.log(print);

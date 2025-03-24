@@ -55,6 +55,12 @@
                                 </div>
                             </div>
                             <div class="mb-3">
+                                    <label class="form-label" for="printer_name">Nama Printer</label>
+                                    <div class="input-group input-group-merge">
+                                        <input class="form-control" name="printer_name" type="text" value="<?= $user->printer_name ?? '' ?>"/>
+                                    </div>
+                                </div>
+                            <div class="mb-3">
                                 <label class="form-label" for="namabarang">Lokasi</label>
                                 <div class="input-group input-group-merge">
                                     <textarea class="form-control" name="lokasi" rows="4"><?= $user->lokasi ?? '' ?></textarea>
