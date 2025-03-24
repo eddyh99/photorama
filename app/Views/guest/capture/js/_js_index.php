@@ -433,7 +433,7 @@ async function startPictureCountdown(idx = null) {
 
 
     $(function() {
-        overlayCanvas.style.transform = `rotate(${cameraRotation[camera.id]}deg)`;
+        overlayCanvas.style.transform = `scaleX(-1) rotate(${cameraRotation[camera.id]}deg)`;
         overlayCanvas.style.transformOrigin = 'center';
         $("#previewkanan").addClass("d-none");
         $("#videoarea").removeClass("col-md-8");
