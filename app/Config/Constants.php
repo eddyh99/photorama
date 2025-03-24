@@ -104,3 +104,4 @@ defined('BASE_URL') || define('BASE_URL',$protocol);
 // define('DOKU_URL', 'https://api.doku.com/');
 define('DOKU_URL', 'https://api.doku.com/');
 define('NAMETITLE', 'Photorama');
+define('DEFAULT_PRINTER', 'HP DJ 2130 series');
