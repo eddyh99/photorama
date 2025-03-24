@@ -47,27 +47,29 @@
 
         // Cetak manual jika tombol ditekan
         $("#print").on('click', function() {
-        Swal.fire({
-            title: "Masukkan jumlah cetakan",
-            input: "number",
-            inputAttributes: { min: 1 },
-            inputValue: 1,
-            showCancelButton: true,
-            confirmButtonText: "Cetak",
-            cancelButtonText: "Batal",
-            preConfirm: (value) => {
-                if (!value || isNaN(value) || value <= 0) {
-                    Swal.showValidationMessage("Masukkan angka yang valid!");
+            Swal.fire({
+                title: "Masukkan jumlah cetakan",
+                input: "number",
+                inputAttributes: {
+                    min: 1
+                },
+                inputValue: 1,
+                showCancelButton: true,
+                confirmButtonText: "Cetak",
+                cancelButtonText: "Batal",
+                preConfirm: (value) => {
+                    if (!value || isNaN(value) || value <= 0) {
+                        Swal.showValidationMessage("Masukkan angka yang valid!");
+                    }
+                    return value;
                 }
-                return value;
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                print = parseInt(result.value);
-                printImage();
-            }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    print = parseInt(result.value);
+                    printImage();
+                }
+            });
         });
-    });
 
     });
 
