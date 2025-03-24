@@ -42,19 +42,6 @@ CREATE TABLE `background` (
 
 LOCK TABLES `background` WRITE;
 /*!40000 ALTER TABLE `background` DISABLE KEYS */;
-INSERT INTO `background` VALUES
-(55,'screen_start','background/screen_start_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
-(56,'screen_order','background/screen_order_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
-(57,'screen_payment','background/screen_payment_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
-(58,'screen_frame','background/screen_frame_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
-(59,'screen_select_camera','background/screen_select_camera_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
-(60,'screen_capture_photo','background/screen_capture_photo_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
-(61,'screen_filter','background/screen_filter_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
-(62,'screen_print','background/screen_print_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
-(63,'screen_finish','background/screen_finish_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
-(64,'container_frame','background/container_frame_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
-(65,'container_filter','background/container_filter_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57'),
-(66,'container_print','background/container_print_2.png',2,'2025-03-03 22:22:57','2025-03-03 22:22:57');
 /*!40000 ALTER TABLE `background` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -79,9 +66,10 @@ CREATE TABLE `cabang` (
   `payment_status` tinyint(1) NOT NULL DEFAULT 1,
   `retake_status` tinyint(1) NOT NULL DEFAULT 1,
   `print_status` tinyint(1) NOT NULL DEFAULT 0,
+  `printer_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,11 +79,11 @@ CREATE TABLE `cabang` (
 LOCK TABLES `cabang` WRITE;
 /*!40000 ALTER TABLE `cabang` DISABLE KEYS */;
 INSERT INTO `cabang` VALUES
-(2,'Photo Uye','Jl. Cempaka Putih',0,0,'2025-02-10 09:33:23','2025-03-24 02:10:11','user','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1,1),
-(3,'Aku Admin','Jl. Jayabana',0,0,'2025-02-10 09:33:23','2025-03-04 14:55:38','admin','f865b53623b121fd34ee5426c792e5c33af8c227','admin',0,1,0),
-(5,'Kodak Modern','Jl. Tegal Ampel',0,0,'2025-02-10 09:33:23','2025-03-24 02:07:35','user2','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1,1),
-(11,'Event Cukimay','Jl. Tegal Ampel',0,1,'2025-02-10 09:33:23','2025-03-05 04:30:40','user3','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1,0),
-(14,'Event Wedding','Bondowoso',0,1,'2025-03-05 06:33:52','2025-03-05 06:40:52','user4','7b21848ac9af35be0ddb2d6b9fc3851934db8420','user',0,0,0);
+(2,'Photo Uye','Tegal Manik',0,0,'2025-03-24 07:47:04','2025-03-24 07:48:10','user','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1,1,''),
+(3,'Aku Admin','Jl. Jayabana',0,0,'2025-02-10 09:33:23','2025-03-04 14:55:38','admin','f865b53623b121fd34ee5426c792e5c33af8c227','admin',0,1,0,NULL),
+(5,'Kodak Modern','Jl. Tegal Ampel',0,0,'2025-02-10 09:33:23','2025-03-24 07:44:33','user2','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1,1,''),
+(11,'Event Cukimay','Jl. Tegal Ampel',0,1,'2025-02-10 09:33:23','2025-03-05 04:30:40','user3','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1,0,NULL),
+(14,'Event Wedding','Bondowoso',0,1,'2025-03-05 06:33:52','2025-03-05 06:40:52','user4','7b21848ac9af35be0ddb2d6b9fc3851934db8420','user',0,0,0,NULL);
 /*!40000 ALTER TABLE `cabang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,7 +134,7 @@ CREATE TABLE `frame` (
   PRIMARY KEY (`id`),
   KEY `fk_frame_cabang` (`cabang_id`),
   CONSTRAINT `fk_frame_cabang` FOREIGN KEY (`cabang_id`) REFERENCES `cabang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -156,8 +144,6 @@ CREATE TABLE `frame` (
 LOCK TABLES `frame` WRITE;
 /*!40000 ALTER TABLE `frame` DISABLE KEYS */;
 INSERT INTO `frame` VALUES
-(32,'musix1','frame/musix1738915735.png','2025-02-07 15:08:55','2025-03-12 21:22:37',2),
-(33,'Frame cloud','frame/Frame cloud1740634806.png','2025-02-27 12:40:06','2025-03-12 21:16:43',2),
 (39,'frame-natal','frame/frame-natal1742180258.png','2025-03-17 09:57:38','2025-03-17 09:57:38',5);
 /*!40000 ALTER TABLE `frame` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -181,7 +167,7 @@ CREATE TABLE `frame_koordinat` (
   PRIMARY KEY (`id`),
   KEY `frame_id` (`frame_id`),
   CONSTRAINT `frame_koordinat_ibfk_1` FOREIGN KEY (`frame_id`) REFERENCES `frame` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -191,15 +177,6 @@ CREATE TABLE `frame_koordinat` (
 LOCK TABLES `frame_koordinat` WRITE;
 /*!40000 ALTER TABLE `frame_koordinat` DISABLE KEYS */;
 INSERT INTO `frame_koordinat` VALUES
-(41,32,9.1685393258427,25.9675,183.37078651685,143.585,0,1),
-(42,32,13.752808988764,181.7725,175.73033707865,128.31,0,1),
-(43,32,16.808988764045,323.83,171.14606741573,122.2,0,1),
-(44,32,213.93258426966,45.825,180.31460674157,120.6725,0,1),
-(45,32,212.40449438202,181.7725,178.78651685393,126.7825,0,1),
-(46,32,213.93258426966,322.3025,177.25842696629,128.31,0,1),
-(49,33,229.32,87.36,346.71,273,NULL,1),
-(50,33,237.51,622.44,338.52,273,NULL,2),
-(51,33,289.38,357.63,221.13,273,45.637830437395,1),
 (52,39,146.55290102389,95.333333333333,483.62457337884,524.33333333333,-1.8774044229251,1),
 (53,39,1494.8395904437,143,534.9180887372,495,NULL,1),
 (54,39,106.25085324232,832.33333333333,527.59044368601,462,NULL,2),
@@ -233,8 +210,7 @@ CREATE TABLE `harga` (
 LOCK TABLES `harga` WRITE;
 /*!40000 ALTER TABLE `harga` DISABLE KEYS */;
 INSERT INTO `harga` VALUES
-(4,8000.00,5,'2025-02-10 11:46:18','2025-02-10 12:03:07'),
-(6,5500.00,2,'2025-02-10 12:52:17','2025-02-10 13:12:41');
+(4,8000.00,5,'2025-02-10 11:46:18','2025-02-10 12:03:07');
 /*!40000 ALTER TABLE `harga` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -319,7 +295,6 @@ CREATE TABLE `qris` (
 LOCK TABLES `qris` WRITE;
 /*!40000 ALTER TABLE `qris` DISABLE KEYS */;
 INSERT INTO `qris` VALUES
-(5,'background-qris/Qris-1739250546.png',2,'2025-02-11 05:09:06','2025-02-11 05:09:06'),
 (6,'background-qris/Qris-1739250592.png',5,'2025-02-11 05:09:52','2025-02-11 05:09:52');
 /*!40000 ALTER TABLE `qris` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -377,14 +352,6 @@ CREATE TABLE `timer` (
 LOCK TABLES `timer` WRITE;
 /*!40000 ALTER TABLE `timer` DISABLE KEYS */;
 INSERT INTO `timer` VALUES
-(4,'screen_order',1000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
-(5,'screen_frame',300,2,'2025-02-10 13:35:26','2025-03-17 04:43:00'),
-(6,'screen_payment',50,2,'2025-02-10 13:35:26','2025-02-28 09:37:24'),
-(8,'screen_select_camera',1000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
-(9,'screen_capture_photo',2000,2,'2025-02-10 13:35:26','2025-03-18 02:25:32'),
-(10,'screen_filter',3000,2,'2025-02-10 13:35:26','2025-03-02 14:00:57'),
-(11,'screen_print',800,2,'2025-02-10 13:35:26','2025-03-07 03:58:17'),
-(29,'countdown',2,2,'2025-02-10 15:26:15','2025-03-17 02:54:07'),
 (30,'screen_order',300,5,'2025-03-17 02:58:35','2025-03-17 03:29:08'),
 (31,'screen_payment',30,5,'2025-03-17 02:58:35','2025-03-17 02:58:35'),
 (32,'screen_frame',300,5,'2025-03-17 02:58:35','2025-03-17 04:12:38'),
@@ -423,7 +390,6 @@ LOCK TABLES `voucher` WRITE;
 /*!40000 ALTER TABLE `voucher` DISABLE KEYS */;
 INSERT INTO `voucher` VALUES
 ('3Y4NGZHJ','2025-02-27',500,NULL),
-('6JB9H4KO','2026-02-27',4,2),
 ('Y0QIZBOD','2026-02-27',2,3);
 /*!40000 ALTER TABLE `voucher` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -437,4 +403,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-03-24  9:37:26
+-- Dump completed on 2025-03-24 14:51:14
