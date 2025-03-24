@@ -6,6 +6,7 @@
 		}, 0)
 	});
 	var table = $('#table_list_bg').DataTable({
+	    "order": [[0, 'desc']],
 		"scrollX": true,
 		"dom": 'lBfrtip',
 		"lengthMenu": [
