@@ -1,6 +1,5 @@
 <style>
     video {
-        transform: scaleX(-1);
         max-width: 100%;
         max-height: 100%; /* Pastikan video tidak keluar dari container */
     }
@@ -27,7 +26,7 @@
             <div class="col-lg-6 col-md-12">
                 <div class="camera-container">
                     <video id="camera1" autoplay 
-                        style="transform: rotate(<?= $camera_rotation->camera1 ?? 0 ?>deg);">
+                        style="transform: scaleX(-1) rotate(<?= $camera_rotation->camera1 ?? 0 ?>deg);">
                     </video>
                 </div>
             </div>
@@ -35,7 +34,7 @@
             <div class="col-lg-6 col-md-12">
                 <div class="camera-container">
                     <video id="camera2" autoplay 
-                        style="transform: rotate(<?= $camera_rotation->camera2 ?? 0 ?>deg);">
+                        style="transform: scaleX(-1) rotate(<?= $camera_rotation->camera2 ?? 0 ?>deg);">
                     </video>
                 </div>
             </div>

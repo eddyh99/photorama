@@ -45,7 +45,7 @@
                             <div class="col-1">
                                 <button class="btn btn-primary" id="lihat">Lihat</button>
                             </div>
-                            <div class="col-sm-2">
+                            <!-- <div class="col-sm-2">
                                 <form id="form" action="<?= BASE_URL ?>admin/photo/print_setting">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="auto-print" id="auto-print" <?= $auto_print ? 'checked' : '' ?>>
@@ -54,7 +54,7 @@
                                         </label>
                                     </div>
                                 </form>
-                            </div>
+                            </div> -->
                         </div>
                         <table id="table_list_bg" class="table table-striped" style="width:100%">
                             <thead>

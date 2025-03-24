@@ -279,7 +279,7 @@ class Home extends BaseController
         $bg_container = $this->background->backgroundByScreen('container_print', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
         $qrcode = new Generator;
-        $auto_print = $this->setting->value('auto_print');
+        $print = $this->cabang->get_status('print_status', $this->id_cabang)->message;
         $dir = base64_decode($dir);
         $videos = glob(FCPATH . 'assets/photobooth/'. $dir . '/video*', GLOB_BRACE);
         $videos = array_map(function ($video) use ($dir) {
@@ -295,7 +295,7 @@ class Home extends BaseController
             'timer'         => $timer,
             'dir'           => $dir,
             'videos'        => $videos,
-            'auto_print'    => $auto_print ? filter_var($auto_print, FILTER_VALIDATE_BOOLEAN) : false,
+            'print'         => filter_var($print, FILTER_VALIDATE_BOOLEAN),
             'qrcode'        => $qrcode->size(250)->generate(base_url("download/" . base64_encode($dir)))
         ];
 

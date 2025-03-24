@@ -52,6 +52,7 @@
                                     <th>User</th>
                                     <th>Payment</th>
                                     <th>Retake</th>
+                                    <th>Print</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
