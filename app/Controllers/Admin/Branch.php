@@ -91,6 +91,7 @@ class Branch extends BaseController
             'is_event' => $this->request->getVar('is_event') ? true : false,
             'payment_status' => $this->request->getVar('payment_status') ? true : false,
             'retake_status' => $this->request->getVar('retake_status') ? true : false,
+            'print_status' => $this->request->getVar('print_status') ? true : false,
         ];
 
         $result = $this->cabang->insertCabang($mdata);

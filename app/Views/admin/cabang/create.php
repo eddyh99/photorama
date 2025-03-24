@@ -74,6 +74,10 @@
                                     <input class="form-check-input" type="checkbox" role="switch" name="retake_status" checked>
                                     <label class="form-check-label" for="retake_status">Retake Photo</label>
                                 </div>
+                                <div class="form-check form-switch ms-3">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="print_status" checked>
+                                    <label class="form-check-label" for="print_status">Print</label>
+                                </div>
                             </div>
 
 
