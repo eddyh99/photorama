@@ -1,4 +1,5 @@
 <script src="<?= BASE_URL ?>assets/js/payment-check.js"></script>
+<script src="<?= BASE_URL ?>assets/js/qz-tray.js"></script>
 <script>
     let videoBlob = null;
     const dir = btoa(<?= json_encode($dir) ?>);
@@ -11,6 +12,8 @@
         const img = $("#photo").attr('src');
         let print = sessionStorage.getItem('print') || 1;
         const btnPrint = <?= json_encode($print) ?>;
+        const printer = <?= json_encode($printer) ?>;
+        console.log(printer);
 
         function printImage() {
             console.log(print);
@@ -21,13 +24,8 @@
                 success: function(response) {
                     const mdata = JSON.parse(response)
                     if (mdata.status === "success") {
-                        Swal.fire({
-                            title: 'Sukses!',
-                            text: 'Foto berhasil dicetak.',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        })
-
+                        console.log(mdata.pdf_url);
+                        printPDF(mdata.pdf_url, printer);
                     } else {
                         alert("Gagal print Foto!");
                     }
@@ -70,6 +68,35 @@
                 }
             });
         });
+
+
+        function printPDF(pdfUrl, printerName) {
+            qz.websocket.connect().then(() => {
+                const config = qz.configs.create(printerName);
+                return qz.print(config, [{
+                    type: 'pdf',
+                    data: pdfUrl
+                }]);
+            }).then(() => {
+                console.log("Print job sent successfully!");
+                qz.websocket.disconnect();
+                Swal.fire({
+                    title: 'Sukses!',
+                    text: 'Foto berhasil dicetak.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            }).catch(err => {
+                console.error("Print error: ", err);
+                qz.websocket.disconnect();
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Gagal mencetak foto.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+        }
 
     });
 

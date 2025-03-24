@@ -70,6 +70,10 @@ class Branch extends BaseController
                 'label' => 'Konfirmasi Password',
                 'rules' => 'required|matches[password]'
             ],
+            'printer_name' => [
+                'label' => 'Nama Printer',
+                'rules' => 'required'
+            ],
             'lokasi' => [
                 'label' => 'Lokasi',
                 'rules' => 'required'
@@ -87,6 +91,7 @@ class Branch extends BaseController
             'nama_cabang' => $this->request->getVar('nama_cabang'),
             'username' => $this->request->getVar('username'),
             'password' => sha1($this->request->getVar('password')),
+            'printer_name' => $this->request->getVar('printer_name'),
             'lokasi' => $this->request->getVar('lokasi'),
             'is_event' => $this->request->getVar('is_event') ? true : false,
             'payment_status' => $this->request->getVar('payment_status') ? true : false,
@@ -123,6 +128,10 @@ class Branch extends BaseController
                 'label' => 'Konfirmasi Password',
                 'rules' => 'matches[password]'
             ],
+            'printer_name' => [
+                'label' => 'Nama Printer',
+                'rules' => 'required'
+            ],
             'lokasi' => [
                 'label' => 'Lokasi',
                 'rules' => 'required'
@@ -139,6 +148,7 @@ class Branch extends BaseController
         $mdata = [
             'nama_cabang' => $this->request->getVar('nama_cabang'),
             'username' => $this->request->getVar('username'),
+            'printer_name' => $this->request->getVar('printer_name'),
             'lokasi' => $this->request->getVar('lokasi')
         ];
 
