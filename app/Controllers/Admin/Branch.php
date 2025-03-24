@@ -205,4 +205,20 @@ class Branch extends BaseController
             return redirect()->to(BASE_URL . "admin/branch");
         }
     }
+
+    public function update_status_print() {
+        $mdata = [
+            'id' => $this->request->getVar('id'),
+            'print_status' => $this->request->getVar('print_status') ? true : false,
+        ];
+
+        $result = $this->cabang->update_status($mdata);
+        if ($result->code == 201) {
+            session()->setFlashdata('success', $result->message);
+            return redirect()->to(BASE_URL . "admin/branch");
+        }else{
+            session()->setFlashdata('failed', $result->message);
+            return redirect()->to(BASE_URL . "admin/branch");
+        }
+    }
 }
