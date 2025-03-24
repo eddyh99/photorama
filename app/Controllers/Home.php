@@ -295,7 +295,7 @@ class Home extends BaseController
             'timer'         => $timer,
             'dir'           => $dir,
             'videos'        => $videos,
-            'auto_print'    => $auto_print ? filter_var($auto_print, FILTER_VALIDATE_BOOLEAN) : false,
+            'print'         => true,
             'qrcode'        => $qrcode->size(250)->generate(base_url("download/" . base64_encode($dir)))
         ];
 

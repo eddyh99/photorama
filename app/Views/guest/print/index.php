@@ -36,7 +36,7 @@
                     <p class="text-white">OR</p>
                     <div class="d-grid gap-2">
                         <!-- <button class="btn btn-warning">EMAIL SOFT COPY</button> -->
-                        <button id="print" class="btn btn-info">PRINT</button>
+                        <button id="print" class="btn btn-info d-none">PRINT</button>
                         <button id="submit" href="#" class="btn btn-primary" onclick="save(event)">DONE</button>
                     </div>
                 </div>

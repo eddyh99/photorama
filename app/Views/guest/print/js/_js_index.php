@@ -2,9 +2,6 @@
 <script>
     let videoBlob = null;
     const dir = btoa(<?= json_encode($dir) ?>);
-    const print = sessionStorage.getItem('print') || 1;
-    console.log(print);
-
 
     function redirecTo() {
         save();
@@ -12,7 +9,8 @@
 
     $(function async () {
         const img = $("#photo").attr('src');
-        const autoPrint = <?= json_encode($auto_print) ?>;
+        let print = sessionStorage.getItem('print') || 1;
+        const btnPrint = <?= json_encode($print) ?>;
 
         function printImage() {
             console.log(print);
@@ -41,16 +39,36 @@
         }
 
         // Cetak otomatis jika session print aktif
-        if (autoPrint) {
-            setTimeout(printImage, 1000);
+        if (btnPrint) {
+            $('#print').removeClass('d-none');
         } else {
-            $("#print").removeAttr("hidden");
+            setTimeout(printImage, 1000);
         }
 
         // Cetak manual jika tombol ditekan
         $("#print").on('click', function() {
-            printImage();
+        Swal.fire({
+            title: "Masukkan jumlah cetakan",
+            input: "number",
+            inputAttributes: { min: 1 },
+            inputValue: 1,
+            showCancelButton: true,
+            confirmButtonText: "Cetak",
+            cancelButtonText: "Batal",
+            preConfirm: (value) => {
+                if (!value || isNaN(value) || value <= 0) {
+                    Swal.showValidationMessage("Masukkan angka yang valid!");
+                }
+                return value;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                print = parseInt(result.value);
+                printImage();
+            }
         });
+    });
+
     });
 
     function save(e) {
