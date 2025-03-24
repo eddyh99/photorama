@@ -312,6 +312,7 @@ async function startPictureCountdown(idx = null) {
 
                 rotatedContext.save();
                 rotatedContext.translate(rotatedCanvas.width / 2, rotatedCanvas.height / 2);
+                rotatedContext.scale(-1, 1); //for mirroring
                 rotatedContext.rotate((rotation * Math.PI) / 180);
                 rotatedContext.drawImage(
                     snapshotCanvas,
