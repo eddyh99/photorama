@@ -153,14 +153,6 @@ class Branch extends BaseController
                 'label' => 'Lokasi',
                 'rules' => 'required'
             ],
-            'pk_name' => [
-                'label' => 'Private Key',
-                'rules' => 'required'
-            ],
-            'cert_name' => [
-                'label' => 'Sertifikat',
-                'rules' => 'required'
-            ],
             'private_key' => [
                 'label' => 'Kunci Privat',
                 'rules' => 'permit_empty|max_size[private_key,2048]'
@@ -177,21 +169,30 @@ class Branch extends BaseController
             return redirect()->to(BASE_URL . "admin/branch/edit/$id")->withInput();
         }
 
+        $mdata = [];
         $private_key = $this->request->getFile('private_key');
         $cert = $this->request->getFile('certificate');
         $pk_name = basename($this->request->getVar('pk_name'));
         $cert_name = basename($this->request->getVar('cert_name'));
 
         if($private_key && $private_key->isValid()) {
+            if(empty($pk_name)) {
+                $pk_name = 'private-key-' . time() . '.pem';
+                $mdata['private_key'] = $pk_name;
+            }
             $private_key->move(WRITEPATH . 'certs/', $pk_name, true);
         }
 
         if($cert && $cert->isValid()) {
+            if(empty($cert_name)) {
+                $cert_name = 'digital-cert-' . time() . '.txt';
+                $mdata['certificate'] = $cert_name;
+            }
             $cert->move(FCPATH . 'assets/certs/', $cert_name, true);
         }
 
         $pwd = $this->request->getVar('password');
-        $mdata = [
+        $mdata += [
             'nama_cabang' => $this->request->getVar('nama_cabang'),
             'username' => $this->request->getVar('username'),
             'printer_name' => $this->request->getVar('printer_name'),
