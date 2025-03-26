@@ -152,6 +152,22 @@ class Branch extends BaseController
             'lokasi' => [
                 'label' => 'Lokasi',
                 'rules' => 'required'
+            ],
+            'pk_name' => [
+                'label' => 'Private Key',
+                'rules' => 'required'
+            ],
+            'cert_name' => [
+                'label' => 'Sertifikat',
+                'rules' => 'required'
+            ],
+            'private_key' => [
+                'label' => 'Kunci Privat',
+                'rules' => 'permit_empty|max_size[private_key,2048]'
+            ],
+            'certificate' => [
+                'label' => 'Sertifikat',
+                'rules' => 'permit_empty|ext_in[certificate,txt]|max_size[certificate,2048]'
             ]
         ]);
 
@@ -159,6 +175,19 @@ class Branch extends BaseController
         if (!$rules){
             session()->setFlashdata('failed', $this->validation->listErrors());
             return redirect()->to(BASE_URL . "admin/branch/edit/$id")->withInput();
+        }
+
+        $private_key = $this->request->getFile('private_key');
+        $cert = $this->request->getFile('certificate');
+        $pk_name = basename($this->request->getVar('pk_name'));
+        $cert_name = basename($this->request->getVar('cert_name'));
+
+        if($private_key && $private_key->isValid()) {
+            $private_key->move(WRITEPATH . 'certs/', $pk_name, true);
+        }
+
+        if($cert && $cert->isValid()) {
+            $cert->move(FCPATH . 'assets/certs/', $cert_name, true);
         }
 
         $pwd = $this->request->getVar('password');

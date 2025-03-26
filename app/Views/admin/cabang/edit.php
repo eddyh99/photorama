@@ -26,7 +26,7 @@
                         <h5 class="mb-1">Tambah Cabang</h5>
                     </div>
                     <div class="card-body">
-                        <form action="<?= BASE_URL ?>admin/branch/update/<?= $user->id ?>" method="POST">
+                        <form action="<?= BASE_URL ?>admin/branch/update/<?= $user->id ?>" method="POST" enctype="multipart/form-data">
                             <div class="row row-cols-2">
                             <div class="mb-3">
                                     <label class="form-label" for="namabarang">Nama Cabang</label>
@@ -54,6 +54,20 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row row-cols-2">
+                                <div class="mb-3">
+                                    <label class="form-label" for="private_key">Unggah Private Key</label>
+                                    <input type="hidden" name="pk_name" value="<?= $user->private_key ?>">
+                                        <input class="form-control" name="private_key" type="file" accept=".pem" />
+                                        <small class="text-danger mt-1">Kosongkan jika tidak ingin mengubah</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="certificate">Unggah Sertifikat</label>
+                                        <input type="hidden" name="cert_name" value="<?= $user->certificate ?>">
+                                        <input class="form-control" name="certificate" type="file" accept=".txt" />
+                                        <small class="text-danger mt-1">Kosongkan jika tidak ingin mengubah</small>
+                                </div>
+                                </div>
                             <div class="mb-3">
                                     <label class="form-label" for="printer_name">Nama Printer</label>
                                     <div class="input-group input-group-merge">
