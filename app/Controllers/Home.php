@@ -337,9 +337,10 @@ class Home extends BaseController
         $bg_container = $this->background->backgroundByScreen('container_print', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
         $qrcode = new Generator;
-        $print = $this->cabang->get_status('print_status', $this->id_cabang)->message;
-        $printer = $this->cabang->get_status('printer_name', $this->id_cabang)->message;
-        $cert = $this->cabang->get_status('certificate', $this->id_cabang)->message;
+        $cab = $this->cabang->getCabang_byId($this->id_cabang);
+        $print = $cab->print_status;
+        $printer = $cab->printer_name;
+        $cert = $cab->certificate;
         $dir = base64_decode($dir);
         $videos = glob(FCPATH . 'assets/photobooth/'. $dir . '/video*', GLOB_BRACE);
         $videos = array_map(function ($video) use ($dir) {
