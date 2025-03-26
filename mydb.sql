@@ -67,9 +67,11 @@ CREATE TABLE `cabang` (
   `retake_status` tinyint(1) NOT NULL DEFAULT 1,
   `print_status` tinyint(1) NOT NULL DEFAULT 0,
   `printer_name` varchar(255) DEFAULT NULL,
+  `private_key` varchar(255) DEFAULT NULL,
+  `certificate` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -79,11 +81,12 @@ CREATE TABLE `cabang` (
 LOCK TABLES `cabang` WRITE;
 /*!40000 ALTER TABLE `cabang` DISABLE KEYS */;
 INSERT INTO `cabang` VALUES
-(2,'Photo Uye','Tegal Manik',0,0,'2025-03-24 07:47:04','2025-03-24 07:48:10','user','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1,1,''),
-(3,'Aku Admin','Jl. Jayabana',0,0,'2025-02-10 09:33:23','2025-03-04 14:55:38','admin','f865b53623b121fd34ee5426c792e5c33af8c227','admin',0,1,0,NULL),
-(5,'Kodak Modern','Jl. Tegal Ampel',0,0,'2025-02-10 09:33:23','2025-03-24 07:44:33','user2','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1,1,''),
-(11,'Event Cukimay','Jl. Tegal Ampel',0,1,'2025-02-10 09:33:23','2025-03-05 04:30:40','user3','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1,0,NULL),
-(14,'Event Wedding','Bondowoso',0,1,'2025-03-05 06:33:52','2025-03-05 06:40:52','user4','7b21848ac9af35be0ddb2d6b9fc3851934db8420','user',0,0,0,NULL);
+(2,'Photo Uye','Tegal Manik',0,0,'2025-03-24 07:47:04','2025-03-24 07:48:10','user','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1,1,'',NULL,NULL),
+(3,'Aku Admin','Jl. Jayabana',0,0,'2025-02-10 09:33:23','2025-03-04 14:55:38','admin','f865b53623b121fd34ee5426c792e5c33af8c227','admin',0,1,0,NULL,NULL,NULL),
+(5,'Kodak Modern','Jl. Tegal Ampel',0,0,'2025-02-10 09:33:23','2025-03-26 08:32:10','user2','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1,1,'x',NULL,NULL),
+(11,'Event Cukimay','Jl. Tegal Ampel',0,1,'2025-02-10 09:33:23','2025-03-26 08:20:27','user3','95c946bf622ef93b0a211cd0fd028dfdfcf7e39e','user',0,1,0,'',NULL,NULL),
+(14,'Event Wedding','Bondowoso',0,1,'2025-03-05 06:33:52','2025-03-26 08:42:24','user4','7b21848ac9af35be0ddb2d6b9fc3851934db8420','user',0,0,0,'ss','certs/private-key-1742977917.pem','certs/digital-cert-1742977899.txt'),
+(19,'12345678','12345678',0,0,'2025-03-26 07:42:26','2025-03-26 07:42:26','12345678','7c222fb2927d828af22f592134e8932480637c0d','user',1,1,1,'12345678','certs/private-key-1742974946.pem','certs/digital-cert-1742974946.txt');
 /*!40000 ALTER TABLE `cabang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -403,4 +406,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-03-24 14:51:14
+-- Dump completed on 2025-03-26 15:58:04

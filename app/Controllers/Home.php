@@ -59,7 +59,8 @@ class Home extends BaseController
         }
     
         $requestData = $json->data;
-        $privateKeyPath = WRITEPATH . 'certs/private-key.pem'; // adjust if needed
+        $cabang = $this->cabang->getCabang_byId($this->id_cabang);
+        $privateKeyPath = $cabang->private_key ? WRITEPATH . $cabang->private_key : null; // adjust if needed
     
         if (!file_exists($privateKeyPath)) {
             return $this->fail('Private key not found.');
@@ -336,8 +337,10 @@ class Home extends BaseController
         $bg_container = $this->background->backgroundByScreen('container_print', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
         $qrcode = new Generator;
-        $print = $this->cabang->get_status('print_status', $this->id_cabang)->message;
-        $printer = $this->cabang->get_status('printer_name', $this->id_cabang)->message;;
+        $cab = $this->cabang->getCabang_byId($this->id_cabang);
+        $print = $cab->print_status;
+        $printer = $cab->printer_name;
+        $cert = $cab->certificate;
         $dir = base64_decode($dir);
         $videos = glob(FCPATH . 'assets/photobooth/'. $dir . '/video*', GLOB_BRACE);
         $videos = array_map(function ($video) use ($dir) {
@@ -355,7 +358,8 @@ class Home extends BaseController
             'videos'        => $videos,
             'print'         => filter_var($print, FILTER_VALIDATE_BOOLEAN),
             'printer'       => !empty($printer) ? $printer : DEFAULT_PRINTER,
-            'qrcode'        => $qrcode->size(250)->generate(base_url("download/" . base64_encode($dir)))
+            'qrcode'        => $qrcode->size(250)->generate(base_url("download/" . base64_encode($dir))),
+            'cert'          => $cert ?? null
         ];
 
         return view('guest/wrapper', $mdata);

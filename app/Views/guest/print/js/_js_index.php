@@ -13,7 +13,17 @@
         let print = sessionStorage.getItem('print') || 1;
         const btnPrint = <?= json_encode($print) ?>;
         const printer = <?= json_encode($printer) ?>;
-        console.log(printer);
+        const cert = <?= json_encode($cert) ?>
+        
+
+        if(!cert) {
+            Swal.fire({
+                    title: 'Error!',
+                    text: 'Certificate printer tidak ditermukan!',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+            });
+        }
 
         function printImage() {
             console.log(print);
@@ -72,7 +82,7 @@
 
         function printPDF(pdfUrl, printerName) {
             qz.security.setCertificatePromise(function(resolve, reject) {
-               fetch("assets/certs/digital-certificate.txt", {cache: 'no-store', headers: {'Content-Type': 'text/plain'}})
+               fetch("assets/" + cert, {cache: 'no-store', headers: {'Content-Type': 'text/plain'}})
                   .then(function(data) { data.ok ? resolve(data.text()) : reject(data.text()); });
             });
             

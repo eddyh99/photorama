@@ -57,7 +57,20 @@
                                     <label class="form-label" for="printer_name">Nama Printer</label>
                                     <div class="input-group input-group-merge">
                                         <input class="form-control" name="printer_name" type="text" />
+                                        <button id="detect-printer" type="button" class="btn btn-danger">Detect</button>
                                     </div>
+                                </div>
+                                <div class="row row-cols-2">
+                                <div class="mb-3">
+                                    <label class="form-label" for="private_key">Unggah Private Key</label>
+                                        <input class="form-control" name="private_key" type="file" accept=".pem" />
+                                        <small class="text-danger mt-1">Ekstensi .pem</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="certificate">Unggah Sertifikat</label>
+                                        <input class="form-control" name="certificate" type="file" accept=".txt" />
+                                        <small class="text-danger mt-1">Ekstensi .txt</small>
+                                </div>
                                 </div>
                             <div class="mb-3">
                                 <label class="form-label" for="namabarang">Lokasi</label>
