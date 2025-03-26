@@ -77,6 +77,14 @@ class Branch extends BaseController
             'lokasi' => [
                 'label' => 'Lokasi',
                 'rules' => 'required'
+            ],
+            'private_key' => [
+                'label' => 'Kunci Privat',
+                'rules' => 'uploaded[private_key]|max_size[private_key,2048]'
+            ],
+            'certificate' => [
+                'label' => 'Sertifikat',
+                'rules' => 'uploaded[certificate]|ext_in[certificate,txt]|max_size[certificate,2048]'
             ]
         ]);
 
@@ -85,6 +93,13 @@ class Branch extends BaseController
             session()->setFlashdata('failed', $this->validation->listErrors());
             return redirect()->to(BASE_URL . "admin/branch/add")->withInput();
         }
+
+        $private_key = $this->request->getFile('private_key');
+        $cert = $this->request->getFile('certificate');
+        $pk_name = 'private-key-' . time() . '.pem';
+        $cert_name = 'digital-cert-' . time() . '.txt';
+        $private_key->move(WRITEPATH . 'certs/', $pk_name);
+        $cert->move(FCPATH . 'assets/certs/', $cert_name);
 
 
         $mdata = [
@@ -97,6 +112,8 @@ class Branch extends BaseController
             'payment_status' => $this->request->getVar('payment_status') ? true : false,
             'retake_status' => $this->request->getVar('retake_status') ? true : false,
             'print_status' => $this->request->getVar('print_status') ? true : false,
+            'private_key' =>  'certs/' . $pk_name,
+            'certificate' => 'certs/' . $cert_name
         ];
 
         $result = $this->cabang->insertCabang($mdata);
