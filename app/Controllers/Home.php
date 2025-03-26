@@ -59,7 +59,8 @@ class Home extends BaseController
         }
     
         $requestData = $json->data;
-        $privateKeyPath = WRITEPATH . 'certs/private-key.pem'; // adjust if needed
+        $cabang = $this->cabang->getCabang_byId($this->id_cabang);
+        $privateKeyPath = $cabang->private_key ? WRITEPATH . $cabang->private_key : null; // adjust if needed
     
         if (!file_exists($privateKeyPath)) {
             return $this->fail('Private key not found.');

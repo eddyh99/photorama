@@ -178,7 +178,7 @@ class Branch extends BaseController
         if($private_key && $private_key->isValid()) {
             if(empty($pk_name)) {
                 $pk_name = 'private-key-' . time() . '.pem';
-                $mdata['private_key'] = $pk_name;
+                $mdata['private_key'] = 'certs/' . $pk_name;
             }
             $private_key->move(WRITEPATH . 'certs/', $pk_name, true);
         }
@@ -186,7 +186,7 @@ class Branch extends BaseController
         if($cert && $cert->isValid()) {
             if(empty($cert_name)) {
                 $cert_name = 'digital-cert-' . time() . '.txt';
-                $mdata['certificate'] = $cert_name;
+                $mdata['certificate'] = 'certs/' . $cert_name;
             }
             $cert->move(FCPATH . 'assets/certs/', $cert_name, true);
         }
