@@ -24,4 +24,5 @@ $routes->get('/browse/(:any)', 'Home::browseFiles/$1');
 $routes->get('/delete/(:any)', 'Admin\Photo::delete_userFiles/$1');
 $routes->get('/camera', 'Home::camera');
 $routes->get('/capture', 'Home::capture');
+$routes->get('/sign', 'Home::sign');
 $routes->get('/login', 'Auth::index');

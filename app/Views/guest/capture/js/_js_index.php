@@ -387,7 +387,7 @@
 
         mediaRecorder.onstop = async () => {
             const webmBlob = new Blob(recordedChunks, {
-                type: "video/webm"
+                mimeType: "video/webm; codecs=vp9"
             });
             console.log("WebM video saved as Blob:", webmBlob);
 

@@ -71,6 +71,28 @@
 
 
         function printPDF(pdfUrl, printerName) {
+            qz.security.setCertificatePromise(function(resolve, reject) {
+               fetch("assets/certs/digital-certificate.txt", {cache: 'no-store', headers: {'Content-Type': 'text/plain'}})
+                  .then(function(data) { data.ok ? resolve(data.text()) : reject(data.text()); });
+            });
+            
+            
+            qz.security.setSignaturePromise(function(toSign) {
+               return function(resolve, reject) {
+                   fetch('/sign', {
+                       method: 'POST',
+                       body: JSON.stringify({ data: toSign }),
+                       headers: { 'Content-Type': 'application/json' }
+                   })
+                   .then(response => {
+                       if (!response.ok) throw new Error("Signing request failed");
+                       return response.text();
+                   })
+                   .then(resolve)
+                   .catch(reject);
+               };
+            });
+            
             qz.websocket.connect().then(() => {
                 const config = qz.configs.create(printerName);
                 return qz.print(config, [{

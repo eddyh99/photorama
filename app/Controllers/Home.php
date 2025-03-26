@@ -44,6 +44,45 @@ class Home extends BaseController
 
         return view('guest/wrapper', $mdata);
     }
+    
+    public function sign()
+    {
+        // Make sure it’s a POST request
+        if ($this->request->getMethod() !== 'post') {
+            return $this->fail('Invalid request method.');
+        }
+    
+        // Get JSON data from POST body
+        $json = $this->request->getJSON();
+        if (!$json || !isset($json->data)) {
+            return $this->fail('Missing data to sign.');
+        }
+    
+        $requestData = $json->data;
+        $privateKeyPath = WRITEPATH . 'certs/private-key.pem'; // adjust if needed
+    
+        if (!file_exists($privateKeyPath)) {
+            return $this->fail('Private key not found.');
+        }
+    
+        $privateKey = openssl_get_privatekey(file_get_contents($privateKeyPath));
+    
+        if (!$privateKey) {
+            return $this->fail('Unable to load private key.');
+        }
+    
+        $signature = null;
+        $success = openssl_sign($requestData, $signature, $privateKey, 'sha512');
+    
+        if ($success && $signature) {
+            return $this->response
+                ->setHeader('Content-Type', 'text/plain')
+                ->setBody(base64_encode($signature));
+        }
+    
+        return $this->fail('Error signing message.');
+    }
+
 
     public function order() {
         $background = $this->background->backgroundByScreen('screen_order', $this->id_cabang);
@@ -259,7 +298,25 @@ class Home extends BaseController
         $background = $this->background->backgroundByScreen('screen_filter', $this->id_cabang);
         $bg_container = $this->background->backgroundByScreen('container_filter', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_filter', $this->id_cabang);
+        $path = FCPATH . "assets/photobooth/".base64_decode($dir) . "/";
+        
+        $input = $path . 'video.mp4';
+        $temp = $path . 'temp.mp4';
+        $ffmpeg = '/usr/bin/ffmpeg';
+        
+        $command = "$ffmpeg -y -i \"{$input}\" -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -shortest -vf \"scale=1024:768,format=yuv420p\" -c:v libx264 -profile:v baseline -level 3.0 -pix_fmt yuv420p -c:a aac -b:a 128k -crf 26 -preset fast -movflags +faststart \"{$temp}\" 2>&1 && mv -f \"{$temp}\" \"{$input}\"";
 
+        exec($command, $output, $return_var);
+        // echo "<pre>";
+        // print_r($output);
+        // echo "</pre>";
+        
+        // if ($return_var === 0) {
+        //     echo "Video converted and replaced successfully.";
+        // } else {
+        //     echo "Conversion failed.";
+        // }
+        // die;
         $mdata = [
             'title'         => 'Make Filter - ' . NAMETITLE,
             'content'       => 'guest/filter/index',
