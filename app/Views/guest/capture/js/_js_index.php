@@ -33,10 +33,14 @@
     let mediaRecorder, recordedChunks;
     const positions = [];
     let totalPhotos = 0;
+    let animationFrameId;
 
     function redirecTo() {
         save();
     }
+
+    window.addEventListener("beforeunload", cleanup);
+    window.addEventListener("pagehide", cleanup);
 
 
     async function getCoordinates(frame) {
@@ -53,52 +57,34 @@
     }
 
     async function startWebcam(idx = null) {
+        
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
-                    width: {
-                        ideal: 1080
-                    },
-                    height: {
-                        ideal: 768
-                    },
-                    deviceId: {
-                        exact: camera.device
-                    }
+                    width: { ideal: 1080 },
+                    height: { ideal: 768 },
+                    deviceId: { exact: camera.device }
                 },
                 audio: false
             });
+            
             video.srcObject = stream;
 
             video.addEventListener('play', () => {
-                const frame = positions[pictureCount - 1] || positions[0];
-                const {
-                    targetWidth,
-                    targetHeight,
-                    x,
-                    y
-                } = getAspectRatio(idx);
-
-                // Ukuran canvas sesuai video asli agar ada area hitam di sekitarnya
+                const { targetWidth, targetHeight, x, y } = getAspectRatio(idx);
+                
                 overlayCanvas.width = video.videoWidth;
                 overlayCanvas.height = video.videoHeight;
-
                 const context = overlayCanvas.getContext('2d');
 
                 function renderFrame() {
                     if (!video.paused && !video.ended) {
-                        // Bersihkan dan isi dengan hitam
                         context.fillStyle = "black";
                         context.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
                         context.save();
-                        context.translate(video.videoWidth / 2, video.videoHeight / 2); // Pusatkan rotasi
-                        // context.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
-                        // context.scale(-1, 1); // Flip horizontal (opsional)
-
-                        // Gambar video dengan ukuran sesuai aspect ratio
+                        context.translate(video.videoWidth / 2, video.videoHeight / 2);
                         context.drawImage(video, x, y, targetWidth, targetHeight, -targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight);
-
                         context.restore();
 
                         requestAnimationFrame(renderFrame);
@@ -107,75 +93,11 @@
 
                 renderFrame();
                 startRecording(stream, targetWidth, targetHeight, x, y);
-                startPictureCountdown();
-            });
-
-        } catch (error) {
-            console.error('Error accessing webcam: ', error);
-            if (confirm('No camera selected. Do you want to go back?')) {
-                window.location.href = "<?= BASE_URL ?>camera"
-            }
-        }
-    }
-
-    // Access the webcam
-    async function startWebcam2(idx = null) {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    width: {
-                        ideal: 1080
-                    },
-                    height: {
-                        ideal: 768
-                    },
-                    deviceId: {
-                        exact: camera.device
-                    }
-                },
-                audio: false
-            });
-            video.srcObject = stream;
-
-            video.addEventListener('play', () => {
-                const frame = positions[pictureCount - 1] || positions[0];
-                const {
-                    targetWidth,
-                    targetHeight,
-                    x,
-                    y
-                } = getAspectRatio(idx);
-
-                // Ukuran canvas sesuai video asli agar ada area hitam di sekitarnya
-                overlayCanvas.width = video.videoWidth;
-                overlayCanvas.height = video.videoHeight;
-
-                const context = overlayCanvas.getContext('2d');
-
-                function renderFrame() {
-                    if (!video.paused && !video.ended) {
-                        // Bersihkan dan isi dengan hitam
-                        context.fillStyle = "black";
-                        context.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-
-                        context.save();
-                        context.translate(video.videoWidth / 2, video.videoHeight / 2); // Pusatkan rotasi
-                        // context.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
-                        // context.scale(-1, 1); // Flip horizontal (opsional)
-
-                        // Gambar video dengan ukuran sesuai aspect ratio
-                        context.drawImage(video, x, y, targetWidth, targetHeight, -targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight);
-
-                        context.restore();
-
-                        requestAnimationFrame(renderFrame);
-                    }
+                
+                if (idx === null) {
+                    startPictureCountdown();
                 }
-
-                renderFrame();
-                startRecording(stream, targetWidth, targetHeight, x, y);
-                // startPictureCountdown();
-            });
+            }, { once: true }); // Gunakan once:true untuk menghindari duplikasi event listener
 
         } catch (error) {
             console.error('Error accessing webcam: ', error);
@@ -259,6 +181,8 @@
                     video.srcObject.getTracks().forEach(track => track.stop());
                     video.srcObject = null;
                 }
+                console.log('retake');
+                
                 await startWebcam(idx + 1);
             }
 
@@ -271,10 +195,14 @@
             audio.play().catch(err => console.warn("Audio play was prevented:", err));
 
             let countdown = countdownValue;
+            console.log(mediaRecorder)
 
             // Start recording
             if (mediaRecorder && mediaRecorder.state === 'inactive') {
-                mediaRecorder.start();
+                setTimeout(() => {
+                    mediaRecorder.start();
+                }, 500);
+
             }
 
             const countdownInterval = setInterval(async () => {
@@ -362,7 +290,7 @@
 
                     if (pictureCount < totalPhotos) {
                         setTimeout(async () => {
-                            await startWebcam2();
+                            await startWebcam();
                         }, 2000);
                     }
                 }
@@ -386,6 +314,10 @@
         };
 
         mediaRecorder.onstop = async () => {
+            stream.getTracks().forEach(track => track.stop());
+            if (animationFrameId) {
+                        cancelAnimationFrame(animationFrameId);
+            }
             const webmBlob = new Blob(recordedChunks, {
                 mimeType: "video/webm; codecs=vp9"
             });
@@ -404,6 +336,7 @@
         // Hentikan rekaman setelah 3 detik
         setTimeout(() => {
             mediaRecorder.stop();
+            $('#btn-retake').removeClass('pe-none');
             $('#select-filter').text('Select Filter');
             $('#select-filter').removeAttr('disabled');
         }, 8000);
@@ -412,7 +345,7 @@
 
     function getAspectRatio(idx) {
 
-        const frame = idx ? positions[idx - 1] : positions[pictureCount - 1] || positions[0];
+        const frame = idx ? positions[idx - 1] : positions[(pictureCount == 0 ? 1 : pictureCount) - 1];
         const aspectRatio = frame.width / frame.height;
 
         // Ukuran asli video
@@ -453,6 +386,7 @@
             confirmButtonText: "OK"
         }).then(async (result) => {
             if (result.isConfirmed) {
+                await cleanup();
                 await getCoordinates(frame);
                 startWebcam(); // Memulai kamera hanya jika pengguna menekan OK
             } else {
@@ -553,7 +487,8 @@
 
                     ctxVideo.drawImage(tempVideoCanvas, pos.x, pos.y, pos.width, pos.height);
                     ctxVideo.drawImage(frameVideo, 0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
-                    requestAnimationFrame(drawVideoFrame);
+
+                    animationFrameId = requestAnimationFrame(drawVideoFrame);
 
                 }
 
@@ -677,6 +612,9 @@
             confirmButtonText: "Yes, retake!",
             cancelButtonText: "Cancel"
         }).then(async (result) => {
+            if (animationFrameId) {
+                        cancelAnimationFrame(animationFrameId);
+            }
             if (result.isConfirmed) {
                 pictureCount = (totalPhotos - 1);
                 startPictureCountdown(index);
@@ -688,4 +626,39 @@
         localStorage.removeItem("sisa_waktu");
         window.location.href = "<?= BASE_URL ?>frame";
     }
+
+    function cleanup() {
+    // Hentikan semua track video jika ada
+    if (video.srcObject) {
+        video.srcObject.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+    }
+    
+    // Hentikan perekaman jika masih berjalan
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+    }
+    
+    // Hapus blob hasil rekaman
+    if (videoBlob) {
+        URL.revokeObjectURL(videoBlob);
+    }
+    
+    // Hapus objek URL dari foto yang diambil
+    selectedPhotos.forEach(photo => {
+        if (photo.src) URL.revokeObjectURL(photo.src);
+    });
+    
+    // Bersihkan elemen tampilan
+    photosContainer.innerHTML = "";
+    recordedVideoContainer.innerHTML = "";
+    
+    // Hentikan animasi jika ada
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+    }
+    
+    console.log("Cleanup completed before unload.");
+}
+
 </script>
