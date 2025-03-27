@@ -11,9 +11,9 @@ class Home extends BaseController
 {
 
     public function __construct()
-    {   
+    {
         $user = $_COOKIE['logged_user'] ?? null;
-        $this->id_cabang = $user ? json_decode($user)->id_cabang: null;
+        $this->id_cabang = $user ? json_decode($user)->id_cabang : null;
         $this->cabang       = model('App\Models\Mdl_cabang');
         $this->qris       = model('App\Models\Mdl_qris');
         $this->background       = model('App\Models\Mdl_background');
@@ -23,9 +23,10 @@ class Home extends BaseController
         $this->timer       = model('App\Models\Mdl_timer');
         $this->pembayaran       = model('App\Models\Mdl_pembayaran');
         $this->camera       = model('App\Models\Mdl_camera');
-	}
+    }
 
-    public function testing() {
+    public function testing()
+    {
         return view('guest/script');
     }
 
@@ -44,48 +45,49 @@ class Home extends BaseController
 
         return view('guest/wrapper', $mdata);
     }
-    
+
     public function sign()
     {
         // Make sure it’s a POST request
         if ($this->request->getMethod() !== 'post') {
             return $this->fail('Invalid request method.');
         }
-    
+
         // Get JSON data from POST body
         $json = $this->request->getJSON();
         if (!$json || !isset($json->data)) {
             return $this->fail('Missing data to sign.');
         }
-    
+
         $requestData = $json->data;
         $cabang = $this->cabang->getCabang_byId($this->id_cabang);
         $privateKeyPath = $cabang->private_key ? WRITEPATH . $cabang->private_key : null; // adjust if needed
-    
+
         if (!file_exists($privateKeyPath)) {
             return $this->fail('Private key not found.');
         }
-    
+
         $privateKey = openssl_get_privatekey(file_get_contents($privateKeyPath));
-    
+
         if (!$privateKey) {
             return $this->fail('Unable to load private key.');
         }
-    
+
         $signature = null;
         $success = openssl_sign($requestData, $signature, $privateKey, 'sha512');
-    
+
         if ($success && $signature) {
             return $this->response
                 ->setHeader('Content-Type', 'text/plain')
                 ->setBody(base64_encode($signature));
         }
-    
+
         return $this->fail('Error signing message.');
     }
 
 
-    public function order() {
+    public function order()
+    {
         $background = $this->background->backgroundByScreen('screen_order', $this->id_cabang);
         $price = $this->price->getBy_cabang($this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_order', $this->id_cabang);
@@ -103,12 +105,13 @@ class Home extends BaseController
         return view('guest/wrapper', $mdata);
     }
 
-    public function payment($price, $print = null) {
+    public function payment($price, $print = null)
+    {
         $price = base64_decode($price);
-        if(!is_numeric($price) || is_null($print)) return redirect()->to(BASE_URL .'order');
+        if (!is_numeric($price) || is_null($print)) return redirect()->to(BASE_URL . 'order');
 
         $kd_voucher = $this->request->getVar('voucher');
-        if(!empty($kd_voucher)) {
+        if (!empty($kd_voucher)) {
             $voucher = new Voucher;
             $result = $voucher->cekVoucher($kd_voucher, $this->id_cabang);
 
@@ -118,12 +121,11 @@ class Home extends BaseController
             }
             session()->setFlashdata('success', $result->message);
             $price =  $price - $result->data->potongan_harga;
-
         }
         $payment =  Payment::QRIS($price);
-        if(!$payment->success) {
+        if (!$payment->success) {
             session()->setFlashdata('failed', 'Maaf, coba kembali beberapa saat lagi.');
-            return redirect()->to(BASE_URL. 'order');
+            return redirect()->to(BASE_URL . 'order');
         }
         $cabang = $this->cabang->getCabang_byId($this->id_cabang);
 
@@ -155,15 +157,16 @@ class Home extends BaseController
         return view('guest/wrapper', $mdata);
     }
 
-    public function frame() {
+    public function frame()
+    {
         $background = $this->background->backgroundByScreen('screen_frame', $this->id_cabang);
         $bg_container = $this->background->backgroundByScreen('container_frame', $this->id_cabang);
         $frame = $this->frame->getByCabang($this->id_cabang);
         $frames = [];
-        if(!empty($frame)) {
+        if (!empty($frame)) {
             foreach ($frame as $row) {
                 $frameId = $row->id;
-    
+
                 // Jika frame belum ada di array, tambahkan data frame
                 if (!isset($frames[$frameId])) {
                     $frames[$frameId] = (object) [
@@ -173,7 +176,7 @@ class Home extends BaseController
                         'coordinates' => [] // Array kosong untuk koordinat
                     ];
                 }
-    
+
                 // Tambahkan koordinat ke dalam array frame yang sesuai
                 $frames[$frameId]->coordinates[] = (object) [
                     'x' => $row->x,
@@ -201,7 +204,8 @@ class Home extends BaseController
         return view('guest/wrapper', $mdata);
     }
 
-    public function camera() {
+    public function camera()
+    {
         $background = $this->background->backgroundByScreen('screen_select_camera', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_select_camera', $this->id_cabang);
         $camera_rotation = $this->camera->getBy_cabang($this->id_cabang);
@@ -218,7 +222,8 @@ class Home extends BaseController
         return view('guest/wrapper', $mdata);
     }
 
-    public function capture() {
+    public function capture()
+    {
         $background = $this->background->backgroundByScreen('screen_capture_photo', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_capture_photo', $this->id_cabang);
         $countdown = $this->timer->get_byCabang_andScreen('countdown', $this->id_cabang);
@@ -244,8 +249,8 @@ class Home extends BaseController
         $time = time();
         $cabang = $this->cabang->getCabang_byId($this->id_cabang);
         $is_event = filter_var($cabang->is_event, FILTER_VALIDATE_BOOLEAN);
-        $nama_cabang= $cabang->nama_cabang ?? 'unknown';
-        $uploadDir = "assets/photobooth/" . ($is_event ? "$nama_cabang/" : '' ) .$nama_cabang. "-$time/";
+        $nama_cabang = $cabang->nama_cabang ?? 'unknown';
+        $uploadDir = "assets/photobooth/" . ($is_event ? "$nama_cabang/" : '') . $nama_cabang . "-$time/";
         // Buat direktori jika belum ada
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
@@ -256,11 +261,11 @@ class Home extends BaseController
         foreach ($_FILES as $key => $file) {
             if ($file['error'] === UPLOAD_ERR_OK) {
                 $uploadFile = "$uploadDir/" . ($file['type'] == "image/jpeg" ? "$key.jpg" : "$key.mp4");
-                
+
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     $response = [
                         'success' => true,
-                        'folder'  => base64_encode(($is_event ? "$nama_cabang/" : '') . $nama_cabang . '-' .$time),
+                        'folder'  => base64_encode(($is_event ? "$nama_cabang/" : '') . $nama_cabang . '-' . $time),
                         'form'    => null
                     ];
                 }
@@ -273,45 +278,46 @@ class Home extends BaseController
     public function updateRecord($dir)
     {
         $uploadDir = "assets/photobooth/" . base64_decode($dir) . "/";
-    
+
         // Jika direktori tidak ada, kembalikan false
         if (!is_dir($uploadDir)) {
             return json_encode(['success' => false, 'message' => 'Folder tidak ditemukan']);
         }
-    
+
         $success = false; // Default gagal
-    
+
         // Proses unggah foto jika ada
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
             $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "photos.jpg") || $success;
         }
-    
+
         // Proses unggah video jika ada
         if (isset($_FILES['video']) && $_FILES['video']['error'] === UPLOAD_ERR_OK) {
             $success = move_uploaded_file($_FILES['video']['tmp_name'], $uploadDir . "video.mp4") || $success;
         }
-    
+
         return json_encode(['success' => $success]);
     }
-    
 
-    public function filter($dir) {
+
+    public function filter($dir)
+    {
         $background = $this->background->backgroundByScreen('screen_filter', $this->id_cabang);
         $bg_container = $this->background->backgroundByScreen('container_filter', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_filter', $this->id_cabang);
-        $path = FCPATH . "assets/photobooth/".base64_decode($dir) . "/";
-        
+        $path = FCPATH . "assets/photobooth/" . base64_decode($dir) . "/";
+
         $input = $path . 'video.mp4';
         $temp = $path . 'temp.mp4';
         $ffmpeg = '/usr/bin/ffmpeg';
-        
+
         $command = "$ffmpeg -y -i \"{$input}\" -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -shortest -vf \"scale=1024:768,format=yuv420p\" -c:v libx264 -profile:v baseline -level 3.0 -pix_fmt yuv420p -c:a aac -b:a 128k -crf 26 -preset fast -movflags +faststart \"{$temp}\" 2>&1 && mv -f \"{$temp}\" \"{$input}\"";
 
         exec($command, $output, $return_var);
         // echo "<pre>";
         // print_r($output);
         // echo "</pre>";
-        
+
         // if ($return_var === 0) {
         //     echo "Video converted and replaced successfully.";
         // } else {
@@ -329,10 +335,10 @@ class Home extends BaseController
         ];
 
         return view('guest/wrapper', $mdata);
-
     }
 
-    public function print($dir) {
+    public function print($dir)
+    {
         $background = $this->background->backgroundByScreen('screen_print', $this->id_cabang);
         $bg_container = $this->background->backgroundByScreen('container_print', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_print', $this->id_cabang);
@@ -342,7 +348,7 @@ class Home extends BaseController
         $printer = $cab->printer_name;
         $cert = $cab->certificate;
         $dir = base64_decode($dir);
-        $videos = glob(FCPATH . 'assets/photobooth/'. $dir . '/video*', GLOB_BRACE);
+        $videos = glob(FCPATH . 'assets/photobooth/' . $dir . '/video*', GLOB_BRACE);
         $videos = array_map(function ($video) use ($dir) {
             return BASE_URL . 'assets/photobooth/' . $dir . '/' . basename($video);
         }, $videos);
@@ -363,10 +369,10 @@ class Home extends BaseController
         ];
 
         return view('guest/wrapper', $mdata);
-
     }
 
-    public function finish() {
+    public function finish()
+    {
         $background = $this->background->backgroundByScreen('screen_finish', $this->id_cabang);
         $timer = $this->timer->get_byCabang_andScreen('screen_finish', $this->id_cabang);
         $mdata = [
@@ -383,7 +389,7 @@ class Home extends BaseController
     public function userFiles($folder)
     {
         $path = FCPATH . "assets/photobooth/" . base64_decode($folder);
-        
+
         if (!is_dir($path)) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
@@ -403,8 +409,8 @@ class Home extends BaseController
 
     public function browseFiles($folder)
     {
-        $path = FCPATH . "assets/photobooth/" .$folder;
-        
+        $path = FCPATH . "assets/photobooth/" . $folder;
+
         if (!is_dir($path)) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
@@ -421,13 +427,15 @@ class Home extends BaseController
         return view('guest/wrapper', $mdata);
     }
 
-    public function get_coordinates() {
+    public function get_coordinates()
+    {
         $frame = $this->request->getVar('frame');
         $result = $this->frame->getByFile(urldecode($frame));
         echo json_encode($result);
     }
 
-    public function get_payment_status() {
+    public function get_payment_status()
+    {
         $payment_status = $this->cabang->get_status('payment_status', $this->id_cabang)->message ?? true;
         $result = ['status' => filter_var($payment_status, FILTER_VALIDATE_BOOLEAN)];
         return $this->response->setJSON($result);
@@ -494,7 +502,7 @@ class Home extends BaseController
         // Konfigurasi Dompdf
         $options = new Options();
         $options->set('defaultFont', 'NotaFonts');
-        
+
         // Buat instance Dompdf
         $dompdf = new Dompdf($options);
         $image = FCPATH . 'assets/photobooth/' . base64_decode($img) . '/photos.jpg';
@@ -519,7 +527,7 @@ class Home extends BaseController
         // Konversi gambar ke Base64
         $imageData = base64_encode(file_get_contents($image));
         $imageSrc = "data:.jpg;base64,$imageData";
-    
+
         // Generate HTML dengan jumlah halaman sesuai $print
         $html = '<html><head>
         <style>
@@ -537,24 +545,24 @@ class Home extends BaseController
         }
 
         $html .= '</body></html>';
-        
+
         $dompdf->loadHtml($html);
-        
+
         // Set ukuran kertas ke 4R (4x6 inci)
         $dompdf->setPaper([4 * 25.4, 6 * 25.4]);
-        
+
         // Render PDF
         $dompdf->render();
-        
+
         // Simpan file PDF ke dalam folder
         $folderPath = 'assets/pdf/';
         $fileName = "photorama-$date.pdf";
-        
+
         // Pastikan folder tersedia
         if (!is_dir($folderPath)) {
             mkdir($folderPath, 0777, true);
         }
-        
+
         file_put_contents($folderPath . $fileName, $dompdf->output());
 
         // Eksekusi print
@@ -572,5 +580,4 @@ class Home extends BaseController
             "pdf_url" => BASE_URL . $folderPath . $fileName
         ]);
     }
-
 }

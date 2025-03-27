@@ -14,14 +14,14 @@
         const btnPrint = <?= json_encode($print) ?>;
         const printer = <?= json_encode($printer) ?>;
         const cert = <?= json_encode($cert) ?>
-        
 
-        if(!cert) {
+
+        if (!cert) {
             Swal.fire({
-                    title: 'Error!',
-                    text: 'Certificate printer tidak ditermukan!',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
+                title: 'Error!',
+                text: 'Certificate printer tidak ditermukan!',
+                icon: 'error',
+                confirmButtonText: 'OK'
             });
         }
 
@@ -82,27 +82,38 @@
 
         function printPDF(pdfUrl, printerName) {
             qz.security.setCertificatePromise(function(resolve, reject) {
-               fetch("assets/" + cert, {cache: 'no-store', headers: {'Content-Type': 'text/plain'}})
-                  .then(function(data) { data.ok ? resolve(data.text()) : reject(data.text()); });
+                fetch("assets/" + cert, {
+                        cache: 'no-store',
+                        headers: {
+                            'Content-Type': 'text/plain'
+                        }
+                    })
+                    .then(function(data) {
+                        data.ok ? resolve(data.text()) : reject(data.text());
+                    });
             });
-            
-            
+
+
             qz.security.setSignaturePromise(function(toSign) {
-               return function(resolve, reject) {
-                   fetch('/sign', {
-                       method: 'POST',
-                       body: JSON.stringify({ data: toSign }),
-                       headers: { 'Content-Type': 'application/json' }
-                   })
-                   .then(response => {
-                       if (!response.ok) throw new Error("Signing request failed");
-                       return response.text();
-                   })
-                   .then(resolve)
-                   .catch(reject);
-               };
+                return function(resolve, reject) {
+                    fetch('/sign', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                data: toSign
+                            }),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) throw new Error("Signing request failed");
+                            return response.text();
+                        })
+                        .then(resolve)
+                        .catch(reject);
+                };
             });
-            
+
             qz.websocket.connect().then(() => {
                 const config = qz.configs.create(printerName);
                 return qz.print(config, [{
