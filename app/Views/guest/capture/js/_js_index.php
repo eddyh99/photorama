@@ -235,18 +235,21 @@
                     const rotatedCanvas = document.createElement('canvas');
                     const rotatedContext = rotatedCanvas.getContext('2d');
 
-                    if (rotation === 90 || rotation === 270) {
-                        rotatedCanvas.width = targetHeight;
-                        rotatedCanvas.height = targetWidth;
-                    } else {
-                        rotatedCanvas.width = targetWidth;
-                        rotatedCanvas.height = targetHeight;
-                    }
+                    // if (rotation == 90 || rotation == 270) {
+                    //     rotatedCanvas.width = targetHeight;
+                    //     rotatedCanvas.height = targetWidth;
+                    // } else {
+                    //     rotatedCanvas.width = targetWidth;
+                    //     rotatedCanvas.height = targetHeight;
+                    // }
+
+                    rotatedCanvas.width = targetWidth;
+                    rotatedCanvas.height = targetHeight;
 
                     rotatedContext.save();
                     rotatedContext.translate(rotatedCanvas.width / 2, rotatedCanvas.height / 2);
                     rotatedContext.scale(-1, 1); //for mirroring
-                    rotatedContext.rotate((rotation * Math.PI) / 180);
+                    // rotatedContext.rotate((rotation * Math.PI) / 180);
                     rotatedContext.drawImage(
                         snapshotCanvas,
                         -snapshotCanvas.width / 2,
