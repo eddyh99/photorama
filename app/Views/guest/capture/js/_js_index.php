@@ -53,52 +53,34 @@
     }
 
     async function startWebcam(idx = null) {
+        
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
-                    width: {
-                        ideal: 1080
-                    },
-                    height: {
-                        ideal: 768
-                    },
-                    deviceId: {
-                        exact: camera.device
-                    }
+                    width: { ideal: 1080 },
+                    height: { ideal: 768 },
+                    deviceId: { exact: camera.device }
                 },
                 audio: false
             });
+            
             video.srcObject = stream;
 
             video.addEventListener('play', () => {
-                const frame = positions[pictureCount - 1] || positions[0];
-                const {
-                    targetWidth,
-                    targetHeight,
-                    x,
-                    y
-                } = getAspectRatio(idx);
-
-                // Ukuran canvas sesuai video asli agar ada area hitam di sekitarnya
+                const { targetWidth, targetHeight, x, y } = getAspectRatio(idx);
+                
                 overlayCanvas.width = video.videoWidth;
                 overlayCanvas.height = video.videoHeight;
-
                 const context = overlayCanvas.getContext('2d');
 
                 function renderFrame() {
                     if (!video.paused && !video.ended) {
-                        // Bersihkan dan isi dengan hitam
                         context.fillStyle = "black";
                         context.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
                         context.save();
-                        context.translate(video.videoWidth / 2, video.videoHeight / 2); // Pusatkan rotasi
-                        // context.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
-                        // context.scale(-1, 1); // Flip horizontal (opsional)
-
-                        // Gambar video dengan ukuran sesuai aspect ratio
+                        context.translate(video.videoWidth / 2, video.videoHeight / 2);
                         context.drawImage(video, x, y, targetWidth, targetHeight, -targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight);
-
                         context.restore();
 
                         requestAnimationFrame(renderFrame);
@@ -107,75 +89,11 @@
 
                 renderFrame();
                 startRecording(stream, targetWidth, targetHeight, x, y);
-                startPictureCountdown();
-            });
-
-        } catch (error) {
-            console.error('Error accessing webcam: ', error);
-            if (confirm('No camera selected. Do you want to go back?')) {
-                window.location.href = "<?= BASE_URL ?>camera"
-            }
-        }
-    }
-
-    // Access the webcam
-    async function startWebcam2(idx = null) {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    width: {
-                        ideal: 1080
-                    },
-                    height: {
-                        ideal: 768
-                    },
-                    deviceId: {
-                        exact: camera.device
-                    }
-                },
-                audio: false
-            });
-            video.srcObject = stream;
-
-            video.addEventListener('play', () => {
-                const frame = positions[pictureCount - 1] || positions[0];
-                const {
-                    targetWidth,
-                    targetHeight,
-                    x,
-                    y
-                } = getAspectRatio(idx);
-
-                // Ukuran canvas sesuai video asli agar ada area hitam di sekitarnya
-                overlayCanvas.width = video.videoWidth;
-                overlayCanvas.height = video.videoHeight;
-
-                const context = overlayCanvas.getContext('2d');
-
-                function renderFrame() {
-                    if (!video.paused && !video.ended) {
-                        // Bersihkan dan isi dengan hitam
-                        context.fillStyle = "black";
-                        context.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-
-                        context.save();
-                        context.translate(video.videoWidth / 2, video.videoHeight / 2); // Pusatkan rotasi
-                        // context.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
-                        // context.scale(-1, 1); // Flip horizontal (opsional)
-
-                        // Gambar video dengan ukuran sesuai aspect ratio
-                        context.drawImage(video, x, y, targetWidth, targetHeight, -targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight);
-
-                        context.restore();
-
-                        requestAnimationFrame(renderFrame);
-                    }
+                
+                if (idx === null) {
+                    startPictureCountdown();
                 }
-
-                renderFrame();
-                startRecording(stream, targetWidth, targetHeight, x, y);
-                // startPictureCountdown();
-            });
+            }, { once: true }); // Gunakan once:true untuk menghindari duplikasi event listener
 
         } catch (error) {
             console.error('Error accessing webcam: ', error);
@@ -362,7 +280,7 @@
 
                     if (pictureCount < totalPhotos) {
                         setTimeout(async () => {
-                            await startWebcam2();
+                            await startWebcam();
                         }, 2000);
                     }
                 }
@@ -527,43 +445,43 @@
                 }
             };
 
-            selectedVideo.addEventListener("loadeddata", function() {
-                if (recordingStarted) return;
-                selectedVideo.play();
-                const frameVideo = new Image();
-                frameVideo.src = frameImageSrc;
+            // selectedVideo.addEventListener("loadeddata", function() {
+            //     if (recordingStarted) return;
+            //     selectedVideo.play();
+            //     const frameVideo = new Image();
+            //     frameVideo.src = frameImageSrc;
 
-                function drawVideoFrame() {
-                    const tempVideoCanvas = document.createElement("canvas");
-                    const tempVideoCtx = tempVideoCanvas.getContext("2d");
+            //     function drawVideoFrame() {
+            //         const tempVideoCanvas = document.createElement("canvas");
+            //         const tempVideoCtx = tempVideoCanvas.getContext("2d");
 
-                    if (rotation % 180 === 90) {
-                        tempVideoCanvas.width = pos.height;
-                        tempVideoCanvas.height = pos.width;
-                    } else {
-                        tempVideoCanvas.width = pos.width;
-                        tempVideoCanvas.height = pos.height;
-                    }
+            //         if (rotation % 180 === 90) {
+            //             tempVideoCanvas.width = pos.height;
+            //             tempVideoCanvas.height = pos.width;
+            //         } else {
+            //             tempVideoCanvas.width = pos.width;
+            //             tempVideoCanvas.height = pos.height;
+            //         }
 
-                    tempVideoCtx.save();
-                    tempVideoCtx.translate(tempVideoCanvas.width / 2, tempVideoCanvas.height / 2);
-                    tempVideoCtx.rotate((rotation * Math.PI) / 180);
-                    tempVideoCtx.drawImage(selectedVideo, -pos.width / 2, -pos.height / 2, pos.width, pos.height);
-                    tempVideoCtx.restore();
+            //         tempVideoCtx.save();
+            //         tempVideoCtx.translate(tempVideoCanvas.width / 2, tempVideoCanvas.height / 2);
+            //         tempVideoCtx.rotate((rotation * Math.PI) / 180);
+            //         tempVideoCtx.drawImage(selectedVideo, -pos.width / 2, -pos.height / 2, pos.width, pos.height);
+            //         tempVideoCtx.restore();
 
-                    ctxVideo.drawImage(tempVideoCanvas, pos.x, pos.y, pos.width, pos.height);
-                    ctxVideo.drawImage(frameVideo, 0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
-                    requestAnimationFrame(drawVideoFrame);
+            //         ctxVideo.drawImage(tempVideoCanvas, pos.x, pos.y, pos.width, pos.height);
+            //         ctxVideo.drawImage(frameVideo, 0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
+            //         requestAnimationFrame(drawVideoFrame);
 
-                }
+            //     }
 
-                drawVideoFrame();
-                loadedVideos++;
-                if (loadedVideos === positions.length) {
-                    setTimeout(startVideoRecord, 1000);
-                }
+            //     drawVideoFrame();
+            //     loadedVideos++;
+            //     if (loadedVideos === positions.length) {
+            //         setTimeout(startVideoRecord, 1000);
+            //     }
 
-            });
+            // });
 
             // Tambahkan tombol retake jika belum ada
             let buttonId = "retake-btn-" + (pos.index - 1);
