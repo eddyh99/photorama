@@ -181,6 +181,8 @@
                     video.srcObject.getTracks().forEach(track => track.stop());
                     video.srcObject = null;
                 }
+                console.log('retake');
+                
                 await startWebcam(idx + 1);
             }
 
@@ -193,10 +195,14 @@
             audio.play().catch(err => console.warn("Audio play was prevented:", err));
 
             let countdown = countdownValue;
+            console.log(mediaRecorder)
 
             // Start recording
             if (mediaRecorder && mediaRecorder.state === 'inactive') {
-                mediaRecorder.start();
+                setTimeout(() => {
+                    mediaRecorder.start();
+                }, 500);
+
             }
 
             const countdownInterval = setInterval(async () => {
@@ -330,6 +336,7 @@
         // Hentikan rekaman setelah 3 detik
         setTimeout(() => {
             mediaRecorder.stop();
+            $('#btn-retake').removeClass('pe-none');
             $('#select-filter').text('Select Filter');
             $('#select-filter').removeAttr('disabled');
         }, 8000);
@@ -338,7 +345,7 @@
 
     function getAspectRatio(idx) {
 
-        const frame = idx ? positions[idx - 1] : positions[pictureCount - 1] || positions[0];
+        const frame = idx ? positions[idx - 1] : positions[(pictureCount == 0 ? 1 : pictureCount) - 1];
         const aspectRatio = frame.width / frame.height;
 
         // Ukuran asli video
