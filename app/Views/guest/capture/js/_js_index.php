@@ -57,22 +57,33 @@
     }
 
     async function startWebcam(idx = null) {
-        
+
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
-                    width: { ideal: 1080 },
-                    height: { ideal: 768 },
-                    deviceId: { exact: camera.device }
+                    width: {
+                        ideal: 1080
+                    },
+                    height: {
+                        ideal: 768
+                    },
+                    deviceId: {
+                        exact: camera.device
+                    }
                 },
                 audio: false
             });
-            
+
             video.srcObject = stream;
 
             video.addEventListener('play', () => {
-                const { targetWidth, targetHeight, x, y } = getAspectRatio(idx);
-                
+                const {
+                    targetWidth,
+                    targetHeight,
+                    x,
+                    y
+                } = getAspectRatio(idx);
+
                 overlayCanvas.width = video.videoWidth;
                 overlayCanvas.height = video.videoHeight;
                 const context = overlayCanvas.getContext('2d');
@@ -93,11 +104,13 @@
 
                 renderFrame();
                 startRecording(stream, targetWidth, targetHeight, x, y);
-                
+
                 if (idx === null) {
                     startPictureCountdown();
                 }
-            }, { once: true }); // Gunakan once:true untuk menghindari duplikasi event listener
+            }, {
+                once: true
+            }); // Gunakan once:true untuk menghindari duplikasi event listener
 
         } catch (error) {
             console.error('Error accessing webcam: ', error);
@@ -182,7 +195,7 @@
                     video.srcObject = null;
                 }
                 console.log('retake');
-                
+
                 await startWebcam(idx + 1);
             }
 
@@ -319,7 +332,7 @@
         mediaRecorder.onstop = async () => {
             stream.getTracks().forEach(track => track.stop());
             if (animationFrameId) {
-                        cancelAnimationFrame(animationFrameId);
+                cancelAnimationFrame(animationFrameId);
             }
             const webmBlob = new Blob(recordedChunks, {
                 mimeType: "video/webm; codecs=vp9"
@@ -616,7 +629,7 @@
             cancelButtonText: "Cancel"
         }).then(async (result) => {
             if (animationFrameId) {
-                        cancelAnimationFrame(animationFrameId);
+                cancelAnimationFrame(animationFrameId);
             }
             if (result.isConfirmed) {
                 pictureCount = (totalPhotos - 1);
@@ -631,37 +644,36 @@
     }
 
     function cleanup() {
-    // Hentikan semua track video jika ada
-    if (video.srcObject) {
-        video.srcObject.getTracks().forEach(track => track.stop());
-        video.srcObject = null;
-    }
-    
-    // Hentikan perekaman jika masih berjalan
-    if (mediaRecorder && mediaRecorder.state === "recording") {
-        mediaRecorder.stop();
-    }
-    
-    // Hapus blob hasil rekaman
-    if (videoBlob) {
-        URL.revokeObjectURL(videoBlob);
-    }
-    
-    // Hapus objek URL dari foto yang diambil
-    selectedPhotos.forEach(photo => {
-        if (photo.src) URL.revokeObjectURL(photo.src);
-    });
-    
-    // Bersihkan elemen tampilan
-    photosContainer.innerHTML = "";
-    recordedVideoContainer.innerHTML = "";
-    
-    // Hentikan animasi jika ada
-    if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-    }
-    
-    console.log("Cleanup completed before unload.");
-}
+        // Hentikan semua track video jika ada
+        if (video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+        }
 
+        // Hentikan perekaman jika masih berjalan
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+        }
+
+        // Hapus blob hasil rekaman
+        if (videoBlob) {
+            URL.revokeObjectURL(videoBlob);
+        }
+
+        // Hapus objek URL dari foto yang diambil
+        selectedPhotos.forEach(photo => {
+            if (photo.src) URL.revokeObjectURL(photo.src);
+        });
+
+        // Bersihkan elemen tampilan
+        photosContainer.innerHTML = "";
+        recordedVideoContainer.innerHTML = "";
+
+        // Hentikan animasi jika ada
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+
+        console.log("Cleanup completed before unload.");
+    }
 </script>
