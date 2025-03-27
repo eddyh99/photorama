@@ -33,10 +33,14 @@
     let mediaRecorder, recordedChunks;
     const positions = [];
     let totalPhotos = 0;
+    let animationFrameId;
 
     function redirecTo() {
         save();
     }
+
+    window.addEventListener("beforeunload", cleanup);
+    window.addEventListener("pagehide", cleanup);
 
 
     async function getCoordinates(frame) {
@@ -304,6 +308,10 @@
         };
 
         mediaRecorder.onstop = async () => {
+            stream.getTracks().forEach(track => track.stop());
+            if (animationFrameId) {
+                        cancelAnimationFrame(animationFrameId);
+            }
             const webmBlob = new Blob(recordedChunks, {
                 mimeType: "video/webm; codecs=vp9"
             });
@@ -371,6 +379,7 @@
             confirmButtonText: "OK"
         }).then(async (result) => {
             if (result.isConfirmed) {
+                await cleanup();
                 await getCoordinates(frame);
                 startWebcam(); // Memulai kamera hanya jika pengguna menekan OK
             } else {
@@ -445,43 +454,44 @@
                 }
             };
 
-            // selectedVideo.addEventListener("loadeddata", function() {
-            //     if (recordingStarted) return;
-            //     selectedVideo.play();
-            //     const frameVideo = new Image();
-            //     frameVideo.src = frameImageSrc;
+            selectedVideo.addEventListener("loadeddata", function() {
+                if (recordingStarted) return;
+                selectedVideo.play();
+                const frameVideo = new Image();
+                frameVideo.src = frameImageSrc;
 
-            //     function drawVideoFrame() {
-            //         const tempVideoCanvas = document.createElement("canvas");
-            //         const tempVideoCtx = tempVideoCanvas.getContext("2d");
+                function drawVideoFrame() {
+                    const tempVideoCanvas = document.createElement("canvas");
+                    const tempVideoCtx = tempVideoCanvas.getContext("2d");
 
-            //         if (rotation % 180 === 90) {
-            //             tempVideoCanvas.width = pos.height;
-            //             tempVideoCanvas.height = pos.width;
-            //         } else {
-            //             tempVideoCanvas.width = pos.width;
-            //             tempVideoCanvas.height = pos.height;
-            //         }
+                    if (rotation % 180 === 90) {
+                        tempVideoCanvas.width = pos.height;
+                        tempVideoCanvas.height = pos.width;
+                    } else {
+                        tempVideoCanvas.width = pos.width;
+                        tempVideoCanvas.height = pos.height;
+                    }
 
-            //         tempVideoCtx.save();
-            //         tempVideoCtx.translate(tempVideoCanvas.width / 2, tempVideoCanvas.height / 2);
-            //         tempVideoCtx.rotate((rotation * Math.PI) / 180);
-            //         tempVideoCtx.drawImage(selectedVideo, -pos.width / 2, -pos.height / 2, pos.width, pos.height);
-            //         tempVideoCtx.restore();
+                    tempVideoCtx.save();
+                    tempVideoCtx.translate(tempVideoCanvas.width / 2, tempVideoCanvas.height / 2);
+                    tempVideoCtx.rotate((rotation * Math.PI) / 180);
+                    tempVideoCtx.drawImage(selectedVideo, -pos.width / 2, -pos.height / 2, pos.width, pos.height);
+                    tempVideoCtx.restore();
 
-            //         ctxVideo.drawImage(tempVideoCanvas, pos.x, pos.y, pos.width, pos.height);
-            //         ctxVideo.drawImage(frameVideo, 0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
-            //         requestAnimationFrame(drawVideoFrame);
+                    ctxVideo.drawImage(tempVideoCanvas, pos.x, pos.y, pos.width, pos.height);
+                    ctxVideo.drawImage(frameVideo, 0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
 
-            //     }
+                    animationFrameId = requestAnimationFrame(drawVideoFrame);
 
-            //     drawVideoFrame();
-            //     loadedVideos++;
-            //     if (loadedVideos === positions.length) {
-            //         setTimeout(startVideoRecord, 1000);
-            //     }
+                }
 
-            // });
+                drawVideoFrame();
+                loadedVideos++;
+                if (loadedVideos === positions.length) {
+                    setTimeout(startVideoRecord, 1000);
+                }
+
+            });
 
             // Tambahkan tombol retake jika belum ada
             let buttonId = "retake-btn-" + (pos.index - 1);
@@ -595,6 +605,9 @@
             confirmButtonText: "Yes, retake!",
             cancelButtonText: "Cancel"
         }).then(async (result) => {
+            if (animationFrameId) {
+                        cancelAnimationFrame(animationFrameId);
+            }
             if (result.isConfirmed) {
                 pictureCount = (totalPhotos - 1);
                 startPictureCountdown(index);
@@ -606,4 +619,39 @@
         localStorage.removeItem("sisa_waktu");
         window.location.href = "<?= BASE_URL ?>frame";
     }
+
+    function cleanup() {
+    // Hentikan semua track video jika ada
+    if (video.srcObject) {
+        video.srcObject.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+    }
+    
+    // Hentikan perekaman jika masih berjalan
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+    }
+    
+    // Hapus blob hasil rekaman
+    if (videoBlob) {
+        URL.revokeObjectURL(videoBlob);
+    }
+    
+    // Hapus objek URL dari foto yang diambil
+    selectedPhotos.forEach(photo => {
+        if (photo.src) URL.revokeObjectURL(photo.src);
+    });
+    
+    // Bersihkan elemen tampilan
+    photosContainer.innerHTML = "";
+    recordedVideoContainer.innerHTML = "";
+    
+    // Hentikan animasi jika ada
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+    }
+    
+    console.log("Cleanup completed before unload.");
+}
+
 </script>
