@@ -52,10 +52,9 @@
         opacity: 1; /* Opacity penuh untuk thumbnail aktif */
     }
 
-    .download-btn {
+    .action-btn {
         position: absolute;
         top: 10px;
-        right: 10px;
         padding: 8px 16px;
         background-color: #007bff; /* Warna biru */
         color: white;
@@ -124,9 +123,9 @@
                                 <!-- <a href="#" class="download-btn"><i class="bx bx-print"></i> Print</a> -->
                                 <img src="<?= $fileUrl ?>" alt="Random Image">
                                <?php if($file == 'photos.jpg'):  ?>
-                                    <button class="download-btn" style="right: 220px;"><i class="bx bx-printer" onclick="printImage('<?= $fileUrl ?>')"></i></button>
+                                    <button class="action-btn" style="left: 10px;"><i class="bx bx-printer" onclick="printImage('<?= $fileUrl ?>')"></i></button>
                                <?php endif ?>
-                                <a href="<?= $fileUrl ?>" class="download-btn" download><i class="bx bx-download"></i></a>
+                                <a href="<?= $fileUrl ?>" class="action-btn" style="right: 10px;" download><i class="bx bx-download"></i></a>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
