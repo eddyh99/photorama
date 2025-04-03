@@ -62,11 +62,12 @@
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
                     width: {
-                        ideal: 1080
+                        ideal: 1920
                     },
                     height: {
-                        ideal: 768
+                        ideal: 1080
                     },
+                    facingMode: "user",
                     deviceId: {
                         exact: camera.device
                     }
@@ -314,7 +315,7 @@
         }
     }
 
-    function startVideoRecord() {
+function startVideoRecord() {
         if (recordingStarted) return;
 
         let stream = frameVideoCanvas.captureStream(30);
@@ -358,6 +359,33 @@
         }, 8000);
     }
 
+
+/*function getAspectRatio(idx) {
+    const frame = idx ? positions[idx - 1] : positions[(pictureCount === 0 ? 1 : pictureCount) - 1];
+    const aspectRatio = frame.width / frame.height;
+
+    const videoWidth = video.videoWidth;
+    const videoHeight = video.videoHeight;
+
+    // Maintain aspect ratio without zooming
+    let targetWidth, targetHeight;
+
+    if (videoWidth / videoHeight > aspectRatio) {
+        targetHeight = videoHeight;
+        targetWidth = targetHeight * aspectRatio;
+    } else {
+        targetWidth = videoWidth;
+        targetHeight = targetWidth / aspectRatio;
+    }
+
+    return {
+        targetWidth,
+        targetHeight,
+        x: (videoWidth - targetWidth) / 2,
+        y: (videoHeight - targetHeight) / 2
+    };
+}
+*/
 
     function getAspectRatio(idx) {
 
@@ -511,7 +539,7 @@
                 drawVideoFrame();
                 loadedVideos++;
                 if (loadedVideos === positions.length) {
-                    setTimeout(startVideoRecord, 1000);
+                    startVideoRecord();
                 }
 
             });

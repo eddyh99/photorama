@@ -16,7 +16,7 @@
                 <div class="row row-cols-2 mx-2 my-2" id="photos"></div>
 
                 <!-- Pastikan aspect ratio tetap dan tidak stretch -->
-                <div class="d-flex justify-content-center align-items-center" style="width: 100%;">
+                <div class="d-flex justify-content-center align-items-center" style="width: 100%;height:70vh">
                     <canvas id="frame" class="w-100 p-2 h-75"
                         style="max-width: 100%; object-fit: contain;" hidden>
                     </canvas>
@@ -74,7 +74,7 @@
     video {
         width: auto;
         height: auto;
-        object-fit: cover;
+        object-fit: contain;
     }
 
     canvas#overlay {
@@ -108,7 +108,7 @@
         margin: 5px;
         width: auto;
         height: auto;
-        object-fit: cover;
+        object-fit: contain;
         border: 2px solid #ccc;
         border-radius: 5px;
     }
