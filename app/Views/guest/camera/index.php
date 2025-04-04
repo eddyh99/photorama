@@ -13,6 +13,12 @@
         background-color: transparent; /* Agar tampilan lebih jelas */
     }
 
+    @media (max-width: 991.98px) {
+    .camera-container {
+        height: 40vh;
+        }
+    }
+
     .button-container {
         margin-top: 20px; /* Jarak tombol agar tidak tertindih */
     }
@@ -29,6 +35,10 @@
                         style="transform: scaleX(-1) rotate(<?= $camera_rotation->camera1 ?? 0 ?>deg);">
                     </video>
                 </div>
+
+                <div class="col-lg-6 col-md-12 text-center d-lg-none">
+                <button class="btn btn-primary fs-3 px-5" onclick="setCamera(1)">CAMERA 1</button>
+            </div>
             </div>
             <!-- Bagian kanan -->
             <div class="col-lg-6 col-md-12">
@@ -42,7 +52,7 @@
 
         <!-- Row Baru untuk Tombol -->
         <div class="row button-container">
-            <div class="col-lg-6 col-md-12 text-center">
+            <div class="col-lg-6 col-md-12 text-center d-none d-lg-block">
                 <button class="btn btn-primary fs-3 px-5" onclick="setCamera(1)">CAMERA 1</button>
             </div>
             <div class="col-lg-6 col-md-12 text-center">
