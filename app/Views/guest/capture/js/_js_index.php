@@ -123,74 +123,9 @@
         }
     }
 
-    function startRecording(stream, targetWidth, targetHeight, x, y) {
-        recordedChunks = []; // Reset recorded chunks for new recording
-
-        // Buat canvas rekaman sesuai ukuran aspect ratio
-        const recordingCanvas = document.createElement('canvas');
-        recordingCanvas.width = targetWidth;
-        recordingCanvas.height = targetHeight;
-        const recordingContext = recordingCanvas.getContext('2d');
-
-        // Ambil video dari stream asli
-        const videoTrack = stream.getVideoTracks()[0];
-        const videoElement = document.createElement('video');
-        videoElement.srcObject = new MediaStream([videoTrack]);
-        videoElement.play();
-
-        function drawFrame() {
-            if (videoTrack.readyState === "live") {
-                recordingContext.clearRect(0, 0, recordingCanvas.width, recordingCanvas.height);
-
-                // Crop video sesuai aspect ratio
-                recordingContext.save();
-                recordingContext.translate(recordingCanvas.width / 2, recordingCanvas.height / 2);
-                recordingContext.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
-                recordingContext.drawImage(
-                    videoElement,
-                    x, y, targetWidth, targetHeight, // Area yang diambil dari video
-                    -targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight // Tempatkan ke recordingCanvas
-                );
-                recordingContext.restore();
-
-                requestAnimationFrame(drawFrame);
-            }
-        }
-
-        drawFrame();
-
-        // Ambil stream dari recordingCanvas untuk MediaRecorder
-        const recordedStream = recordingCanvas.captureStream();
-
-        mediaRecorder = new MediaRecorder(recordedStream);
-
-        mediaRecorder.ondataavailable = event => {
-            if (event.data.size > 0) {
-                recordedChunks.push(event.data);
-            }
-        };
-
-        mediaRecorder.onstop = () => {
-            const blob = new Blob(recordedChunks, {
-                type: 'video/mp4'
-            });
-
-            capturedVideos.push(blob);
-
-            const recordedVideo = document.createElement('video');
-            recordedVideo.src = URL.createObjectURL(blob);
-            recordedVideo.controls = true;
-            recordedVideoContainer.appendChild(recordedVideo);
-        };
-
-        mediaRecorder.start();
-    }
-
-
     // Countdown and capture photo
     async function startPictureCountdown(idx = null) {
         if (pictureCount < totalPhotos) {
-            pictureCount += 1;
 
             if (idx != null) {
                 if (video.srcObject) {
@@ -308,6 +243,7 @@
                         mediaRecorder.stop();
                     }
 
+                    pictureCount += 1;
                     if (pictureCount < totalPhotos) {
                         setTimeout(async () => {
                             await startWebcam();
@@ -316,6 +252,70 @@
                 }
             }, 1000);
         }
+    }
+
+
+    function startRecording(stream, targetWidth, targetHeight, x, y) {
+        recordedChunks = []; // Reset recorded chunks for new recording
+
+        // Buat canvas rekaman sesuai ukuran aspect ratio
+        const recordingCanvas = document.createElement('canvas');
+        recordingCanvas.width = targetWidth;
+        recordingCanvas.height = targetHeight;
+        const recordingContext = recordingCanvas.getContext('2d');
+
+        // Ambil video dari stream asli
+        const videoTrack = stream.getVideoTracks()[0];
+        const videoElement = document.createElement('video');
+        videoElement.srcObject = new MediaStream([videoTrack]);
+        videoElement.play();
+
+        function drawFrame() {
+            if (videoTrack.readyState === "live") {
+                recordingContext.clearRect(0, 0, recordingCanvas.width, recordingCanvas.height);
+
+                // Crop video sesuai aspect ratio
+                recordingContext.save();
+                recordingContext.translate(recordingCanvas.width / 2, recordingCanvas.height / 2);
+                recordingContext.rotate((cameraRotation[camera.id] || 0) * Math.PI / 180); // Rotasi sesuai kamera
+                recordingContext.drawImage(
+                    videoElement,
+                    x, y, targetWidth, targetHeight, // Area yang diambil dari video
+                    -targetWidth / 2, -targetHeight / 2, targetWidth, targetHeight // Tempatkan ke recordingCanvas
+                );
+                recordingContext.restore();
+
+                requestAnimationFrame(drawFrame);
+            }
+        }
+
+        drawFrame();
+
+        // Ambil stream dari recordingCanvas untuk MediaRecorder
+        const recordedStream = recordingCanvas.captureStream();
+
+        mediaRecorder = new MediaRecorder(recordedStream);
+
+        mediaRecorder.ondataavailable = event => {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, {
+                type: 'video/mp4'
+            });
+
+            capturedVideos.push(blob);
+
+            const recordedVideo = document.createElement('video');
+            recordedVideo.src = URL.createObjectURL(blob);
+            recordedVideo.controls = true;
+            recordedVideoContainer.appendChild(recordedVideo);
+        };
+
+        mediaRecorder.start();
     }
 
     function startVideoRecord() {
@@ -392,7 +392,9 @@
 
     function getAspectRatio(idx) {
 
-        const frame = idx ? positions[idx - 1] : positions[(pictureCount == 0 ? 1 : pictureCount) - 1];
+        const frame = idx ? positions[idx - 1] : positions[0];
+        console.log('Posisi' + positions.findIndex(item => item.index == 3));
+        
         let aspectRatio = frame.width / frame.height;
 
         if (isRotate) {
@@ -632,6 +634,25 @@
 
     }
 
+    function retake_photo(index) {
+        Swal.fire({
+            title: "Retake Photo #" + (index + 1),
+            text: "Are you sure you want to retake this photo?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, retake!",
+            cancelButtonText: "Cancel"
+        }).then(async (result) => {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            if (result.isConfirmed) {
+                pictureCount = (totalPhotos - 1);
+                startPictureCountdown(index);
+            }
+        });
+    }
+
     function flash() {
         return new Promise((resolve) => {
             $('#countdown-camera')
@@ -651,25 +672,6 @@
                         resolve(); // Selesaikan Promise setelah efek selesai
                     }, 500);
                 });
-        });
-    }
-
-    function retake_photo(index) {
-        Swal.fire({
-            title: "Retake Photo #" + (index + 1),
-            text: "Are you sure you want to retake this photo?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes, retake!",
-            cancelButtonText: "Cancel"
-        }).then(async (result) => {
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-            }
-            if (result.isConfirmed) {
-                pictureCount = (totalPhotos - 1);
-                startPictureCountdown(index);
-            }
         });
     }
 
