@@ -1,26 +1,31 @@
 <style>
     video {
         max-width: 100%;
-        max-height: 100%; /* Pastikan video tidak keluar dari container */
+        max-height: 100%;
+        /* Pastikan video tidak keluar dari container */
     }
 
     .camera-container {
-        height: 80vh; /* Tetapkan tinggi agar kamera lebih besar */
-        overflow: hidden; /* Cegah elemen meluas saat diputar */
+        height: 80vh;
+        /* Tetapkan tinggi agar kamera lebih besar */
+        overflow: hidden;
+        /* Cegah elemen meluas saat diputar */
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: transparent; /* Agar tampilan lebih jelas */
+        background-color: transparent;
+        /* Agar tampilan lebih jelas */
     }
 
     @media (max-width: 991.98px) {
-    .camera-container {
-        height: 40vh;
+        .camera-container {
+            height: 40vh;
         }
     }
 
     .button-container {
-        margin-top: 20px; /* Jarak tombol agar tidak tertindih */
+        margin-top: 20px;
+        /* Jarak tombol agar tidak tertindih */
     }
 </style>
 
@@ -31,19 +36,19 @@
             <!-- Bagian kiri -->
             <div class="col-lg-6 col-md-12">
                 <div class="camera-container">
-                    <video id="camera1" autoplay 
+                    <video id="camera1" autoplay
                         style="transform: scaleX(-1) rotate(<?= $camera_rotation->camera1 ?? 0 ?>deg);">
                     </video>
                 </div>
 
                 <div class="col-lg-6 col-md-12 text-center d-lg-none">
-                <button class="btn btn-primary fs-3 px-5" onclick="setCamera(1)">CAMERA 1</button>
-            </div>
+                    <button class="btn btn-primary fs-3 px-5" onclick="setCamera(1)">CAMERA 1</button>
+                </div>
             </div>
             <!-- Bagian kanan -->
             <div class="col-lg-6 col-md-12">
                 <div class="camera-container">
-                    <video id="camera2" autoplay 
+                    <video id="camera2" autoplay
                         style="transform: scaleX(-1) rotate(<?= $camera_rotation->camera2 ?? 0 ?>deg);">
                     </video>
                 </div>
