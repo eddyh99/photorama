@@ -26,6 +26,7 @@
 
     const capturedPhotos = [];
     const capturedVideos = [];
+    const rotation = cameraRotation[camera.id] || 0;
     let blobResultImage;
     let videoBlob;
     let recordingStarted = false;
@@ -34,6 +35,7 @@
     const positions = [];
     let totalPhotos = 0;
     let animationFrameId;
+    let isRotate = rotation == 90 || rotation == 270;
 
     function redirecTo() {
         save();
@@ -200,7 +202,7 @@
                 await startWebcam(idx + 1);
             }
 
-            const countdownValue = <?= json_encode($countdown ?? 4) ?>;
+            const countdownValue = <?= json_encode($countdown ?? 1) ?>;
 
             countdownOverlay.style.display = 'flex';
             countdownOverlay.textContent = countdownValue;
@@ -243,33 +245,34 @@
                     // Direct draw without flipping
                     snapshotContext.drawImage(video, x, y, targetWidth, targetHeight, 0, 0, targetWidth, targetHeight);
 
-                    const rotation = cameraRotation[camera.id] || 0;
                     console.log('Rotation for camera', camera.id, 'is', rotation);
 
                     const rotatedCanvas = document.createElement('canvas');
                     const rotatedContext = rotatedCanvas.getContext('2d');
 
-                    // if (rotation == 90 || rotation == 270) {
-                    //     rotatedCanvas.width = targetHeight;
-                    //     rotatedCanvas.height = targetWidth;
-                    // } else {
-                    //     rotatedCanvas.width = targetWidth;
-                    //     rotatedCanvas.height = targetHeight;
-                    // }
-
-                    rotatedCanvas.width = targetWidth;
-                    rotatedCanvas.height = targetHeight;
+                    if (rotation == 90 || rotation == 270) {
+                        rotatedCanvas.width = targetHeight;
+                        rotatedCanvas.height = targetWidth;
+                    } else {
+                        rotatedCanvas.width = targetWidth;
+                        rotatedCanvas.height = targetHeight;
+                    }
 
                     rotatedContext.save();
                     rotatedContext.translate(rotatedCanvas.width / 2, rotatedCanvas.height / 2);
-                    rotatedContext.scale(-1, 1); //for mirroring
-                    // rotatedContext.rotate((rotation * Math.PI) / 180);
+                    rotatedContext.scale(-1, 1);
+                    rotatedContext.rotate((rotation * Math.PI) / 180);
+
                     rotatedContext.drawImage(
                         snapshotCanvas,
-                        -snapshotCanvas.width / 2,
-                        -snapshotCanvas.height / 2
+                        -targetWidth / 2,
+                        -targetHeight / 2,
+                        targetWidth,
+                        targetHeight
                     );
+
                     rotatedContext.restore();
+
 
                     rotatedCanvas.toBlob(function(blob) {
                         const photoURL = URL.createObjectURL(blob);
@@ -315,7 +318,7 @@
         }
     }
 
-function startVideoRecord() {
+    function startVideoRecord() {
         if (recordingStarted) return;
 
         let stream = frameVideoCanvas.captureStream(30);
@@ -360,37 +363,41 @@ function startVideoRecord() {
     }
 
 
-/*function getAspectRatio(idx) {
-    const frame = idx ? positions[idx - 1] : positions[(pictureCount === 0 ? 1 : pictureCount) - 1];
-    const aspectRatio = frame.width / frame.height;
+    /*function getAspectRatio(idx) {
+        const frame = idx ? positions[idx - 1] : positions[(pictureCount === 0 ? 1 : pictureCount) - 1];
+        const aspectRatio = frame.width / frame.height;
 
-    const videoWidth = video.videoWidth;
-    const videoHeight = video.videoHeight;
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
 
-    // Maintain aspect ratio without zooming
-    let targetWidth, targetHeight;
+        // Maintain aspect ratio without zooming
+        let targetWidth, targetHeight;
 
-    if (videoWidth / videoHeight > aspectRatio) {
-        targetHeight = videoHeight;
-        targetWidth = targetHeight * aspectRatio;
-    } else {
-        targetWidth = videoWidth;
-        targetHeight = targetWidth / aspectRatio;
+        if (videoWidth / videoHeight > aspectRatio) {
+            targetHeight = videoHeight;
+            targetWidth = targetHeight * aspectRatio;
+        } else {
+            targetWidth = videoWidth;
+            targetHeight = targetWidth / aspectRatio;
+        }
+
+        return {
+            targetWidth,
+            targetHeight,
+            x: (videoWidth - targetWidth) / 2,
+            y: (videoHeight - targetHeight) / 2
+        };
     }
-
-    return {
-        targetWidth,
-        targetHeight,
-        x: (videoWidth - targetWidth) / 2,
-        y: (videoHeight - targetHeight) / 2
-    };
-}
-*/
+    */
 
     function getAspectRatio(idx) {
 
         const frame = idx ? positions[idx - 1] : positions[(pictureCount == 0 ? 1 : pictureCount) - 1];
-        const aspectRatio = frame.width / frame.height;
+        let aspectRatio = frame.width / frame.height;
+
+        if (isRotate) {
+            aspectRatio = frame.height / frame.width;
+        }
 
         // Ukuran asli video
         const videoWidth = video.videoWidth;
