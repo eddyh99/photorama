@@ -26,6 +26,7 @@
 
     const capturedPhotos = [];
     const capturedVideos = [];
+    const rotation = cameraRotation[camera.id] || 0;
     let blobResultImage;
     let videoBlob;
     let recordingStarted = false;
@@ -34,6 +35,7 @@
     const positions = [];
     let totalPhotos = 0;
     let animationFrameId;
+    let isRotate = rotation == 90 || rotation == 270;
 
     function redirecTo() {
         save();
@@ -121,6 +123,138 @@
         }
     }
 
+    // Countdown and capture photo
+    async function startPictureCountdown(idx = null) {
+        if (pictureCount < totalPhotos) {
+
+            if (idx != null) {
+                if (video.srcObject) {
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                    video.srcObject = null;
+                }
+                console.log('retake');
+
+                await startWebcam(idx + 1);
+            }
+
+            const countdownValue = <?= json_encode($countdown ?? 1) ?>;
+
+            countdownOverlay.style.display = 'flex';
+            countdownOverlay.textContent = countdownValue;
+
+            const audio = new Audio('<?= BASE_URL ?>assets/audio/' + listAudio[Math.floor(Math.random() * listAudio.length)]);
+            audio.play().catch(err => console.warn("Audio play was prevented:", err));
+
+            let countdown = countdownValue;
+            console.log(mediaRecorder)
+
+            // Start recording
+            if (mediaRecorder && mediaRecorder.state === 'inactive') {
+                setTimeout(() => {
+                    mediaRecorder.start();
+                }, 500);
+
+            }
+
+            const countdownInterval = setInterval(async () => {
+                countdown -= 1;
+
+                if (countdown > 0) {
+                    countdownOverlay.textContent = countdown;
+                } else {
+                    clearInterval(countdownInterval);
+                    await flash();
+
+                    const {
+                        targetWidth,
+                        targetHeight,
+                        x,
+                        y
+                    } = idx != null ? getAspectRatio(idx + 1) : getAspectRatio();
+
+                    const snapshotCanvas = document.createElement('canvas');
+                    snapshotCanvas.width = targetWidth;
+                    snapshotCanvas.height = targetHeight;
+                    const snapshotContext = snapshotCanvas.getContext('2d');
+
+                    // Direct draw without flipping
+                    snapshotContext.drawImage(video, x, y, targetWidth, targetHeight, 0, 0, targetWidth, targetHeight);
+
+                    console.log('Rotation for camera', camera.id, 'is', rotation);
+
+                    const rotatedCanvas = document.createElement('canvas');
+                    const rotatedContext = rotatedCanvas.getContext('2d');
+
+                    if (rotation == 90 || rotation == 270) {
+                        rotatedCanvas.width = targetHeight;
+                        rotatedCanvas.height = targetWidth;
+                    } else {
+                        rotatedCanvas.width = targetWidth;
+                        rotatedCanvas.height = targetHeight;
+                    }
+
+                    rotatedContext.save();
+                    rotatedContext.translate(rotatedCanvas.width / 2, rotatedCanvas.height / 2);
+                    rotatedContext.scale(-1, 1);
+                    rotatedContext.rotate((rotation * Math.PI) / 180);
+
+                    rotatedContext.drawImage(
+                        snapshotCanvas,
+                        -targetWidth / 2,
+                        -targetHeight / 2,
+                        targetWidth,
+                        targetHeight
+                    );
+
+                    rotatedContext.restore();
+
+
+                    rotatedCanvas.toBlob(function(blob) {
+                        const photoURL = URL.createObjectURL(blob);
+                        const photo = new Image();
+                        photo.src = photoURL;
+
+                        if (idx != null) {
+                            capturedPhotos[idx] = blob;
+                            selectedPhotos[idx] = photo;
+                            $('#select').click();
+                        } else {
+                            selectedPhotos.push(photo);
+                            capturedPhotos.push(blob);
+                        }
+
+                        photosContainer.innerHTML += `
+                        <div class="col px-2">
+                            <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected">
+                        </div>`;
+
+                        if (selectedPhotos.length === totalPhotos) {
+                            $('#select').prop('disabled', false);
+                            $("#previewkanan").removeClass("d-none");
+                            $("#videoarea").removeClass("col-lg-12").addClass("col-lg-8");
+                            $('#select').click();
+                        } else {
+                            $('#select').prop('disabled', true);
+                        }
+                    }, 'image/jpeg', 0.7);
+
+                    // Stop recording
+                    if (mediaRecorder && mediaRecorder.state === 'recording') {
+                        mediaRecorder.stop();
+                    }
+
+                    pictureCount += 1;
+                    if (pictureCount < totalPhotos) {
+                        setTimeout(async () => {
+                            await startWebcam();
+                        }, 2000);
+                    }
+                }
+            }, 1000);
+        }
+    }
+
+
     function startRecording(stream, targetWidth, targetHeight, x, y) {
         recordedChunks = []; // Reset recorded chunks for new recording
 
@@ -184,138 +318,7 @@
         mediaRecorder.start();
     }
 
-
-    // Countdown and capture photo
-    async function startPictureCountdown(idx = null) {
-        if (pictureCount < totalPhotos) {
-            pictureCount += 1;
-
-            if (idx != null) {
-                if (video.srcObject) {
-                    video.srcObject.getTracks().forEach(track => track.stop());
-                    video.srcObject = null;
-                }
-                console.log('retake');
-
-                await startWebcam(idx + 1);
-            }
-
-            const countdownValue = <?= json_encode($countdown ?? 4) ?>;
-
-            countdownOverlay.style.display = 'flex';
-            countdownOverlay.textContent = countdownValue;
-
-            const audio = new Audio('<?= BASE_URL ?>assets/audio/' + listAudio[Math.floor(Math.random() * listAudio.length)]);
-            audio.play().catch(err => console.warn("Audio play was prevented:", err));
-
-            let countdown = countdownValue;
-            console.log(mediaRecorder)
-
-            // Start recording
-            if (mediaRecorder && mediaRecorder.state === 'inactive') {
-                setTimeout(() => {
-                    mediaRecorder.start();
-                }, 500);
-
-            }
-
-            const countdownInterval = setInterval(async () => {
-                countdown -= 1;
-
-                if (countdown > 0) {
-                    countdownOverlay.textContent = countdown;
-                } else {
-                    clearInterval(countdownInterval);
-                    await flash();
-
-                    const {
-                        targetWidth,
-                        targetHeight,
-                        x,
-                        y
-                    } = idx != null ? getAspectRatio(idx + 1) : getAspectRatio();
-
-                    const snapshotCanvas = document.createElement('canvas');
-                    snapshotCanvas.width = targetWidth;
-                    snapshotCanvas.height = targetHeight;
-                    const snapshotContext = snapshotCanvas.getContext('2d');
-
-                    // Direct draw without flipping
-                    snapshotContext.drawImage(video, x, y, targetWidth, targetHeight, 0, 0, targetWidth, targetHeight);
-
-                    const rotation = cameraRotation[camera.id] || 0;
-                    console.log('Rotation for camera', camera.id, 'is', rotation);
-
-                    const rotatedCanvas = document.createElement('canvas');
-                    const rotatedContext = rotatedCanvas.getContext('2d');
-
-                    // if (rotation == 90 || rotation == 270) {
-                    //     rotatedCanvas.width = targetHeight;
-                    //     rotatedCanvas.height = targetWidth;
-                    // } else {
-                    //     rotatedCanvas.width = targetWidth;
-                    //     rotatedCanvas.height = targetHeight;
-                    // }
-
-                    rotatedCanvas.width = targetWidth;
-                    rotatedCanvas.height = targetHeight;
-
-                    rotatedContext.save();
-                    rotatedContext.translate(rotatedCanvas.width / 2, rotatedCanvas.height / 2);
-                    rotatedContext.scale(-1, 1); //for mirroring
-                    // rotatedContext.rotate((rotation * Math.PI) / 180);
-                    rotatedContext.drawImage(
-                        snapshotCanvas,
-                        -snapshotCanvas.width / 2,
-                        -snapshotCanvas.height / 2
-                    );
-                    rotatedContext.restore();
-
-                    rotatedCanvas.toBlob(function(blob) {
-                        const photoURL = URL.createObjectURL(blob);
-                        const photo = new Image();
-                        photo.src = photoURL;
-
-                        if (idx != null) {
-                            capturedPhotos[idx] = blob;
-                            selectedPhotos[idx] = photo;
-                            $('#select').click();
-                        } else {
-                            selectedPhotos.push(photo);
-                            capturedPhotos.push(blob);
-                        }
-
-                        photosContainer.innerHTML += `
-                        <div class="col px-2">
-                            <img src="${photo.src}" class="img-fluid rounded shadow-sm mx-0 selected">
-                        </div>`;
-
-                        if (selectedPhotos.length === totalPhotos) {
-                            $('#select').prop('disabled', false);
-                            $("#previewkanan").removeClass("d-none");
-                            $("#videoarea").removeClass("col-lg-12").addClass("col-lg-8");
-                            $('#select').click();
-                        } else {
-                            $('#select').prop('disabled', true);
-                        }
-                    }, 'image/jpeg', 0.7);
-
-                    // Stop recording
-                    if (mediaRecorder && mediaRecorder.state === 'recording') {
-                        mediaRecorder.stop();
-                    }
-
-                    if (pictureCount < totalPhotos) {
-                        setTimeout(async () => {
-                            await startWebcam();
-                        }, 2000);
-                    }
-                }
-            }, 1000);
-        }
-    }
-
-function startVideoRecord() {
+    function startVideoRecord() {
         if (recordingStarted) return;
 
         let stream = frameVideoCanvas.captureStream(30);
@@ -360,37 +363,43 @@ function startVideoRecord() {
     }
 
 
-/*function getAspectRatio(idx) {
-    const frame = idx ? positions[idx - 1] : positions[(pictureCount === 0 ? 1 : pictureCount) - 1];
-    const aspectRatio = frame.width / frame.height;
+    /*function getAspectRatio(idx) {
+        const frame = idx ? positions[idx - 1] : positions[(pictureCount === 0 ? 1 : pictureCount) - 1];
+        const aspectRatio = frame.width / frame.height;
 
-    const videoWidth = video.videoWidth;
-    const videoHeight = video.videoHeight;
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
 
-    // Maintain aspect ratio without zooming
-    let targetWidth, targetHeight;
+        // Maintain aspect ratio without zooming
+        let targetWidth, targetHeight;
 
-    if (videoWidth / videoHeight > aspectRatio) {
-        targetHeight = videoHeight;
-        targetWidth = targetHeight * aspectRatio;
-    } else {
-        targetWidth = videoWidth;
-        targetHeight = targetWidth / aspectRatio;
+        if (videoWidth / videoHeight > aspectRatio) {
+            targetHeight = videoHeight;
+            targetWidth = targetHeight * aspectRatio;
+        } else {
+            targetWidth = videoWidth;
+            targetHeight = targetWidth / aspectRatio;
+        }
+
+        return {
+            targetWidth,
+            targetHeight,
+            x: (videoWidth - targetWidth) / 2,
+            y: (videoHeight - targetHeight) / 2
+        };
     }
-
-    return {
-        targetWidth,
-        targetHeight,
-        x: (videoWidth - targetWidth) / 2,
-        y: (videoHeight - targetHeight) / 2
-    };
-}
-*/
+    */
 
     function getAspectRatio(idx) {
 
-        const frame = idx ? positions[idx - 1] : positions[(pictureCount == 0 ? 1 : pictureCount) - 1];
-        const aspectRatio = frame.width / frame.height;
+        const frame = idx ? positions[idx - 1] : positions[0];
+        console.log('Posisi' + positions.findIndex(item => item.index == 3));
+        
+        let aspectRatio = frame.width / frame.height;
+
+        if (isRotate) {
+            aspectRatio = frame.height / frame.width;
+        }
 
         // Ukuran asli video
         const videoWidth = video.videoWidth;
@@ -625,6 +634,25 @@ function startVideoRecord() {
 
     }
 
+    function retake_photo(index) {
+        Swal.fire({
+            title: "Retake Photo #" + (index + 1),
+            text: "Are you sure you want to retake this photo?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, retake!",
+            cancelButtonText: "Cancel"
+        }).then(async (result) => {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            if (result.isConfirmed) {
+                pictureCount = (totalPhotos - 1);
+                startPictureCountdown(index);
+            }
+        });
+    }
+
     function flash() {
         return new Promise((resolve) => {
             $('#countdown-camera')
@@ -644,25 +672,6 @@ function startVideoRecord() {
                         resolve(); // Selesaikan Promise setelah efek selesai
                     }, 500);
                 });
-        });
-    }
-
-    function retake_photo(index) {
-        Swal.fire({
-            title: "Retake Photo #" + (index + 1),
-            text: "Are you sure you want to retake this photo?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes, retake!",
-            cancelButtonText: "Cancel"
-        }).then(async (result) => {
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-            }
-            if (result.isConfirmed) {
-                pictureCount = (totalPhotos - 1);
-                startPictureCountdown(index);
-            }
         });
     }
 
