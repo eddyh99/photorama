@@ -11,35 +11,37 @@
         </div>
 
         <!-- Bagian kanan (PREVIEW FRAME) -->
-        <div id="previewkanan" class="col-lg-4 col-md-12 d-flex justify-content-center p-3 d-none">
-            <div class="bg-warning w-100 p-2 rounded d-flex flex-column" style="overflow-y: auto; max-height: 95vh;">
-                <div class="row row-cols-2 mx-2 my-2" id="photos"></div>
+        <div id="previewkanan" class="col-lg-12 col-md-12 d-flex justify-content-center p-3 d-none">
+            <div class="bg-warning w-100 p-3 rounded d-flex flex-row flex-wrap" style="overflow-y: auto; max-height: 95vh; gap: 1rem;">
+    
+            <!-- LEFT: Canvas Section -->
+            <div style="flex: 1 1 60%; max-width: 60%;">
+                <div id="photos" class="row row-cols-2 mx-2 my-2"></div>
+              
+                <canvas id="frame" class="w-100 p-2" style="height: 90vh; max-width: 100%; object-fit: contain;" hidden></canvas>
+        
+                <canvas id="frame-video" class="w-100 p-2" style="max-width: 100%; object-fit: contain; aspect-ratio: 16/9;" hidden></canvas>
+            </div>
 
-                <!-- Pastikan aspect ratio tetap dan tidak stretch -->
-                <div class="d-flex justify-content-center align-items-center" style="width: 100%;height:70vh">
-                    <canvas id="frame" class="w-100 p-2 h-75"
-                        style="max-width: 100%; object-fit: contain;" hidden>
-                    </canvas>
-                    <canvas id="frame-video" class="w-100 p-2"
-                        style="max-width: 100%; object-fit: contain; aspect-ratio: 16/9;" hidden>
-                    </canvas>
-                </div>
-
-                <!-- Area tombol retake bisa di-scroll -->
-                <div id="btn-action" class="row d-flex justify-content-center text-center w-100 d-none">
-                    <div class="col-12 <?= $retake ? '' : 'd-none' ?>">
+            <!-- RIGHT: Buttons Section -->
+            <div style="flex: 1 1 35%; max-width: 35%;" class="d-flex flex-column justify-content-center align-items-center">
+            
+              <!-- Retake Buttons -->
+                <div id="btn-action" class="text-center w-100 mb-3 d-none">
+                    <div class="<?= $retake ? '' : 'd-none' ?>">
                         <span class="d-block mb-2 text-white">Retake:</span>
                         <div id="btn-retake" class="d-flex flex-wrap justify-content-center gap-2 mb-3 p-2 pe-none"
-                            style="overflow-y: auto; max-height: 20vh;">
+                            style="overflow-y: auto; max-height: 20vh;"></div>
                         </div>
                     </div>
+            
+              <!-- Action Buttons -->
+                    <div class="d-flex flex-column align-items-center gap-2 w-100">
+                        <button id="select" class="btn btn-danger w-75 fs-4 py-2" disabled>SELECT</button>
+                        <button id="select-filter" class="btn btn-primary w-75 fs-4 py-2" disabled>Menyiapkan...</button>
+                    </div>
                 </div>
-
-                <div class="d-flex justify-content-center">
-                    <button id="select" class="btn btn-danger w-75 fs-4 py-2" disabled>SELECT</button>
-                    <button id="select-filter" class="btn btn-primary w-75 fs-4 py-2" disabled>Menyiapkan...</button>
-                </div>
-            </div>
+             </div>
         </div>
     </div>
     <div id="recordedVideoContainer" hidden></div>

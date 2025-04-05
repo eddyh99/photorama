@@ -61,14 +61,19 @@
     async function startWebcam(idx = null) {
 
         try {
+            const portrait = window.innerHeight > window.innerWidth;
+            console.log(window.innerHeight);
+            console.log(window.innerWidth);
+            
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
                     width: {
-                        ideal: 1920
+                        ideal: portrait ? 1080 : 1920
                     },
                     height: {
-                        ideal: 1080
+                        ideal: portrait ? 1920 : 1080
                     },
+                    aspectRatio: portrait ? { ideal: 9 / 16 } : { ideal: 16 / 9 },
                     facingMode: "user",
                     deviceId: {
                         exact: camera.device
@@ -122,6 +127,8 @@
             }
         }
     }
+    
+    
 
     // Countdown and capture photo
     async function startPictureCountdown(idx = null) {
@@ -137,7 +144,7 @@
                 await startWebcam(idx + 1);
             }
 
-            const countdownValue = <?= json_encode($countdown ?? 1) ?>;
+            const countdownValue = <?= json_encode($countdown ?? 3) ?>;
 
             countdownOverlay.style.display = 'flex';
             countdownOverlay.textContent = countdownValue;
@@ -231,7 +238,7 @@
                         if (selectedPhotos.length === totalPhotos) {
                             $('#select').prop('disabled', false);
                             $("#previewkanan").removeClass("d-none");
-                            $("#videoarea").removeClass("col-lg-12").addClass("col-lg-8");
+                            $("#videoarea").addClass("d-none");
                             $('#select').click();
                         } else {
                             $('#select').prop('disabled', true);
@@ -247,7 +254,7 @@
                     if (pictureCount < totalPhotos) {
                         setTimeout(async () => {
                             await startWebcam();
-                        }, 2000);
+                        }, 1000);
                     }
                 }
             }, 1000);
@@ -363,34 +370,7 @@
     }
 
 
-    /*function getAspectRatio(idx) {
-        const frame = idx ? positions[idx - 1] : positions[(pictureCount === 0 ? 1 : pictureCount) - 1];
-        const aspectRatio = frame.width / frame.height;
-
-        const videoWidth = video.videoWidth;
-        const videoHeight = video.videoHeight;
-
-        // Maintain aspect ratio without zooming
-        let targetWidth, targetHeight;
-
-        if (videoWidth / videoHeight > aspectRatio) {
-            targetHeight = videoHeight;
-            targetWidth = targetHeight * aspectRatio;
-        } else {
-            targetWidth = videoWidth;
-            targetHeight = targetWidth / aspectRatio;
-        }
-
-        return {
-            targetWidth,
-            targetHeight,
-            x: (videoWidth - targetWidth) / 2,
-            y: (videoHeight - targetHeight) / 2
-        };
-    }
-    */
-
-    function getAspectRatio(idx) {
+/*    function getAspectRatio(idx) {
 
         const frame = idx ? positions[idx - 1] : positions[0];
         console.log('Posisi' + positions.findIndex(item => item.index == 3));
@@ -414,21 +394,83 @@
             targetHeight = videoHeight;
             targetWidth = targetHeight * aspectRatio;
         }
+        
+        targetWidth = video.videoWidth;
+        targetHeight = video.videoHeight;
+        const x = 0;
+        const y = 0;
 
         return {
             targetWidth,
             targetHeight,
-            x: (videoWidth - targetWidth) / 2,
-            y: (videoHeight - targetHeight) / 2
+            x: x,
+            y: y
+        };
+    }*/
+    
+    function getAspectRatio(idx) {
+        const frame = idx ? positions[idx - 1] : positions[0];
+    
+        let aspectRatio = frame.width / frame.height;
+        if (isRotate) {
+            aspectRatio = frame.height / frame.width;
+        }
+    
+        // Assume video is being rendered in portrait mode (rotated 90deg)
+        let videoWidth = video.videoWidth;
+        let videoHeight = video.videoHeight;
+
+        const isPortrait = videoHeight > videoWidth;
+        console.log(isPortrait);
+        if (!isPortrait && videoWidth < videoHeight) {
+            // Rotate video logic: swap width/height if you're rendering portrait
+            [videoWidth, videoHeight] = [videoHeight, videoWidth];
+        }
+
+        if (isPortrait && videoWidth > videoHeight) {
+            // Rotate video logic: swap width/height if you're rendering portrait
+            [videoWidth, videoHeight] = [videoHeight, videoWidth];
+        }
+        
+        
+    
+        // if (videoWidth > videoHeight) {
+        //     // Rotate video logic: swap width/height if you're rendering portrait
+        //     [videoWidth, videoHeight] = [videoHeight, videoWidth];
+        // }
+    
+        // Scale frame to fit video while preserving aspect ratio
+        let targetWidth = videoWidth;
+        let targetHeight = targetWidth / aspectRatio;
+    
+        if (targetHeight > videoHeight) {
+            targetHeight = videoHeight;
+            targetWidth = targetHeight * aspectRatio;
+        }
+    
+        const x = (videoWidth - targetWidth) / 2;
+        const y = (videoHeight - targetHeight) / 2;
+    
+        console.log("Frame:", frame.width, frame.height);
+        console.log("Video (portrait):", videoWidth, videoHeight);
+        console.log("Target:", targetWidth, targetHeight);
+        console.log("Offset:", x, y);
+    
+        return {
+            targetWidth,
+            targetHeight,
+            x,
+            y
         };
     }
+
+    
 
 
     $(function() {
         overlayCanvas.style.transform = `scaleX(-1) rotate(${cameraRotation[camera.id]}deg)`;
         overlayCanvas.style.transformOrigin = 'center';
         $("#previewkanan").addClass("d-none");
-        $("#videoarea").removeClass("col-md-8");
         $("#videoarea").addClass("col-md-12");
 
         Swal.fire({
@@ -517,40 +559,40 @@
             selectedVideo.addEventListener("loadeddata", function() {
                 if (recordingStarted) return;
                 selectedVideo.play();
+            
                 const frameVideo = new Image();
                 frameVideo.src = frameImageSrc;
-
+            
                 function drawVideoFrame() {
                     const tempVideoCanvas = document.createElement("canvas");
                     const tempVideoCtx = tempVideoCanvas.getContext("2d");
-
-                    if (rotation % 180 === 90) {
-                        tempVideoCanvas.width = pos.height;
-                        tempVideoCanvas.height = pos.width;
-                    } else {
-                        tempVideoCanvas.width = pos.width;
-                        tempVideoCanvas.height = pos.height;
-                    }
-
+            
+                    const isRotated = rotation % 180 === 90;
+                    const canvasW = isRotated ? pos.height : pos.width;
+                    const canvasH = isRotated ? pos.width : pos.height;
+            
+                    tempVideoCanvas.width = canvasW;
+                    tempVideoCanvas.height = canvasH;
+            
                     tempVideoCtx.save();
-                    tempVideoCtx.translate(tempVideoCanvas.width / 2, tempVideoCanvas.height / 2);
+                    tempVideoCtx.translate(canvasW / 2, canvasH / 2);
+                    tempVideoCtx.scale(-1, 1); // Mirror horizontally
                     tempVideoCtx.rotate((rotation * Math.PI) / 180);
                     tempVideoCtx.drawImage(selectedVideo, -pos.width / 2, -pos.height / 2, pos.width, pos.height);
                     tempVideoCtx.restore();
 
-                    ctxVideo.drawImage(tempVideoCanvas, pos.x, pos.y, pos.width, pos.height);
+            
+                    ctxVideo.drawImage(tempVideoCanvas, pos.x, pos.y, canvasW, canvasH);
                     ctxVideo.drawImage(frameVideo, 0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
-
+            
                     animationFrameId = requestAnimationFrame(drawVideoFrame);
-
                 }
-
+            
                 drawVideoFrame();
                 loadedVideos++;
                 if (loadedVideos === positions.length) {
                     startVideoRecord();
                 }
-
             });
 
             // Tambahkan tombol retake jika belum ada
@@ -649,6 +691,8 @@
             if (result.isConfirmed) {
                 pictureCount = (totalPhotos - 1);
                 startPictureCountdown(index);
+                $("#previewkanan").addClass("d-none");
+                $("#videoarea").removeClass("d-none");
             }
         });
     }

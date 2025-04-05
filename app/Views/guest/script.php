@@ -10,7 +10,7 @@
 
 <body>
 <?php
-$path = FCPATH . "assets/photobooth/TSM-1742817596/";
+/*$path = FCPATH . "assets/photobooth/TSM-1742817596/";
 $input = $path . 'video.mp4';
 $temp = $path . 'temp.mp4';
 $ffmpeg = '/usr/bin/ffmpeg';
@@ -27,20 +27,20 @@ if ($return_var === 0) {
     echo "Video converted and replaced successfully.";
 } else {
     echo "Conversion failed.";
-}
+}*/
 ?>
 
 
 <script>
 qz.security.setCertificatePromise(function(resolve, reject) {
-   fetch("assets/certs/digital-certificate.txt", {cache: 'no-store', headers: {'Content-Type': 'text/plain'}})
+   fetch("/assets/certs/digital-certificate.txt", {cache: 'no-store', headers: {'Content-Type': 'text/plain'}})
       .then(function(data) { data.ok ? resolve(data.text()) : reject(data.text()); });
 });
 
-
+qz.security.setSignatureAlgorithm("SHA512");
 qz.security.setSignaturePromise(function(toSign) {
    return function(resolve, reject) {
-       fetch('/sign', {
+       fetch('/home/sign', {
            method: 'POST',
            body: JSON.stringify({ data: toSign }),
            headers: { 'Content-Type': 'application/json' }

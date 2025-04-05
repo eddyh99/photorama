@@ -39,7 +39,8 @@ class Mdl_cabang extends Model
         $sql = "SELECT
                     cabang.*
                 FROM
-                    cabang";
+                    cabang
+                WHERE nama_cabang<>'admin'";
         return $this->db->query($sql)->getResult();
     }
 
