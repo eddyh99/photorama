@@ -1,4 +1,4 @@
-<div class="container-fluid vh-100 d-flex flex-column" id="content-bg">
+<div class="container-fluid d-flex flex-column" id="content-bg">
     <div class="row flex-grow-1 text-black">
         <!-- Bagian kiri (SELECT FRAME) -->
         <div id="videoarea" class="col-lg-12 col-md-12 d-flex flex-column p-3">
