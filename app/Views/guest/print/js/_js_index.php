@@ -82,7 +82,7 @@
 
         function printPDF(pdfUrl, printerName) {
             qz.security.setCertificatePromise(function(resolve, reject) {
-                fetch("assets/" + cert, {
+                fetch("/assets/" + cert, {
                         cache: 'no-store',
                         headers: {
                             'Content-Type': 'text/plain'
@@ -93,10 +93,10 @@
                     });
             });
 
-
+            qz.security.setSignatureAlgorithm("SHA512");
             qz.security.setSignaturePromise(function(toSign) {
                 return function(resolve, reject) {
-                    fetch('/sign', {
+                    fetch('/home/sign', {
                             method: 'POST',
                             body: JSON.stringify({
                                 data: toSign
@@ -115,7 +115,9 @@
             });
 
             qz.websocket.connect().then(() => {
-                const config = qz.configs.create(printerName);
+                const config =qz.configs.create(printerName, { 
+                    orientation: "landscape"
+                    });
                 return qz.print(config, [{
                     type: 'pdf',
                     data: pdfUrl

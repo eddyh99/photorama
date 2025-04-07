@@ -48,31 +48,12 @@ class Home extends BaseController
 
     public function sign()
     {
-        // Make sure it’s a POST request
-        if ($this->request->getMethod() !== 'post') {
-            return $this->fail('Invalid request method.');
-        }
-
         // Get JSON data from POST body
         $json = $this->request->getJSON();
-        if (!$json || !isset($json->data)) {
-            return $this->fail('Missing data to sign.');
-        }
-
         $requestData = $json->data;
         $cabang = $this->cabang->getCabang_byId($this->id_cabang);
         $privateKeyPath = $cabang->private_key ? WRITEPATH . $cabang->private_key : null; // adjust if needed
-
-        if (!file_exists($privateKeyPath)) {
-            return $this->fail('Private key not found.');
-        }
-
         $privateKey = openssl_get_privatekey(file_get_contents($privateKeyPath));
-
-        if (!$privateKey) {
-            return $this->fail('Unable to load private key.');
-        }
-
         $signature = null;
         $success = openssl_sign($requestData, $signature, $privateKey, 'sha512');
 
@@ -81,8 +62,6 @@ class Home extends BaseController
                 ->setHeader('Content-Type', 'text/plain')
                 ->setBody(base64_encode($signature));
         }
-
-        return $this->fail('Error signing message.');
     }
 
 

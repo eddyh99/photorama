@@ -56,7 +56,7 @@
                             <div class="mb-3">
                                     <label class="form-label" for="printer_name">Nama Printer</label>
                                     <div class="input-group input-group-merge">
-                                        <input class="form-control" name="printer_name" type="text" />
+                                        <input class="form-control" id="printer_name" name="printer_name" type="text" />
                                         <button id="detect-printer" type="button" class="btn btn-danger">Detect</button>
                                     </div>
                                 </div>

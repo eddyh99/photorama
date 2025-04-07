@@ -10,7 +10,7 @@ class Photo extends BaseController
 
     public function __construct()
     {
-        $this->setting       = model('App\Models\Mdl_settings');
+        $this->setting      = model('App\Models\Mdl_settings');
         $this->cabang       = model('App\Models\Mdl_cabang');
     }
 
