@@ -290,7 +290,13 @@ class Home extends BaseController
         $temp = $path . 'temp.mp4';
         $ffmpeg = '/usr/bin/ffmpeg';
 
-        $command = "$ffmpeg -y -i \"{$input}\" -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -shortest -vf \"scale=1024:768,format=yuv420p\" -c:v libx264 -profile:v baseline -level 3.0 -pix_fmt yuv420p -c:a aac -b:a 128k -crf 26 -preset fast -movflags +faststart \"{$temp}\" 2>&1 && mv -f \"{$temp}\" \"{$input}\"";
+        $command = "$ffmpeg -y -i \"{$input}\" -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -shortest \
+        -vf \"fps=30,scale=1024:768:flags=lanczos+accurate_rnd+full_chroma_inp,format=yuv420p\" \
+        -c:v libx264 -profile:v main -level 3.1 -pix_fmt yuv420p \
+        -c:a aac -b:a 96k -crf 23 -preset fast -movflags +faststart \
+        -x264-params \"ref=3:no-deblock=1:weightp=1:subme=2:rc-lookahead=10:threads=auto\" \
+        \"{$temp}\" 2>&1 && mv -f \"{$temp}\" \"{$input}\"";
+
 
         exec($command, $output, $return_var);
         // echo "<pre>";

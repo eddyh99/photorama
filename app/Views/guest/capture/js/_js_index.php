@@ -299,7 +299,7 @@
         drawFrame();
 
         // Ambil stream dari recordingCanvas untuk MediaRecorder
-        const recordedStream = recordingCanvas.captureStream();
+        const recordedStream = recordingCanvas.captureStream(60);
 
         mediaRecorder = new MediaRecorder(recordedStream);
 
@@ -324,41 +324,31 @@
 
         mediaRecorder.start();
     }
+    
+ 
 
     function startVideoRecord() {
-        if (recordingStarted) return;
-
-        let stream = frameVideoCanvas.captureStream(30);
-        mediaRecorder = new MediaRecorder(stream, {
-            mimeType: "video/webm; codecs=vp9"
+        const stream = frameVideoCanvas.captureStream(30);
+        const mediaRecorder = new MediaRecorder(stream, {
+            mimeType: "video/webm;codecs=vp9",
+            videoBitsPerSecond: 5000000 
         });
-
-        mediaRecorder.ondataavailable = (event) => {
-            if (event.data.size > 0) {
-                recordedChunks = [];
-                recordedChunks.push(event.data);
-            }
+        
+        const chunks = [];
+        mediaRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) chunks.push(e.data);
         };
-
-        mediaRecorder.onstop = async () => {
-            stream.getTracks().forEach(track => track.stop());
+    
+        mediaRecorder.onstop = () => {
+            console.log("Recording stopped.");
             if (animationFrameId) {
                 cancelAnimationFrame(animationFrameId);
             }
-            const webmBlob = new Blob(recordedChunks, {
-                mimeType: "video/webm; codecs=vp9"
-            });
-            console.log("WebM video saved as Blob:", webmBlob);
-
-            // Simpan hasil dalam variabel global
+            const webmBlob = new Blob(chunks, { type: "video/webm" });
             videoBlob = webmBlob;
-
-            recordedChunks = [];
         };
-
+    
         mediaRecorder.start();
-        recordingStarted = true;
-        console.log("Perekaman dimulai...");
 
         // Hentikan rekaman setelah 3 detik
         setTimeout(() => {
@@ -372,7 +362,9 @@
 
 /*    function getAspectRatio(idx) {
 
-        const frame = idx ? positions[idx - 1] : positions.find(item => item.index == pictureCount +1);
+        const frame = idx ? positions[idx - 1] : positions[0];
+        console.log('Posisi' + positions.findIndex(item => item.index == 3));
+        
         let aspectRatio = frame.width / frame.height;
 
         if (isRotate) {
@@ -408,7 +400,8 @@
     
     function getAspectRatio(idx) {
         const frame = idx ? positions[idx - 1] : positions.find(item => item.index == pictureCount +1);
-    
+        console.log("Fw : "+frame.width);
+        console.log("Fh : "+frame.height);
         let aspectRatio = frame.width / frame.height;
         if (isRotate) {
             aspectRatio = frame.height / frame.width;
@@ -487,42 +480,44 @@
             }
         });
     });
+    
+    let frameOverlayImage = null;
 
-    $("#select").on('click', function() {
+    $("#select").on('click', function () {
         $('#frame').removeAttr('hidden');
         $('#btn-action').removeClass('d-none');
         $("#photos").hide();
         $(this).hide();
         $('#select-filter').removeAttr('hidden');
-
+    
         const ctx = frameCanvas.getContext('2d');
         const ctxVideo = frameVideoCanvas.getContext("2d");
+    
         frameCanvas.width = frameImage.width;
         frameCanvas.height = frameImage.height;
         frameVideoCanvas.width = frameImage.width;
-        frameVideoCanvas.height = frameImage.height
+        frameVideoCanvas.height = frameImage.height;
+    
         ctx.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
-        ctx.clearRect(0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
-
+        ctxVideo.clearRect(0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
+    
         let loadedImages = 0;
         let loadedVideos = 0;
-        positions.forEach((pos) => {
+        const videoElements = [];
+        frameOverlayImage = new Image();
+        frameOverlayImage.src = frameImageSrc;
+
+        positions.forEach((pos, idx) => {
+            // === IMAGE SETUP ===
             const selectedImage = new Image();
-            const selectedVideo = document.createElement("video");
             selectedImage.src = selectedPhotos[pos.index - 1].src;
-            selectedVideo.src = URL.createObjectURL(capturedVideos[pos.index - 1]);
-            selectedVideo.autoplay = true;
-            selectedVideo.muted = true;
-            selectedVideo.playsInline = true;
-            selectedVideo.loop = true;
-
+    
             const rotation = pos.rotation || 0;
-
-            selectedImage.onload = function() {
+    
+            selectedImage.onload = function () {
                 const tempCanvas = document.createElement("canvas");
                 const tempCtx = tempCanvas.getContext("2d");
-
-                // Atur ukuran canvas sementara sesuai rotasi
+    
                 if (rotation % 180 === 90) {
                     tempCanvas.width = pos.height;
                     tempCanvas.height = pos.width;
@@ -530,86 +525,145 @@
                     tempCanvas.width = pos.width;
                     tempCanvas.height = pos.height;
                 }
-
-                // Pusatkan titik rotasi di tengah gambar
+    
                 tempCtx.save();
                 tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
-                tempCtx.rotate((rotation * Math.PI) / 180); // Konversi derajat ke radian
-
-                // Gambar gambar dengan posisi yang dikoreksi
+                tempCtx.rotate((rotation * Math.PI) / 180);
                 tempCtx.drawImage(selectedImage, -pos.width / 2, -pos.height / 2, pos.width, pos.height);
                 tempCtx.restore();
+    
                 ctx.drawImage(tempCanvas, pos.x, pos.y, pos.width, pos.height);
                 loadedImages++;
-
-                // Jika semua foto sudah dimuat, gambar frame
+    
                 if (loadedImages === positions.length) {
                     const frame = new Image();
                     frame.src = frameImageSrc;
-
-                    frame.onload = function() {
+    
+                    frame.onload = function () {
                         ctx.drawImage(frame, 0, 0, frame.width, frame.height);
                         frameCanvas.toBlob(blob => blobResultImage = blob, 'image/jpeg', 0.7);
                     };
                 }
             };
-
-            selectedVideo.addEventListener("loadeddata", function() {
-                if (recordingStarted) return;
-                selectedVideo.play();
-            
-                const frameVideo = new Image();
-                frameVideo.src = frameImageSrc;
-            
-                function drawVideoFrame() {
-                    const tempVideoCanvas = document.createElement("canvas");
-                    const tempVideoCtx = tempVideoCanvas.getContext("2d");
-            
-                    const isRotated = rotation % 180 === 90;
-                    const canvasW = isRotated ? pos.height : pos.width;
-                    const canvasH = isRotated ? pos.width : pos.height;
-            
-                    tempVideoCanvas.width = canvasW;
-                    tempVideoCanvas.height = canvasH;
-            
-                    tempVideoCtx.save();
-                    tempVideoCtx.translate(canvasW / 2, canvasH / 2);
-                    tempVideoCtx.scale(-1, 1); // Mirror horizontally
-                    tempVideoCtx.rotate((rotation * Math.PI) / 180);
-                    tempVideoCtx.drawImage(selectedVideo, -pos.width / 2, -pos.height / 2, pos.width, pos.height);
-                    tempVideoCtx.restore();
-
-            
-                    ctxVideo.drawImage(tempVideoCanvas, pos.x, pos.y, canvasW, canvasH);
-                    ctxVideo.drawImage(frameVideo, 0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
-            
-                    animationFrameId = requestAnimationFrame(drawVideoFrame);
-                }
-            
-                drawVideoFrame();
+    
+            // === VIDEO SETUP ===
+            const selectedVideo = document.createElement("video");
+            selectedVideo.src = URL.createObjectURL(capturedVideos[pos.index - 1]);
+            selectedVideo.autoplay = false;
+            selectedVideo.muted = true;
+            selectedVideo.playsInline = true;
+            selectedVideo.loop = true;
+    
+            selectedVideo.addEventListener("loadeddata", function () {
                 loadedVideos++;
-                if (loadedVideos === positions.length) {
-                    startVideoRecord();
-                }
-            });
+                selectedVideo.play();
+                videoElements[idx] = { video: selectedVideo, pos };
+    
+                if (loadedVideos === positions.length && !recordingStarted) {
+                    recordingStarted = true;
 
-            // Tambahkan tombol retake jika belum ada
+                    // Ensure all videos are explicitly played
+                    Promise.all(videoElements.map(({ video }) =>video.play().catch((e) => {console.warn("Play error", e);})))
+                        .then(() => {
+                            drawVideoFrameLoop(); // Start drawing once all are playing
+                            startVideoRecord();
+                        });
+
+                }
+
+            });
+    
+            // Append retake button if not exist
             let buttonId = "retake-btn-" + (pos.index - 1);
             if ($("#" + buttonId).length === 0) {
                 let retakeButton = $("<button>")
                     .attr("id", buttonId)
                     .text("Photo " + (pos.index))
                     .addClass("btn btn-danger")
-                    .on("click", function() {
+                    .on("click", function () {
                         retake_photo(pos.index - 1);
                     });
-
                 $('#btn-retake').append(retakeButton);
             }
         });
+    
+        // === DRAW LOOP USING EXISTING VIDEOS ===
+        function drawVideoFrameLoop() {
+            // Get original frame size
+            const frameWidth = frameCanvas.width;
+            const frameHeight = frameCanvas.height;
+            const frameAspectRatio = frameWidth / frameHeight;
+        
+            // Set a max canvas size for performance (e.g., max 720p)
+            const maxCanvasWidth = 1280;
+            const maxCanvasHeight = 720;
+        
+            // Scale down frameCanvas while maintaining aspect ratio
+            let targetWidth = maxCanvasWidth;
+            let targetHeight = targetWidth / frameAspectRatio;
+        
+            if (targetHeight > maxCanvasHeight) {
+                targetHeight = maxCanvasHeight;
+                targetWidth = targetHeight * frameAspectRatio;
+            }
+        
+            frameVideoCanvas.width = targetWidth;
+            frameVideoCanvas.height = targetHeight;
+        
+            const ctxVideo = frameVideoCanvas.getContext("2d");
+        
+            // Precompute scaling ratio from original frame to video canvas
+            const scaleX = targetWidth / frameWidth;
+            const scaleY = targetHeight / frameHeight;
+        
+            function draw() {
+                ctxVideo.clearRect(0, 0, targetWidth, targetHeight);
+        
+                videoElements.forEach(({ video, pos }) => {
+                    if (!video.paused && !video.ended) {
+                        const x = pos.x * scaleX;
+                        const y = pos.y * scaleY;
+                        const width = pos.width * scaleX;
+                        const height = pos.height * scaleY;
+        
+                        ctxVideo.drawImage(video, x, y, width, height);
+                    }
+                });
+        
+                if (frameOverlayImage && frameOverlayImage.complete) {
+                    ctxVideo.drawImage(frameOverlayImage, 0, 0, targetWidth, targetHeight);
+                }
+        
+                requestAnimationFrame(draw);
+            }
+        
+            draw();
+        }
+
+
+
+        /*function drawVideoFrameLoop() {
+            console.log("Drawing frame...");
+
+            const ctxVideo = frameVideoCanvas.getContext("2d");
+            ctxVideo.clearRect(0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
+        
+            videoElements.forEach(({ video, pos }) => {
+                // Just draw directly — no offscreen canvas yet
+                if (!video.paused && !video.ended) {
+                    ctxVideo.drawImage(video, pos.x, pos.y, pos.width, pos.height);
+                } 
+            });
+        
+            // Use preloaded frame overlay if available
+            if (frameOverlayImage && frameOverlayImage.complete) {
+                ctxVideo.drawImage(frameOverlayImage, 0, 0, frameVideoCanvas.width, frameVideoCanvas.height);
+            }
+            
+            requestAnimationFrame(drawVideoFrameLoop);
+        }*/
+
     });
-
-
 
     $('#select-filter').on('click', function(e) {
         if (!navigator.onLine) {

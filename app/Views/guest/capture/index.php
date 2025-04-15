@@ -17,7 +17,7 @@
             <!-- LEFT: Canvas Section -->
             <div style="flex: 1 1 60%; max-width: 60%;">
                 <div id="photos" class="row row-cols-2 mx-2 my-2"></div>
-              
+
                 <canvas id="frame" class="w-100 p-2" style="height: 90vh; max-width: 100%; object-fit: contain;" hidden></canvas>
         
                 <canvas id="frame-video" class="w-100 p-2" style="max-width: 100%; object-fit: contain; aspect-ratio: 16/9;" hidden></canvas>
