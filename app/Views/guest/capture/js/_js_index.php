@@ -372,9 +372,7 @@
 
 /*    function getAspectRatio(idx) {
 
-        const frame = idx ? positions[idx - 1] : positions[0];
-        console.log('Posisi' + positions.findIndex(item => item.index == 3));
-        
+        const frame = idx ? positions[idx - 1] : positions.find(item => item.index == pictureCount +1);
         let aspectRatio = frame.width / frame.height;
 
         if (isRotate) {
@@ -409,7 +407,7 @@
     }*/
     
     function getAspectRatio(idx) {
-        const frame = idx ? positions[idx - 1] : positions[0];
+        const frame = idx ? positions[idx - 1] : positions.find(item => item.index == pictureCount +1);
     
         let aspectRatio = frame.width / frame.height;
         if (isRotate) {
