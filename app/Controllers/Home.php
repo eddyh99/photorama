@@ -175,7 +175,7 @@ class Home extends BaseController
             'content'       => 'guest/frame/index',
             'extra'         => 'guest/frame/js/_js_index',
             'background'    =>  $background ?? null,
-            'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container ?? 'background/default.jpg'),
+            'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container != 'default' ? $bg_container : 'background/default.jpg'),
             'frame'         =>  $frames,
             'timer'         => $timer
         ];
@@ -314,7 +314,7 @@ class Home extends BaseController
             'content'       => 'guest/filter/index',
             'extra'         => 'guest/filter/js/_js_index',
             'background'    =>  $background ?? null,
-            'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container ?? 'background/default.jpg'),
+            'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container != 'default' ? $bg_container : 'background/default.jpg'),
             'timer'         => $timer,
             'dir'           => base64_decode($dir)
         ];
@@ -343,7 +343,7 @@ class Home extends BaseController
             'content'       => 'guest/print/index',
             'extra'         => 'guest/print/js/_js_index',
             'background'    =>  $background ?? null,
-            'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container ?? 'background/default.jpg'),
+            'bg_container'  =>  BASE_URL . 'assets/img/' . ($bg_container != 'default' ? $bg_container : 'background/default.jpg'),
             'timer'         => $timer,
             'dir'           => $dir,
             'videos'        => $videos,

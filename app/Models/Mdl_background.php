@@ -16,7 +16,7 @@ class Mdl_background extends Model
 
     public function allBackground()
     {
-        $sql = "select background.*, cabang.nama_cabang  from background inner join cabang on cabang.id = background.cabang_id";
+        $sql = "select background.*, cabang.nama_cabang  from background inner join cabang on cabang.id = background.cabang_id WHERE background.file != 'default'";
         return $this->db->query($sql)->getResult();
     }
 
@@ -76,13 +76,13 @@ class Mdl_background extends Model
             // For other database-related errors, return generic server error
             return (object) array(
                 "code"      => 500,
-                "message"   => "Terjadi kesalahan pada server"
+                "message"   => "Terjadi kesalahan pada server" . $e
             );
         } catch (\Exception $e) {
             // Handle any other general exceptions
             return (object) array(
                 "code"      => 500,
-                "message"   => "Terjadi kesalahan pada server"
+                "message"   => "Terjadi kesalahan pada server" .$e
             );
         }
 
@@ -91,4 +91,37 @@ class Mdl_background extends Model
             "message"   => "background berhasil ditambahkan"
         );
     }
+
+
+    public function updateBg(array $mdata)
+    {
+        try {
+    
+            $builder = $this->db->table("background");
+    
+            // Melakukan update batch berdasarkan kombinasi key: id_cabang + display
+            if (!$builder->updateBatch($mdata, ['cabang_id', 'display'])) {
+                return (object)[
+                    "code"    => 400,
+                    "message" => "Gagal mengupdate background"
+                ];
+            }
+    
+            return (object)[
+                "code"    => 201,
+                "message" => "Background berhasil diperbarui."
+            ];
+        } catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
+            return (object)[
+                "code"    => 500,
+                "message" => "Kesalahan database: " . $e->getMessage()
+            ];
+        } catch (\Exception $e) {
+            return (object)[
+                "code"    => 500,
+                "message" => "Kesalahan server: " . $e->getMessage()
+            ];
+        }
+    }
+    
 }
