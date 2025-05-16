@@ -32,7 +32,7 @@
                                 <input type="hidden" name="cabang" value="<?= $nama_cabang ?>">
                                 <label class="form-label" for="namabarang">Cabang</label>
                                 <div class="input-group input-group-merge">
-                                    <select name="cabang_id" class="form-control text-center" readonly>
+                                    <select name="idcabang" class="form-control text-center" readonly>
                                         <option value="<?= $id_cabang ?>" selected><?= $nama_cabang ?></option>
                                     </select>
                                 </div>
@@ -51,7 +51,11 @@
                                             accept=".png"
                                             onchange="previewImage(this)" />
                                     </div>
-                                    <a href="<?= BASE_URL ?>assets/img/<?= $bg->file ?>" target="_blank"><small><u>Lihat Background</u></small></a>
+                                    <?php if($bg->file != 'default'): ?>
+                                        <a href="<?= BASE_URL ?>assets/img/<?= $bg->file ?>" target="_blank"><small><u>Lihat Background</u></small></a>
+                                    <?php else: ?>
+                                        <small class="text-danger">No background provided</small>
+                                    <?php endif ?>
                                 </div>
                             <?php endforeach ?>
                             </div>
