@@ -12,7 +12,7 @@
 
         <!-- Bagian kanan (PREVIEW FRAME) -->
         <div id="previewkanan" class="col-lg-12 col-md-12 d-flex justify-content-center p-3 d-none">
-            <div class="bg-warning w-100 p-3 rounded d-flex flex-row flex-wrap" style="overflow-y: auto; max-height: 95vh; gap: 1rem;">
+            <div class=" w-100 p-3 rounded d-flex flex-row flex-wrap" style="overflow-y: auto; max-height: 95vh; gap: 1rem;">
     
             <!-- LEFT: Canvas Section -->
             <div style="flex: 1 1 60%; max-width: 60%;">
@@ -38,7 +38,7 @@
               <!-- Action Buttons -->
                     <div class="d-flex flex-column align-items-center gap-2 w-100">
                         <button id="select" class="btn btn-danger w-75 fs-4 py-2" disabled>SELECT</button>
-                        <button id="select-filter" class="btn btn-primary w-75 fs-4 py-2" disabled>Menyiapkan...</button>
+                        <button id="select-filter" class="btn btn-danger w-75 fs-4 py-2" disabled>Menyiapkan...</button>
                     </div>
                 </div>
              </div>

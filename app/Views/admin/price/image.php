@@ -28,7 +28,7 @@
                     <div class="card-body">
                         <form action="<?= BASE_URL ?>admin/price/image_edit" method="POST" enctype="multipart/form-data">
                             <?php if(isset($image)): ?>
-                                <img class="img-preview img-fluid col-sm-5 d-block" src="<?= BASE_URL ?>assets/img/<?= $image ?>">
+                                <img class="img-preview img-fluid col-sm-5 d-block" src="<?= BASE_URL ?>assets/img/<?= $image ?>?v=<?= time() ?>">
                             <?php else: ?>
                                 <img class="img-preview img-fluid col-sm-5 d-block">
                             <?php endif ?>

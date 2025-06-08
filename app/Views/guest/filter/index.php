@@ -30,9 +30,9 @@
             </div>
             <!-- Bagian kanan (PREVIEW FRAME) -->
             <div class="col-lg-4 col-md-12 d-flex flex-column">
-                <div class="bg-warning mb-4 flex-grow-1 mt-2 rounded" style="max-height: 80vh; overflow: hidden;">
+                <div class="mb-4 flex-grow-1 mt-2 rounded" style="max-height: 80vh; overflow: hidden;">
                     <div class="d-flex flex-column align-items-center justify-content-center h-100 gap-4">
-                        <h2 class="fw-bold text-white">SELECT FILTER</h2>
+                        <!--<h2 class="fw-bold text-white">SELECT FILTER</h2>-->
                         <!-- Updated Layout: 2 columns, 4 rows -->
                         <div class="d-grid gap-3" style="grid-template-columns: repeat(2, 1fr);">
                             <button id="normal" class="btn btn-info fw-bold btn-circle btn-lg">NORMAL</button>
@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="d-grid">
-                    <button id="next" class="btn btn-primary fs-3">NEXT</button>
+                    <button id="next" class="btn btn-danger fs-3">NEXT</button>
                 </div>
             </div>
             

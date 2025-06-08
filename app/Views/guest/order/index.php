@@ -39,7 +39,7 @@
                 <div class="col">
                     <div class="d-flex flex-column justify-content-center align-items-center h-100">
                         <div class="text-center">
-                            <label class="form-label text-uppercase text-black fs-3" for="upload foto">Voucher Code</label>
+                            <!--<label class="form-label text-uppercase text-black fs-3" for="upload foto">Voucher Code</label>-->
                             <div class="input-group input-group-merge mb-2">
                                 <input
                                     autocomplete="off"

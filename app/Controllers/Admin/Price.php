@@ -173,7 +173,7 @@ class Price extends BaseController
         $file = $this->request->getFile('img_order');
         if ($file && $file->isValid()) {
             $file_name = "image_order.png";
-            $file->move('assets/img/order', $file_name, true);
+            $file->move('assets/img/order/', $file_name, true);
         }
 
         $result = $this->setting->store('img_order', 'order/' . $file_name);

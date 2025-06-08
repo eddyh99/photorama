@@ -21,7 +21,7 @@
                             </div>
 
                         </div>
-                        <p class="text-white text-center mt-3 fs-3">- THANK YOU -</p>
+                        <!--<p class="text-white text-center mt-3 fs-3">- THANK YOU -</p>-->
                     </div>
                 </div>
 
