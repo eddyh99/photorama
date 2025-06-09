@@ -3,7 +3,8 @@
         <div class="row text-black h-100">
             <!-- Bagian kiri (SELECT FRAME) -->
             <div class="col-lg-8 col-md-12 d-flex flex-column justify-content-center">
-                <div class="mt-2 d-flex justify-content-center align-items-center h-100" style="background-image: url(<?= $bg_container ?>); ">
+                <!-- <div class="mt-2 d-flex justify-content-center align-items-center h-100" style="background-image: url(<?= $bg_container ?>); "> -->
+                <div class="mt-2 d-flex justify-content-center align-items-center h-100">
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-md-6 text-center">
