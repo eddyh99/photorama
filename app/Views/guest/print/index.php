@@ -3,7 +3,8 @@
         <div class="row text-black h-100">
             <!-- Bagian kiri (SELECT FRAME) -->
             <div class="col-lg-8 col-md-12 d-flex flex-column justify-content-center">
-                <div class="mt-2 d-flex justify-content-center align-items-center h-100" style="background-image: url(<?= $bg_container ?>); ">
+                <!-- <div class="mt-2 d-flex justify-content-center align-items-center h-100" style="background-image: url(<?= $bg_container ?>); "> -->
+                <div class="mt-2 d-flex justify-content-center align-items-center h-100">
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-md-6 text-center">
@@ -36,8 +37,8 @@
                     <p class="text-white">OR</p>
                     <div class="d-grid gap-2">
                         <!-- <button class="btn btn-warning">EMAIL SOFT COPY</button> -->
-                        <button id="print" class="btn btn-info d-none">PRINT</button>
-                        <button id="submit" href="#" class="btn btn-primary" onclick="save(event)">DONE</button>
+                        <button id="print" class="btn btn-danger d-none">PRINT</button>
+                        <button id="submit" href="#" class="btn btn-danger" onclick="save(event)">DONE</button>
                     </div>
                 </div>
             </div>

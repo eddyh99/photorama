@@ -1,6 +1,7 @@
 </style>
 
 <div class="min-vh-100 w-100 d-flex flex-column overflow-hidden" id="content-bg">
+    <h2 class="text-center mt-3 mb-0">SELECT FRAME</h2>
     <div class="mx-5 my-3 flex-grow-1 d-flex flex-column flex-md-row" style="max-height: 95vh;">
         <div class="row text-black flex-grow-1 w-100">
             <!-- Bagian kiri (SELECT FRAME) -->
