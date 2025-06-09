@@ -253,7 +253,10 @@
                     pictureCount += 1;
                     if (pictureCount < totalPhotos) {
                         setTimeout(async () => {
-                            await startWebcam();
+                            const confirm = await showConfirmation();
+                            if(confirm) {
+                                await startWebcam();
+                            }
                         }, 1000);
                     }
                 }
@@ -808,5 +811,40 @@
         }
 
         console.log("Cleanup completed before unload.");
+    }
+
+    function showConfirmation() {
+        return new Promise((resolve) => {
+            let countdown = 3;
+        Swal.fire({
+            title: "Ready to next pose!",
+            html: `Click OK to start`,
+            icon: "question",
+            showCancelButton: false,
+            confirmButtonText: `OK (${countdown})`,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                const confirmButton = Swal.getConfirmButton();
+
+                const timerInterval = setInterval(() => {
+                    countdown--;
+                    Swal.update({
+                        confirmButtonText: `OK (${countdown})`
+                    });
+
+                    if (countdown <= 0) {
+                        clearInterval(timerInterval);
+                        Swal.close();
+                        resolve(true);
+                    }
+                }, 1000);
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                resolve(true);
+            }
+        });
+        })
     }
 </script>

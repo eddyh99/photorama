@@ -35,14 +35,14 @@
                         <!--<h2 class="fw-bold text-white">SELECT FILTER</h2>-->
                         <!-- Updated Layout: 2 columns, 4 rows -->
                         <div class="d-grid gap-3" style="grid-template-columns: repeat(2, 1fr);">
-                            <button id="normal" class="btn btn-info fw-bold btn-circle btn-lg">NORMAL</button>
-                            <button id="grayscale" class="btn btn-info fw-bold btn-circle btn-lg">GRAYSCALE</button>
-                            <button id="sephia" class="btn btn-info fw-bold btn-circle btn-lg">SEPIA</button>
-                            <button id="polaroid" class="btn btn-info fw-bold btn-circle btn-lg">POLAROID</button>
-                            <button id="bnw-glam" class="btn btn-info fw-bold btn-circle btn-lg">BNW GLAM</button>
-                            <button id="gotham" class="btn btn-info fw-bold btn-circle btn-lg">GOTHAM</button>
-                            <button id="brannan" class="btn btn-info fw-bold btn-circle btn-lg">BRANNAN</button>
-                            <button id="xpro" class="btn btn-info fw-bold btn-circle btn-lg">X-II PRO</button>
+                            <button id="normal" class="btn btn-danger fw-bold btn-circle btn-lg">NORMAL</button>
+                            <button id="grayscale" class="btn btn-danger fw-bold btn-circle btn-lg">GRAYSCALE</button>
+                            <button id="sephia" class="btn btn-danger fw-bold btn-circle btn-lg">SEPIA</button>
+                            <button id="polaroid" class="btn btn-danger fw-bold btn-circle btn-lg">POLAROID</button>
+                            <button id="bnw-glam" class="btn btn-danger fw-bold btn-circle btn-lg">BNW GLAM</button>
+                            <button id="gotham" class="btn btn-danger fw-bold btn-circle btn-lg">GOTHAM</button>
+                            <button id="brannan" class="btn btn-danger fw-bold btn-circle btn-lg">BRANNAN</button>
+                            <button id="xpro" class="btn btn-danger fw-bold btn-circle btn-lg">X-II PRO</button>
                         </div>
                     </div>
                 </div>

@@ -58,10 +58,10 @@
         <!-- Row Baru untuk Tombol -->
         <div class="row button-container">
             <div class="col-lg-6 col-md-12 text-center d-none d-lg-block">
-                <button class="btn btn-primary fs-3 px-5" onclick="setCamera(1)">CAMERA 1</button>
+                <button class="btn btn-danger fs-3 px-5" onclick="setCamera(1)">CAMERA 1</button>
             </div>
             <div class="col-lg-6 col-md-12 text-center">
-                <button class="btn btn-primary fs-3 px-5" onclick="setCamera(2)">CAMERA 2</button>
+                <button class="btn btn-danger fs-3 px-5" onclick="setCamera(2)">CAMERA 2</button>
             </div>
         </div>
     </div>
