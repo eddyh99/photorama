@@ -118,7 +118,7 @@
                                     <source src="<?= $fileUrl ?>" type="video/<?= $ext ?>">
                                     Your browser does not support the video tag.
                                 </video>
-                                <a href="<?= $fileUrl ?>" class="download-btn" download><i class="bx bx-download"></i></a>
+                                <a href="<?= $fileUrl ?>" class="action-btn" style="right: 10px;" download><i class="bx bx-download"></i></a>
                             <?php else: ?>
                                 <!-- <a href="#" class="download-btn"><i class="bx bx-print"></i> Print</a> -->
                                 <img src="<?= $fileUrl ?>" alt="Random Image">
