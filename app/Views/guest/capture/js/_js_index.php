@@ -9,15 +9,15 @@
     const recordedVideoContainer = document.getElementById('recordedVideoContainer');
     const frameCanvas = document.getElementById('frame');
     const frameVideoCanvas = document.getElementById('frame-video');
-    const cameraSound = new Audio('<?= BASE_URL ?>assets/audio/camera-13695.mp3');
+    // const cameraSound = new Audio('<?= BASE_URL ?>assets/audio/camera-13695.mp3');
     const cameraRotation = <?= json_encode($camera_rotation); ?>;
-    const listAudio = [
-        "get-ready.mp3",
-        "smile.mp3",
-        "say-cheese.mp3",
-        "last-one.mp3",
-        "next-pose.mp3"
-    ];
+    // const listAudio = [
+    //     "get-ready.mp3",
+    //     "smile.mp3",
+    //     "say-cheese.mp3",
+    //     "last-one.mp3",
+    //     "next-pose.mp3"
+    // ];
 
     const frame = sessionStorage.getItem("selected_frame") || null;
     const frameImageSrc = '<?= BASE_URL ?>assets/img/' + decodeURIComponent(frame);
@@ -149,8 +149,8 @@
             countdownOverlay.style.display = 'flex';
             countdownOverlay.textContent = countdownValue;
 
-            const audio = new Audio('<?= BASE_URL ?>assets/audio/' + listAudio[Math.floor(Math.random() * listAudio.length)]);
-            audio.play().catch(err => console.warn("Audio play was prevented:", err));
+            // const audio = new Audio('<?= BASE_URL ?>assets/audio/' + listAudio[Math.floor(Math.random() * listAudio.length)]);
+            // audio.play().catch(err => console.warn("Audio play was prevented:", err));
 
             let countdown = countdownValue;
             console.log(mediaRecorder)
@@ -760,7 +760,7 @@
                 }, 300) // Redup
                 .fadeOut(300, function() {
                     $(this).css('background-color', '#fff').show();
-                    cameraSound.play();
+                    // cameraSound.play();
 
                     setTimeout(() => {
                         $(this).css({
