@@ -30,8 +30,8 @@
 </style>
 
 <div class="h-100 w-100" id="content-bg">
-    <div class="mx-5 py-5 h-100">
-        <h3 class="text-center mt-4">SELECT YOUR CAMERA</h3>
+    <div class="mx-5 py-1 h-100">
+        <h3 class="text-center mt-4">&nbsp;</h3>
         <div class="row text-black g-4">
             <!-- Bagian kiri -->
             <div class="col-lg-6 col-md-12">

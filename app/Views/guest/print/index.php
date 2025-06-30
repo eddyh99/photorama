@@ -9,7 +9,7 @@
                         <div class="row justify-content-center">
                             <div class="col-md-6 text-center">
                                 <img id="photo" class="img-fluid mt-4" style="max-height: 75vh; object-fit: contain;"
-                                    src="<?= BASE_URL ?>assets/photobooth/<?= $dir ?>/photos.jpg"
+                                    src="<?= BASE_URL ?>assets/photobooth/<?= $dir ?>/photos.jpg?<?=time()?>"
                                     alt="Photo Booth 1">
                             </div>
                             <div class="col-md-6 text-center">

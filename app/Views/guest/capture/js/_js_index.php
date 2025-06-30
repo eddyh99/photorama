@@ -144,7 +144,7 @@
                 await startWebcam(idx + 1);
             }
 
-            const countdownValue = <?= json_encode($countdown ?? 3) ?>;
+            const countdownValue = <?= json_encode($countdown ?? 5) ?>;
 
             countdownOverlay.style.display = 'flex';
             countdownOverlay.textContent = countdownValue;

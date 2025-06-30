@@ -253,7 +253,7 @@ class Home extends BaseController
 
         return json_encode($response);
     }
-
+/*
     public function updateRecord($dir)
     {
         $uploadDir = "assets/photobooth/" . base64_decode($dir) . "/";
@@ -267,7 +267,10 @@ class Home extends BaseController
 
         // Proses unggah foto jika ada
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+            log_message('error', 'Masuk Upload');
             $success = move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . "photos.jpg") || $success;
+            log_message('error', json_encode($success));
+
         }
 
         // Proses unggah video jika ada
@@ -277,6 +280,63 @@ class Home extends BaseController
 
         return json_encode(['success' => $success]);
     }
+*/
+
+public function updateRecord($dir)
+{
+    $uploadDir = "assets/photobooth/" . base64_decode($dir) . "/";
+
+    // Jika direktori tidak ada, kembalikan false
+    if (!is_dir($uploadDir)) {
+        return json_encode(['success' => false, 'message' => 'Folder tidak ditemukan']);
+    }
+
+    $success = false; // Default gagal
+
+    // Proses unggah foto jika ada
+    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+        $photoPath = $uploadDir . "photos.jpg";
+
+        // Optional: delete old file to ensure overwrite
+        if (file_exists($photoPath)) {
+            unlink($photoPath);
+            log_message('error', 'Old photo deleted');
+        }
+
+        // Attempt move
+        $success = move_uploaded_file($_FILES['photo']['tmp_name'], $photoPath);
+
+        if (!$success) {
+            log_message('error', 'Gagal upload foto ke: ' . $photoPath);
+        } else {
+            log_message('error', 'Foto berhasil di-upload ke: ' . $photoPath);
+        }
+    } else {
+        log_message('error', 'Tidak ada foto diunggah atau error: ' . ($_FILES['photo']['error'] ?? 'no file'));
+    }
+
+    // Proses unggah video jika ada
+    if (isset($_FILES['video']) && $_FILES['video']['error'] === UPLOAD_ERR_OK) {
+        $videoPath = $uploadDir . "video.mp4";
+
+        // Optional: delete old video
+        if (file_exists($videoPath)) {
+            unlink($videoPath);
+        }
+
+        $videoSuccess = move_uploaded_file($_FILES['video']['tmp_name'], $videoPath);
+
+        if ($videoSuccess) {
+            log_message('error', 'Video berhasil di-upload ke: ' . $videoPath);
+        } else {
+            log_message('error', 'Gagal upload video.');
+        }
+
+        $success = $success || $videoSuccess;
+    }
+
+    return json_encode(['success' => $success]);
+}
 
 
     public function filter($dir)
@@ -523,7 +583,7 @@ class Home extends BaseController
         </head><body>';
 
         for ($i = 0; $i < $print; $i++) {
-            $html .= '<img src="' . $imageSrc . '" alt="Gambar 4R">';
+            $html .= '<img src="' . $imageSrc . '?"'.time().' alt="Gambar 4R">';
             if ($i < $print - 1) {
                 $html .= '<div style="page-break-before: always;"></div>'; // Pisahkan halaman
             }

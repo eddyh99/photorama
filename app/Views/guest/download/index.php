@@ -111,7 +111,7 @@
                         <div class="swiper-slide">
                             <?php
                             $ext = pathinfo($file, PATHINFO_EXTENSION);
-                            $fileUrl = base_url("assets/photobooth/$folder/$file");
+                            $fileUrl = base_url("assets/photobooth/$folder/$file")."?".time();
                             if (in_array(strtolower($ext), ['mp4', 'webm'])):
                             ?>
                                 <video controls playsinline>

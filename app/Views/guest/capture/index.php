@@ -29,7 +29,7 @@
               <!-- Retake Buttons -->
                 <div id="btn-action" class="text-center w-100 mb-3 d-none">
                     <div class="<?= $retake ? '' : 'd-none' ?>">
-                        <span class="d-block mb-2 text-white">Retake:</span>
+                        <span class="d-block mb-2 text-white">&nbsp;:</span>
                         <div id="btn-retake" class="d-flex flex-wrap justify-content-center gap-2 mb-3 p-2 pe-none"
                             style="overflow-y: auto; max-height: 20vh;"></div>
                         </div>
