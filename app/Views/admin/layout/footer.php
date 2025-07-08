@@ -63,6 +63,11 @@
             echo '<script src="' . BASE_URL . 'assets/js/timer.js"></script>';
         }
         ?>
+    <script>
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+    </script>
 
     </body>
 </html>
