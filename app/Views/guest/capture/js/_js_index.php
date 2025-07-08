@@ -815,7 +815,7 @@
 
     function showConfirmation() {
         return new Promise((resolve) => {
-            let countdown = 3;
+            let countdown =3;
         Swal.fire({
             title: "Ready to next pose!",
             html: `Click OK to start`,
